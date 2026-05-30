@@ -25,11 +25,6 @@
                             <h2 class="mb-1 text-center">Crear usuario</h2>
                             <p class="text-muted text-center mb-4">Completá tus datos para registrarte</p>
 
-                            <div class="mb-3">
-                                <label for="txtNombreUsuario" class="form-label">Usuario</label>
-                                <asp:TextBox ID="txtNombreUsuario" runat="server" CssClass="form-control"></asp:TextBox>
-                            </div>
-
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="txtNombre" class="form-label">Nombre</label>
@@ -41,6 +36,15 @@
                                     <asp:TextBox ID="txtApellido" runat="server" CssClass="form-control"></asp:TextBox>
                                 </div>
                             </div>
+                            <div class="mb-3">
+                                <label for="txtNombreEmpresa" class="form-label">Nombre de tu Empresa / Organización</label>
+                                <asp:TextBox ID="txtNombreEmpresa" runat="server" CssClass="form-control" placeholder="Ej: Mi Empresa S.A."></asp:TextBox>
+                            </div>
+                            <div class="mb-3">
+                                <label for="txtNombreUsuario" class="form-label">Usuario</label>
+                                <asp:TextBox ID="txtNombreUsuario" runat="server" CssClass="form-control"></asp:TextBox>
+                            </div>
+
 
                             <div class="mb-3">
                                 <label for="txtPassword" class="form-label">Contraseña</label>
@@ -52,7 +56,7 @@
                                 <asp:TextBox ID="txtConfirmarPassword" runat="server" CssClass="form-control" TextMode="Password"></asp:TextBox>
                             </div>
 
-                            <asp:Button ID="btnCrearUsuario" runat="server" Text="Crear usuario" CssClass="btn btn-primary w-100" />
+                            <asp:Button ID="btnCrearUsuario" runat="server" Text="Crear usuario" CssClass="btn btn-primary w-100" OnClick="btnCrearUsuario_Click" />
 
                             <div class="text-center mt-3">
                                 <a href="Login.aspx" class="text-decoration-none">Volver a iniciar sesión</a>

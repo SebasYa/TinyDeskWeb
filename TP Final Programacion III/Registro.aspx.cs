@@ -1,4 +1,5 @@
-﻿using System;
+﻿using negocio;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -12,6 +13,40 @@ namespace TP_Final_Programacion_III
         protected void Page_Load(object sender, EventArgs e)
         {
 
+        }
+
+        protected void btnCrearUsuario_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtNombreUsuario.Text) ||
+                string.IsNullOrWhiteSpace(txtNombre.Text) ||
+                string.IsNullOrWhiteSpace(txtApellido.Text) ||
+                string.IsNullOrWhiteSpace(txtPassword.Text) ||
+                string.IsNullOrWhiteSpace(txtConfirmarPassword.Text) ||
+                string.IsNullOrWhiteSpace(txtNombreEmpresa.Text) ||
+                txtPassword.Text != txtConfirmarPassword.Text
+                )
+            {
+                return;
+            }
+
+            try
+            {
+                UsuarioNegocio negocio = new UsuarioNegocio();
+
+                if (negocio.RegistrarEmpresaYOwner(
+                    txtNombreEmpresa.Text,
+                    txtNombreUsuario.Text,
+                    txtPassword.Text,
+                    txtNombre.Text,
+                    txtApellido.Text))
+                {
+                    Response.Redirect("Login.aspx", false);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }
