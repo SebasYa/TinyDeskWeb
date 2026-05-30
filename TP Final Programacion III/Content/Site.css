@@ -1,4 +1,14 @@
 ﻿/* Wrapping element */
+:root {
+    --bs-primary: #2563EB;
+    --bs-secondary: #64748B;
+    --bs-success: #22C55E;
+    --bs-danger: #EF4444;
+    --bs-warning: #F59E0B;
+    --bs-info: #0EA5E9;
+    --bs-light: #F8FAFC;
+    --bs-dark: #0F172A;
+}
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {
     margin-top: 15px;
@@ -12,6 +22,36 @@ select,
 textarea {
     max-width: 280px;
 }
+
+
+
+.sideBar:hover {
+    border-radius: 7px;
+    background-color: #2d3239;
+}
+
+
+
+/* Espacio entre la hamburguesa y la flecha */
+.btn-hamburguesa::after {
+    margin-left: 5px;
+}
+
+/* Cuando está ABIERTO (se muestra <) */
+.btn-hamburguesa[aria-expanded="true"]::after {
+    content: "<";
+}
+
+/* Cuando está CERRADO (se muestra >) */
+.btn-hamburguesa[aria-expanded="false"]::after {
+    content: ">";
+}
+
+
+
+
+
+
 
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
