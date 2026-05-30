@@ -13,5 +13,22 @@ namespace TP_Final_Programacion_III
         {
 
         }
+
+        protected void btnNuevoProyecto_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected void btnNuevoSprint_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected void btnNuevoTicket_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        
+
+            
     }
 }
