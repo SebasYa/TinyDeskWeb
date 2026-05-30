@@ -38,7 +38,10 @@
                             <a href="Default.aspx" class="btn btn-primary w-100 mb-3">Ingresa sin contraseña
                             </a>
                             <asp:Button ID="btnLogin" runat="server" Text="Iniciar Sesión" CssClass="btn btn-primary w-100" OnClick="btnLogin_Click" />
-
+                            <div class="text-center mt-3">
+                                <span class="text-muted">¿No tenés cuenta?</span>
+                                <a href="Registro.aspx" class="text-decoration-none">Crear usuario</a>
+                            </div>
                         </div>
                     </div>
 
