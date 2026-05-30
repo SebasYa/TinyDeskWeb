@@ -1,4 +1,5 @@
-﻿using negocio;
+﻿using dominio;
+using negocio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,11 @@ namespace TP_Final_Programacion_III
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            /*
+             
+             */
+            Usuario usuario = Session["usuario"] != null ? (Usuario)Session["usuario"] : null;
+
             if (!IsPostBack)
             {
                 try

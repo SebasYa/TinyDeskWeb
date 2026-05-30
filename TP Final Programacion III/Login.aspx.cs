@@ -1,0 +1,46 @@
+﻿using dominio;
+using negocio;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace TP_Final_Programacion_III
+{
+    public partial class Login : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnLogin_Click(object sender, EventArgs e)
+        {
+            Usuario usuario = new Usuario();
+            UsuarioNegocio negocio = new UsuarioNegocio();
+            try
+            {
+                usuario.NombreUsuario = txtNombreUsuario.Text;
+                usuario.PasswordHash = txtPassword.Text;
+
+                if (negocio.Login(usuario))
+                {
+                    Session.Add("usuario", usuario);
+                    Response.Redirect("Default.aspx", false);
+
+                }
+                else
+                {
+                    Session.Add("error", "User o pass incorrectos");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+    }
+}

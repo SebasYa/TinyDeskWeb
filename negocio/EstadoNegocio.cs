@@ -7,7 +7,7 @@ using dominio;
 
 namespace negocio
 {
-    internal class EstadoNegocio
+    public class EstadoNegocio
     {
         public int agregar(Estado estado)
         {
