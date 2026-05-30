@@ -159,6 +159,28 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
+
+        public int ContarActivos() {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta(@"
+                    SELECT COUNT(*) 
+                    FROM PROYECTO
+                    WHERE activo = 1
+                ");
+                return datos.ejecutarScalar();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
     }
 }
 

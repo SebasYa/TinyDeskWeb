@@ -12,23 +12,43 @@
         <asp:Button ID="btnNuevoTicket" runat="server" Text="Nuevo Ticket" OnClick="btnNuevoTicket_Click" />
     </section>
 
-    <section>
-        <h2>Reportes</h2>
-
-        <div>
-            <h3>Proyectos Activos</h3>
-            <p>0</p>
+    <section class="mt-4">
+        <h2 class="mb-3">Reportes</h2>
+        <div class="row g-3">
+            <!-- Ficha Proyectos Activos -->
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="card border-primary shadow-sm h-100">
+                    <div class="card-body p-3 text-center">
+                        <h6 class="card-subtitle mb-2 text-muted text-uppercase font-monospace small">Proyectos Activos</h6>
+                        <h2 class="card-title mb-0 display-6 fw-bold text-primary">
+                            <asp:Label ID="lblProyectosActivos" runat="server" Text=""></asp:Label>
+                        </h2>
+                    </div>
+                </div>
+            </div>
+            <!-- Ficha Sprints en Curso -->
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="card border-success shadow-sm h-100">
+                    <div class="card-body p-3 text-center">
+                        <h6 class="card-subtitle mb-2 text-muted text-uppercase font-monospace small">Sprints en Curso</h6>
+                        <h2 class="card-title mb-0 display-6 fw-bold text-success">
+                            <asp:Label ID="lblSprintsEnCurso" runat="server" Text=""></asp:Label>
+                        </h2>
+                    </div>
+                </div>
+            </div>
+            <!-- Ficha Tickets Abiertos -->
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="card border-warning shadow-sm h-100">
+                    <div class="card-body p-3 text-center">
+                        <h6 class="card-subtitle mb-2 text-muted text-uppercase font-monospace small">Tickets Abiertos</h6>
+                        <h2 class="card-title mb-0 display-6 fw-bold text-warning">
+                            <asp:Label ID="lblTicketsAbiertos" runat="server" Text=""></asp:Label>
+                        </h2>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div>
-             <h3>Sprints en curso</h3>
-             <p>0</p>
-        </div>
-
-        <div>
-            <h3>Tickets abiertos</h3>
-            <p>0</p>
-       </div>
     </section>
 
     <section>

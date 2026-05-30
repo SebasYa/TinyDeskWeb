@@ -1,4 +1,5 @@
-﻿using System;
+﻿using negocio;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,7 +12,25 @@ namespace TP_Final_Programacion_III
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!IsPostBack)
+            {
+                try
+                {
+                    ProyectoNegocio proyectoNegocio = new ProyectoNegocio();
+                    SprintNegocio sprintNegocio = new SprintNegocio();
+                    TicketNegocio ticketNegocio = new TicketNegocio();
 
+                    lblProyectosActivos.Text = proyectoNegocio.ContarActivos().ToString();
+                    lblSprintsEnCurso.Text = sprintNegocio.ContarEnCurso().ToString();
+                    lblTicketsAbiertos.Text = ticketNegocio.ContarAbiertos().ToString();
+
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+            }
         }
 
         protected void btnNuevoProyecto_Click(object sender, EventArgs e)

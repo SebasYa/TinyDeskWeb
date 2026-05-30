@@ -15,7 +15,7 @@ namespace TP_Final_Programacion_III
     {
 
         /// <summary>
-        /// Control  btnNuevoProyecto.
+        /// Control btnNuevoProyecto.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
@@ -40,5 +40,32 @@ namespace TP_Final_Programacion_III
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnNuevoTicket;
+
+        /// <summary>
+        /// Control lblProyectosActivos.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblProyectosActivos;
+
+        /// <summary>
+        /// Control lblSprintsEnCurso.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSprintsEnCurso;
+
+        /// <summary>
+        /// Control lblTicketsAbiertos.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTicketsAbiertos;
     }
 }
