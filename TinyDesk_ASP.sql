@@ -68,11 +68,13 @@ CREATE TABLE PROYECTO (
     Descripcion VARCHAR(250) NOT NULL,
     FechaInicio DATE NOT NULL CHECK(FechaInicio >= CAST(GETDATE() AS DATE)),
     FechaFin DATE,
+    FechaEstimadaFin DATE NOT NULL,
     Activo BIT NOT NULL DEFAULT 1,
     IdEstado INT NOT NULL,
     IdEmpresa INT NOT NULL, -- El proyecto pertenece a una empresa
 	
     CONSTRAINT CK_Proyecto_FechaFin CHECK (FechaFin IS NULL OR FechaFin >= FechaInicio),
+    CONSTRAINT CK_Proyecto_FechaEstimada CHECK (FechaEstimadaFin >= FechaInicio),
     FOREIGN KEY (IdEstado) REFERENCES ESTADO(Id),
     FOREIGN KEY (IdEmpresa) REFERENCES EMPRESA(Id)
 )
@@ -83,11 +85,14 @@ CREATE TABLE SPRINT (
     NumeroSprint INT NOT NULL,
     FechaInicio DATE NOT NULL CHECK(FechaInicio >= CAST(GETDATE() AS DATE)),
     FechaFin DATE,
+    FechaEstimadaFin DATE NOT NULL,
     Activo BIT NOT NULL DEFAULT 1,
     IdProyecto INT NOT NULL,
     IdEstado INT NOT NULL,
     IdArea INT NOT NULL,
+
     CONSTRAINT CK_Sprint_FechaFin CHECK (FechaFin IS NULL OR FechaFin >= FechaInicio),
+    CONSTRAINT CK_Sprint_FechaEstimada CHECK (FechaEstimadaFin >= FechaInicio),
     FOREIGN KEY (IdProyecto) REFERENCES PROYECTO(Id),
     FOREIGN KEY (IdEstado) REFERENCES ESTADO(Id),
     FOREIGN KEY (IdArea) REFERENCES AREA(Id)
@@ -98,13 +103,16 @@ CREATE TABLE TICKET (
     Id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
     FechaInicio DATE NOT NULL CHECK(FechaInicio >= CAST(GETDATE() AS DATE)),
     FechaFin DATE,
+    FechaEstimadaFin DATE NOT NULL,
     Descripcion VARCHAR(150) NOT NULL,
     Activo BIT NOT NULL DEFAULT 1,
     IdPrioridad INT NOT NULL,
     IdUsuario INT NOT NULL,
     IdEstado INT NOT NULL,
     IdSprint INT NOT NULL,
+
     CONSTRAINT CK_Ticket_FechaFin CHECK (FechaFin IS NULL OR FechaFin >= FechaInicio),
+    CONSTRAINT CK_Ticket_FechaEstimada CHECK (FechaEstimadaFin >= FechaInicio),
     FOREIGN KEY (IdPrioridad) REFERENCES PRIORIDAD(Id),
     FOREIGN KEY (IdUsuario) REFERENCES USUARIO(Id),
     FOREIGN KEY (IdEstado) REFERENCES ESTADO(Id),
