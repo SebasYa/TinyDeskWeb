@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace dominio
 {
-    internal class Sprint
+    public class Sprint
     {
         public int Id { get; set; }
         public int NumeroSprint { get; set; }

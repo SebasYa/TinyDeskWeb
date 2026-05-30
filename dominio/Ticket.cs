@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace dominio
 {
-    internal class Ticket
+    public class Ticket
     {
         public int Id { get; set; }
         public DateTime FechaInicio { get; set; }
