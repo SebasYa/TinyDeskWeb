@@ -8,5 +8,9 @@ namespace dominio
 {
     internal class Estado
     {
+        public int Id { get; set; }
+        public String Nombre { get; set; }
+        public bool EsFinal { get; set; }
+        public bool EsSistema { get; set; }
     }
 }

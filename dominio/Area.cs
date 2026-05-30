@@ -8,5 +8,7 @@ namespace dominio
 {
     internal class Area
     {
+        public int ID { get; set; }
+        public int Nombre { get; set; }
     }
 }
