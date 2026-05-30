@@ -15,7 +15,7 @@ namespace dominio
         public string Apellido { get; set; }
         public bool Activo { get; set; }
         public bool PermisoEscritura { get; set; }
-        public bool EsOwner { get; set; }
+        public Puesto Puesto { get; set; }
         public Empresa Empresa { get; set; }
         public Area Area { get; set; }
     }

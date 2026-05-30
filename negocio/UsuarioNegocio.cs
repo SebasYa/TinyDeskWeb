@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,10 +16,16 @@ namespace negocio
             try
             {
                 datos.setearConsulta(@"
-                    SELECT Id, PasswordHash, NombreUsuario, PermisoEscritura
-                    FROM USUARIO
-                    WHERE NombreUsuario = @NombreUsuario AND PasswordHash = @PasswordHash
-                ");
+                    SELECT U.Id, U.PasswordHash, U.NombreUsuario, U.PermisoEscritura, 
+                           U.IdEmpresa, E.Nombre AS NombreEmpresa, 
+                           U.IdPuesto, P.Nombre AS NombrePuesto, 
+                           U.IdArea, A.Nombre AS NombreArea
+                    FROM USUARIO U
+                    INNER JOIN EMPRESA E ON U.IdEmpresa = E.Id
+                    INNER JOIN PUESTO P ON U.IdPuesto = P.Id
+                    INNER JOIN AREA A ON U.IdArea = A.Id
+                    WHERE U.NombreUsuario = @NombreUsuario AND U.PasswordHash = @PasswordHash
+        ");
                 datos.setearParametro("@NombreUsuario", usuario.NombreUsuario);
                 datos.setearParametro("@PasswordHash", usuario.PasswordHash);
                 datos.ejecutarLectura();
@@ -27,6 +33,18 @@ namespace negocio
                 {
                     usuario.Id = (int)datos.Lector["Id"];
                     usuario.PermisoEscritura = (bool)datos.Lector["PermisoEscritura"];
+
+                    usuario.Empresa = new Empresa();
+                    usuario.Empresa.Id = (int)datos.Lector["IdEmpresa"];
+                    usuario.Empresa.Nombre = (string)datos.Lector["NombreEmpresa"];
+
+                    usuario.Puesto = new Puesto();
+                    usuario.Puesto.Id = (int)datos.Lector["IdEmpresa"];
+                    usuario.Puesto.Nombre = (string)datos.Lector["NombrePuesto"];
+
+                    usuario.Area = new Area();
+                    usuario.Area.Id = (int)datos.Lector["IdArea"];
+                    usuario.Area.Nombre = (string)datos.Lector["NombreArea"];
                     return true;
                 }
                 else
@@ -45,56 +63,50 @@ namespace negocio
             }
         }
 
-        public bool RegistrarEmpresaYOwner(string nombreEmpresa, string username, string password, string nombre, string apellido)
+        public bool RegistrarEmpresaYOwner(string nombreEmpresa, string nombreUsuario, string password, string nombre, string apellido)
         {
-            int idEmpresa = 0;
-            int idAreaOwner = 0;
-            AccesoDatos datosEmpresa = new AccesoDatos();
+            AccesoDatos datos = new AccesoDatos();
             try
             {
-                datosEmpresa.setearConsulta("INSERT INTO EMPRESA (Nombre) VALUES (@NombreEmpresa); SELECT SCOPE_IDENTITY();");
-                datosEmpresa.setearParametro("@NombreEmpresa", nombreEmpresa);
-                idEmpresa = datosEmpresa.ejecutarScalar();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                datosEmpresa.cerrarConexion();
-            }
+                datos.setearConsulta(@"
+                    BEGIN TRANSACTION;
+                    BEGIN TRY
+                        -- 1. Insertamos Empresa y guardamos su ID
+                        INSERT INTO EMPRESA (Nombre) VALUES (@NombreEmpresa);
+                        DECLARE @IdEmpresa INT = SCOPE_IDENTITY();
 
-            AccesoDatos datosArea = new AccesoDatos();
-            try
-            {
-                datosArea.setearConsulta("SELECT Id FROM AREA WHERE Nombre = 'Owner'");
-                idAreaOwner = datosArea.ejecutarScalar();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                datosArea.cerrarConexion();
-            }
+                        -- 2. Obtenemos el ID del Area Direccion 
+                        DECLARE @IdAreaOwner INT;
+                        SELECT @IdAreaOwner = Id FROM AREA WHERE Nombre = 'Direccion';
 
-            AccesoDatos datosUsuario = new AccesoDatos();
-            try
-            {
-                datosUsuario.setearConsulta(@"
-                                INSERT INTO USUARIO (NombreUsuario, PasswordHash, Nombre, Apellido, Activo, 
-                                                     PermisoEscritura, IdEmpresa, IdArea, EsOwner)
-                                VALUES (@Username, @Password, @Nombre, @Apellido, 1, 1, @IdEmpresa, @IdArea, 1)
-        ");
-                datosUsuario.setearParametro("@Username", username);
-                datosUsuario.setearParametro("@Password", password);
-                datosUsuario.setearParametro("@Nombre", nombre);
-                datosUsuario.setearParametro("@Apellido", apellido);
-                datosUsuario.setearParametro("@IdEmpresa", idEmpresa);
-                datosUsuario.setearParametro("@IdArea", idAreaOwner);
-                datosUsuario.ejecutarAccion();
+                        -- 3. Obtenemos el ID del PUESTO Owner 
+                        DECLARE @IdPuestoOwner INT;
+                        SELECT @IdPuestoOwner = Id FROM PUESTO WHERE Nombre = 'Owner';
+
+                        -- 4. Insertamos Usuario
+                        INSERT INTO USUARIO (NombreUsuario, PasswordHash, Nombre, Apellido, Activo, 
+                                             PermisoEscritura, IdPuesto, IdArea, IdEmpresa)
+                        VALUES (@NombreUsuario, @Password, @Nombre, @Apellido, 1, 1, @IdPuestoOwner, @IdAreaOwner, @IdEmpresa);
+
+                        -- Si todo fue exitoso, confirmamos los cambios
+                        COMMIT TRANSACTION;
+                    END TRY
+                    BEGIN CATCH
+                        -- Si algo fallo, revertimos todo y levantamos la excepción
+                        IF @@TRANCOUNT > 0
+                            ROLLBACK TRANSACTION;
+                        THROW;
+                    END CATCH
+                ");
+
+                datos.setearParametro("@NombreEmpresa", nombreEmpresa);
+                datos.setearParametro("@NombreUsuario", nombreUsuario);
+                datos.setearParametro("@Password", password);
+                datos.setearParametro("@Nombre", nombre);
+                datos.setearParametro("@Apellido", apellido);
+
+
+                datos.ejecutarAccion();
                 return true;
             }
             catch (Exception ex)
@@ -103,7 +115,7 @@ namespace negocio
             }
             finally
             {
-                datosUsuario.cerrarConexion();
+                datos.cerrarConexion();
             }
         }
     }
