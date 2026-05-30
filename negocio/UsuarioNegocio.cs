@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace dominio
+namespace negocio
 {
-    public class Area
+    internal class UsuarioNegocio
     {
-        public int Id { get; set; }
-        public string Nombre { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace dominio
     {
         public int Id { get; set; }
         public DateTime FechaInicio { get; set; }
-        public DateTime FechaFin { get; set; }
+        public DateTime? FechaFin { get; set; }
         public DateTime FechaEstimadaFin { get; set; }
         public string Descripcion { get; set; }
         public bool Activo { get; set; }
