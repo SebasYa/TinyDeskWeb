@@ -15,12 +15,11 @@ namespace TP_Final_Programacion_III
         {
             if (!IsPostBack)
             {
-                /*
                 ProyectoNegocio negocio = new ProyectoNegocio();
                 List<Proyecto> lista = negocio.listar();
                 repProyectos.DataSource = lista;
                 repProyectos.DataBind();
-                */
+                /*
                 List<Proyecto> lista = new List<Proyecto>();
 
                 Proyecto proyecto = new Proyecto();
@@ -44,6 +43,7 @@ namespace TP_Final_Programacion_III
 
                 repProyectos.DataSource = lista;
                 repProyectos.DataBind();
+                */
             }
         }
 

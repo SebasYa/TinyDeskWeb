@@ -16,7 +16,8 @@
                             <h5 class="card-title"><%# Eval("Nombre") %></h5>
                             <p class="card-text"><%# Eval("Descripcion") %></p>
                             <p>Estado: <%# Eval("Estado.Nombre") %></p>
-                            <p>Inicio: <%# Eval("FechaInicio", "{0:dd/MM/yyyy}") %></p>
+                            <p>Inicio: <%# Eval("FechaInicio", "{0:dd/MM/yyyy}") %> </p>
+                            <p>Final Esperado: <%# Eval("FechaEstimadaFin", "{0:dd/MM/yyyy}") %> </p>
                         </div>
 
                     </a>

@@ -13,7 +13,6 @@ namespace TP_Final_Programacion_III
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
         }
 
         protected void btnLogin_Click(object sender, EventArgs e)
@@ -29,11 +28,15 @@ namespace TP_Final_Programacion_III
                 {
                     Session.Add("usuario", usuario);
                     Response.Redirect("Default.aspx", false);
+                    txtNombreUsuario.Text = "";
+                    txtPassword.Text = "";
 
                 }
                 else
                 {
+                    Session.Remove("usuario");
                     Session.Add("error", "User o pass incorrectos");
+                    txtPassword.Text = "";
                 }
             }
             catch (Exception ex)
