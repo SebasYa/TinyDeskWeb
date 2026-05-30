@@ -13,10 +13,6 @@ namespace TP_Final_Programacion_III
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            /*
-             
-             */
-            Usuario usuario = Session["usuario"] != null ? (Usuario)Session["usuario"] : null;
 
             if (!IsPostBack)
             {

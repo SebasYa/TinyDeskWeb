@@ -45,6 +45,7 @@
     <Compile Include="EstadoNegocio.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProyectoNegocio.cs" />
+    <Compile Include="Seguridad.cs" />
     <Compile Include="SprintNegocio.cs" />
     <Compile Include="TicketNegocio.cs" />
     <Compile Include="UsuarioNegocio.cs" />
