@@ -1,7 +1,7 @@
 create database TinyDesk_Web
 COLLATE Latin1_General_CI_AI
 GO
-USE TinyDesk_SQL_Ej1; 
+USE TinyDesk_Web; 
 GO
 /*-------------------------------------------------------------------------------
 		1. TABLAS INDEPENDIENTES (Sin Claves Foráneas)
