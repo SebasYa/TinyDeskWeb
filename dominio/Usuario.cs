@@ -9,7 +9,7 @@ namespace dominio
     internal class Usuario
     {
         public int Id { get; set; }
-        public string DNI { get; set; }
+        public string NombreUsuario { get; set; }
         public string PasswordHash { get; set; }
         public string Nombre { get; set; }
         public string Apellido { get; set; }
