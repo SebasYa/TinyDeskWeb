@@ -15,21 +15,12 @@ namespace TP_Final_Programacion_III
     {
 
         /// <summary>
-        /// Control btnProyectoDemo1.
+        /// Control repProyectos.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btnProyectoDemo1;
-
-        /// <summary>
-        /// Control btnProyectoDemo2.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btnProyectoDemo2;
+        protected global::System.Web.UI.WebControls.Repeater repProyectos;
     }
 }
