@@ -162,15 +162,16 @@ namespace negocio
             }
         }
 
-        public int ContarActivos() {
+        public int ContarActivos(int idEmpresa) {
             AccesoDatos datos = new AccesoDatos();
             try
             {
                 datos.setearConsulta(@"
                     SELECT COUNT(*) 
                     FROM PROYECTO
-                    WHERE activo = 1
+                    WHERE activo = 1 AND IdEmpresa = @idEmpresa
                 ");
+                datos.setearParametro("@idEmpresa", idEmpresa);
                 return datos.ejecutarScalar();
             }
             catch (Exception ex)

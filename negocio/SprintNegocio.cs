@@ -1,4 +1,5 @@
-﻿using System;
+﻿using dominio;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace negocio
 {
     public class SprintNegocio
     {
-        public int ContarEnCurso()
+        public int ContarEnCurso(int idEmpresa)
         {
             AccesoDatos datos = new AccesoDatos();
             try
@@ -17,8 +18,9 @@ namespace negocio
                     SELECT COUNT(*)
                     FROM SPRINT S
                     INNER JOIN ESTADO E ON S.IdEstado = E.Id
-                    WHERE E.EsFinal = 0
+                    WHERE E.EsFinal = 0 AND IdEmpresa = @idEmpresa
                 ");
+                datos.setearParametro("@idEmpresa", idEmpresa);
                 return datos.ejecutarScalar();
             }
             catch (Exception ex)

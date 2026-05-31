@@ -21,10 +21,10 @@ namespace TP_Final_Programacion_III
                     ProyectoNegocio proyectoNegocio = new ProyectoNegocio();
                     SprintNegocio sprintNegocio = new SprintNegocio();
                     TicketNegocio ticketNegocio = new TicketNegocio();
-
-                    lblProyectosActivos.Text = proyectoNegocio.ContarActivos().ToString();
-                    lblSprintsEnCurso.Text = sprintNegocio.ContarEnCurso().ToString();
-                    lblTicketsAbiertos.Text = ticketNegocio.ContarAbiertos().ToString();
+                    int idEmpresa = ((Usuario)Session["Usuario"]).Empresa.Id;
+                    lblProyectosActivos.Text = proyectoNegocio.ContarActivos(idEmpresa).ToString();
+                    lblSprintsEnCurso.Text = sprintNegocio.ContarEnCurso(idEmpresa).ToString();
+                    lblTicketsAbiertos.Text = ticketNegocio.ContarAbiertos(idEmpresa).ToString();
 
                 }
                 catch (Exception ex)
