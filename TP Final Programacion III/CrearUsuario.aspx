@@ -31,10 +31,6 @@
                             <label for="ddlArea" class="form-label">Área</label>
                             <asp:DropDownList ID="ddlArea" runat="server" CssClass="form-select">
                                 <asp:ListItem Text="Seleccione un área..." Value="" />
-                                <asp:ListItem Text="Dirección" Value="1" />
-                                <asp:ListItem Text="Desarrollo" Value="2" />
-                                <asp:ListItem Text="Soporte" Value="3" />
-                                <asp:ListItem Text="Ventas" Value="4" />
                             </asp:DropDownList>
                         </div>
 
@@ -42,10 +38,6 @@
                             <label for="ddlPuesto" class="form-label">Puesto Laboral</label>
                             <asp:DropDownList ID="ddlPuesto" runat="server" CssClass="form-select">
                                 <asp:ListItem Text="Seleccione un puesto..." Value="" />
-                                <asp:ListItem Text="Owner" Value="1" />
-                                <asp:ListItem Text="Developer" Value="2" />
-                                <asp:ListItem Text="Tester" Value="3" />
-                                <asp:ListItem Text="Manager" Value="4" />
                             </asp:DropDownList>
                         </div>
 
