@@ -52,7 +52,10 @@
                             <a class="nav-link text-light" runat="server" href="~/Sprints.aspx">Sprints</a>
                         </li>
                         <li class="nav-item mb-2 sideBar">
-                            <a class="nav-link text-light" runat="server" href="#">Tickets</a>
+                            <a class="nav-link text-light" runat="server" href="~/Ticket.aspx">Tickets</a>
+                        </li>
+                        <li class="nav-item mb-2 sideBar">
+                            <a class="nav-link text-light" runat="server" href="~/Usuarios.aspx">Usuarios</a>
                         </li>
                     </ul>
                 </div>
