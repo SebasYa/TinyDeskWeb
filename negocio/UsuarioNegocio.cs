@@ -155,5 +155,92 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
+        public Usuario BuscarPorId(int id)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta(@"SELECT U.Id, U.NombreUsuario, U.Nombre, U.Apellido, 
+                                              U.Activo, U.PermisoEscritura,
+                                              U.IdPuesto, P.Nombre AS NombrePuesto,
+                                              U.IdArea, A.Nombre AS NombreArea, U.IdEmpresa
+                                       FROM USUARIO U
+                                       INNER JOIN PUESTO P ON U.IdPuesto = P.Id
+                                       INNER JOIN AREA A ON U.IdArea = A.Id
+                                       WHERE U.Id = @Id"
+                );
+                datos.setearParametro("@Id", id);
+                datos.ejecutarLectura();
+
+                if (datos.Lector.Read())
+                {
+                    Usuario aux = new Usuario();
+                    aux.Id = (int)datos.Lector["Id"];
+                    aux.NombreUsuario = (string)datos.Lector["NombreUsuario"];
+                    aux.Nombre = (string)datos.Lector["Nombre"];
+                    aux.Apellido = (string)datos.Lector["Apellido"];
+                    aux.Activo = (bool)datos.Lector["Activo"];
+                    aux.PermisoEscritura = (bool)datos.Lector["PermisoEscritura"];
+
+                    aux.Puesto = new Puesto();
+                    aux.Puesto.Id = (int)datos.Lector["IdPuesto"];
+                    aux.Puesto.Nombre = (string)datos.Lector["NombrePuesto"];
+
+                    aux.Area = new Area();
+                    aux.Area.Id = (int)datos.Lector["IdArea"];
+                    aux.Area.Nombre = (string)datos.Lector["NombreArea"];
+
+                    aux.Empresa = new Empresa();
+                    aux.Empresa.Id = (int)datos.Lector["IdEmpresa"];
+
+                    return aux;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        public bool Modificar(Usuario usuario)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta(@"UPDATE USUARIO SET 
+                                        NombreUsuario = @NombreUsuario, 
+                                        Nombre = @Nombre, 
+                                        Apellido = @Apellido, 
+                                        PermisoEscritura = @PermisoEscritura, 
+                                        IdPuesto = @IdPuesto, 
+                                        IdArea = @IdArea 
+                                    WHERE Id = @Id"
+                );
+
+                datos.setearParametro("@NombreUsuario", usuario.NombreUsuario);
+                datos.setearParametro("@Nombre", usuario.Nombre);
+                datos.setearParametro("@Apellido", usuario.Apellido);
+                datos.setearParametro("@PermisoEscritura", usuario.PermisoEscritura);
+                datos.setearParametro("@IdPuesto", usuario.Puesto.Id);
+                datos.setearParametro("@IdArea", usuario.Area.Id);
+                datos.setearParametro("@Id", usuario.Id);
+
+                datos.ejecutarAccion();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
     }
 }
