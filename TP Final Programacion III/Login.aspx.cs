@@ -36,8 +36,15 @@ namespace TP_Final_Programacion_III
                 else
                 {
                     Session.Remove("usuario");
-                    Session.Add("error", "User o pass incorrectos");
                     txtPassword.Text = "";
+                    // 1. Mostrar el mensaje de error en el Label
+                    lblErrorUsuario.Text = "Usuario incorrecto.";
+                    lblErrorUsuario.Visible = true;
+                    lblErrorPass.Text = "Contraseña incorrecta.";
+                    lblErrorPass.Visible = true;
+                    // 2. Agregar la clase de borde rojo a los TextBoxes desde el servidor
+                    txtNombreUsuario.CssClass = "form-control is-invalid";
+                    txtPassword.CssClass = "form-control is-invalid";
                 }
             }
             catch (Exception ex)
