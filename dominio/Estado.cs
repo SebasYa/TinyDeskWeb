@@ -12,5 +12,6 @@ namespace dominio
         public String Nombre { get; set; }
         public bool EsFinal { get; set; }
         public bool EsSistema { get; set; }
+        public Empresa Empresa { get; set; }
     }
 }

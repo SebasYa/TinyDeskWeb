@@ -16,5 +16,6 @@ namespace dominio
         public DateTime FechaEstimadaFin { get; set; }
         public bool Activo { get; set; }
         public Estado Estado { get; set; }
+        public Empresa Empresa { get; set; }
     }
 }
