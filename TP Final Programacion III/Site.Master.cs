@@ -18,7 +18,13 @@ namespace TP_Final_Programacion_III
             {
                 Response.Redirect("Login.aspx", false);
             }
-            
+
+            if (!IsPostBack)
+            {
+                Usuario usuario = new Usuario();
+                usuario = (Usuario)Session["usuario"];
+                lblUserWelcome.Text = $"{usuario.Nombre}";
+            }
         }
     }
 }

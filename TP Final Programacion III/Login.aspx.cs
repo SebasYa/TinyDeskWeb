@@ -49,17 +49,17 @@ namespace TP_Final_Programacion_III
 
         protected void btnLoginFantasmin_Click(object sender, EventArgs e)
         {
-            Usuario mockUsuario = new Usuario();
-            mockUsuario.NombreUsuario = "phantom_user";
-            mockUsuario.PasswordHash = "123";
+            Usuario usuario = new Usuario();
+            usuario.NombreUsuario = "phantom_user";
+            usuario.PasswordHash = "123";
 
             UsuarioNegocio negocio = new UsuarioNegocio();
 
             try
             {
-                if (negocio.Login(mockUsuario))
+                if (negocio.Login(usuario))
                 {
-                    Session.Add("usuario", mockUsuario);
+                    Session.Add("usuario", usuario);
                     Response.Redirect("Default.aspx", false);
                     txtNombreUsuario.Text = "";
                     txtPassword.Text = "";

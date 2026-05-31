@@ -16,7 +16,8 @@ namespace negocio
             try
             {
                 datos.setearConsulta(@"
-                    SELECT U.Id, U.PasswordHash, U.NombreUsuario, U.PermisoEscritura, 
+                    SELECT U.Id, U.PasswordHash, U.NombreUsuario, 
+                           U.Nombre, U.Apellido, U.PermisoEscritura, 
                            U.IdEmpresa, E.Nombre AS NombreEmpresa, 
                            U.IdPuesto, P.Nombre AS NombrePuesto, 
                            U.IdArea, A.Nombre AS NombreArea
@@ -32,6 +33,9 @@ namespace negocio
                 if (datos.Lector.Read())
                 {
                     usuario.Id = (int)datos.Lector["Id"];
+                    usuario.NombreUsuario = (string)datos.Lector["NombreUsuario"];
+                    usuario.Nombre = (String)datos.Lector["Nombre"];
+                    usuario.Apellido = (string)datos.Lector["Apellido"];
                     usuario.PermisoEscritura = (bool)datos.Lector["PermisoEscritura"];
 
                     usuario.Empresa = new Empresa();
@@ -106,6 +110,39 @@ namespace negocio
                 datos.setearParametro("@Apellido", apellido);
 
 
+                datos.ejecutarAccion();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        public bool Agregar(Usuario nuevoUsuario)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta(@"INSERT INTO USUARIO (
+                                       NombreUsuario, PasswordHash, Nombre, Apellido, Activo,
+                                       PermisoEscritura, IdPuesto, IdArea, IdEmpresa)
+                                       VALUES (@NombreUsuario, @PasswordHash, @Nombre, @Apellido, @Activo, 
+                                               @PermisoEscritura, @IdPuesto, @IdArea, @IdEmpresa)
+        ");
+                datos.setearParametro("@NombreUsuario", nuevoUsuario.NombreUsuario);
+                datos.setearParametro("@PasswordHash", nuevoUsuario.PasswordHash);
+                datos.setearParametro("@Nombre", nuevoUsuario.Nombre);
+                datos.setearParametro("@Apellido", nuevoUsuario.Apellido);
+                datos.setearParametro("@Activo", nuevoUsuario.Activo);
+                datos.setearParametro("@PermisoEscritura", nuevoUsuario.PermisoEscritura);
+                datos.setearParametro("@IdPuesto", nuevoUsuario.Puesto.Id);
+                datos.setearParametro("@IdArea", nuevoUsuario.Area.Id);
+                datos.setearParametro("@IdEmpresa", nuevoUsuario.Empresa.Id);
                 datos.ejecutarAccion();
                 return true;
             }

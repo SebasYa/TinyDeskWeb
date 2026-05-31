@@ -4,7 +4,7 @@
 
 <html lang="es">
 <head runat="server">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%: Page.Title %> - TinyDesk</title>
@@ -13,7 +13,7 @@
         <%: Scripts.Render("~/bundles/modernizr") %>
     </asp:PlaceHolder>
 
-    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <webopt:BundleReference runat="server" Path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 </head>
 
@@ -37,37 +37,48 @@
 
         <div class="d-flex min-vh-100">
 
-            <aside id="sidebarMenu" class="collapse collapse-horizontal show bg-dark border-end">
-                <div class="p-3" style="width: 220px;">
-                    <h4 class="mb-4 text-light">TinyDesk</h4>
+            <aside id="sidebarMenu" class="collapse collapse-horizontal show bg-dark border-end" style="position: sticky; top: 0; height: 100vh;">
+                <div class="p-3 d-flex flex-column justify-content-between h-100" style="width: 220px;">
 
-                    <ul class="nav flex-column">
-                        <li class="nav-item mb-2 sideBar">
-                            <a class="nav-link text-light" runat="server" href="~/Default.aspx">Dashboard</a>
-                        </li>
-                        <li class="nav-item mb-2 sideBar">
-                            <a class="nav-link text-light" runat="server" href="~/Proyectos.aspx">Proyectos</a>
-                        </li>
-                        <li class="nav-item mb-2 sideBar">
-                            <a class="nav-link text-light" runat="server" href="~/Sprints.aspx">Sprints</a>
-                        </li>
-                        <li class="nav-item mb-2 sideBar">
-                            <a class="nav-link text-light" runat="server" href="~/Ticket.aspx">Tickets</a>
-                        </li>
-                        <li class="nav-item mb-2 sideBar">
-                            <a class="nav-link text-light" runat="server" href="~/Usuarios.aspx">Usuarios</a>
-                        </li>
-                    </ul>
+                    <!-- Contenido superior (Título y Menú) -->
+                    <div>
+                        <h4 class="mb-4 text-light">TinyDesk</h4>
+
+                        <ul class="nav flex-column">
+                            <li class="nav-item mb-2 sideBar">
+                                <a class="nav-link text-light" runat="server" href="~/Default.aspx">Dashboard</a>
+                            </li>
+                            <li class="nav-item mb-2 sideBar">
+                                <a class="nav-link text-light" runat="server" href="~/Proyectos.aspx">Proyectos</a>
+                            </li>
+                            <li class="nav-item mb-2 sideBar">
+                                <a class="nav-link text-light" runat="server" href="~/Sprints.aspx">Sprints</a>
+                            </li>
+                            <li class="nav-item mb-2 sideBar">
+                                <a class="nav-link text-light" runat="server" href="~/Ticket.aspx">Tickets</a>
+                            </li>
+                            <li class="nav-item mb-2 sideBar">
+                                <a class="nav-link text-light" runat="server" href="~/Usuarios.aspx">Usuarios</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Contenido inferior -->
+                    <div class="text-end border-top border-secondary pt-3">
+                        <span class="text-muted small me-1" style="font-size: 0.8rem;">Bienvenido,</span>
+                        <asp:Label ID="lblUserWelcome" runat="server" CssClass="text-light fw-bold" Style="font-size: 0.9rem;"></asp:Label>
+                    </div>
+
                 </div>
             </aside>
 
             <main class="flex-grow-1 p-4">
-                <button 
-                    class="btn btn-outline-secondary btn-sm mb-3 btn-hamburguesa" 
-                    type="button" 
-                    data-bs-toggle="collapse" 
-                    data-bs-target="#sidebarMenu" 
-                    aria-controls="sidebarMenu" 
+                <button
+                    class="btn btn-outline-secondary btn-sm mb-3 btn-hamburguesa"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#sidebarMenu"
+                    aria-controls="sidebarMenu"
                     aria-expanded="true">
                     &#9776;
                 </button>
