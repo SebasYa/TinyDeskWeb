@@ -161,3 +161,30 @@ IF NOT EXISTS (SELECT 1 FROM AREA WHERE Nombre = 'Direccion')
 BEGIN
     INSERT INTO AREA (Nombre) VALUES ('Direccion');
 END
+GO
+
+-- MOCKUP --
+-- 1. Insertar Empresa de prueba 
+IF NOT EXISTS (SELECT 1 FROM EMPRESA WHERE Nombre = 'Phantom inc.')
+BEGIN
+    INSERT INTO EMPRESA (Nombre) VALUES ('Phantom inc.');
+END
+GO
+
+-- 2. Insertar Usuario de prueba
+IF NOT EXISTS (SELECT 1 FROM USUARIO WHERE NombreUsuario = 'phantom_user')
+BEGIN
+    DECLARE @IdEmpresa INT;
+    SELECT @IdEmpresa = Id FROM EMPRESA WHERE Nombre = 'Phantom inc.';
+
+    DECLARE @IdPuesto INT;
+    SELECT @IdPuesto = Id FROM PUESTO WHERE Nombre = 'Owner';
+
+    DECLARE @IdArea INT;
+    SELECT @IdArea = Id FROM AREA WHERE Nombre = 'Direccion';
+
+    -- Insertamos el usuario
+    INSERT INTO USUARIO (NombreUsuario, PasswordHash, Nombre, Apellido, Activo, PermisoEscritura, IdPuesto, IdArea, IdEmpresa)
+    VALUES ('phantom_user', '123', 'Casper', 'Gasparin', 1, 1, @IdPuesto, @IdArea, @IdEmpresa);
+END
+GO

@@ -39,7 +39,7 @@ namespace negocio
                     usuario.Empresa.Nombre = (string)datos.Lector["NombreEmpresa"];
 
                     usuario.Puesto = new Puesto();
-                    usuario.Puesto.Id = (int)datos.Lector["IdPuesto "];
+                    usuario.Puesto.Id = (int)datos.Lector["IdPuesto"];
                     usuario.Puesto.Nombre = (string)datos.Lector["NombrePuesto"];
 
                     usuario.Area = new Area();

@@ -13,6 +13,7 @@ namespace TP_Final_Programacion_III
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+
         }
 
         protected void btnLogin_Click(object sender, EventArgs e)
@@ -42,6 +43,35 @@ namespace TP_Final_Programacion_III
             catch (Exception ex)
             {
 
+                throw ex;
+            }
+        }
+
+        protected void btnLoginFantasmin_Click(object sender, EventArgs e)
+        {
+            Usuario mockUsuario = new Usuario();
+            mockUsuario.NombreUsuario = "phantom_user";
+            mockUsuario.PasswordHash = "123";
+
+            UsuarioNegocio negocio = new UsuarioNegocio();
+
+            try
+            {
+                if (negocio.Login(mockUsuario))
+                {
+                    Session.Add("usuario", mockUsuario);
+                    Response.Redirect("Default.aspx", false);
+                    txtNombreUsuario.Text = "";
+                    txtPassword.Text = "";
+                }
+                else
+                {
+                    txtNombreUsuario.Text = "";
+                    txtPassword.Text = "";
+                }
+            }
+            catch (Exception ex)
+            {
                 throw ex;
             }
         }

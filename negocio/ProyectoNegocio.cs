@@ -88,7 +88,7 @@ namespace negocio
             }
         }
 
-        public List<Proyecto> listar()
+        public List<Proyecto> listar(int idEmpresa)
         {
             List<Proyecto> lista = new List<Proyecto>();
             AccesoDatos datos = new AccesoDatos();
@@ -98,8 +98,10 @@ namespace negocio
                     Select P.Id, P.Nombre, P.Descripcion, P.FechaInicio, P.FechaFin, P.FechaEstimadaFin, 
                            P.Activo, E.Id AS IdEstado, E.Nombre AS NombreEstado, E.EsFinal, E.EsSistema
                     FROM PROYECTO P
-                    INNER JOIN ESTADO E ON E.Id = P.IdEstado"
-                );
+                    INNER JOIN ESTADO E ON E.Id = P.IdEstado
+                    WHERE P.IdEmpresa = @IdEmpresa  
+                ");
+                datos.setearParametro("@IdEmpresa", idEmpresa);
                 datos.ejecutarLectura();
 
                 while (datos.Lector.Read())

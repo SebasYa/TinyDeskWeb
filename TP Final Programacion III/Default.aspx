@@ -13,7 +13,7 @@
     </section>
 
     <section class="mt-4">
-        <h2 class="mb-3">Reportes</h2>
+        <h2 class="mb-3">HighLights</h2>
         <div class="row g-3">
             <!-- Ficha Proyectos Activos -->
             <div class="col-6 col-md-4 col-lg-3">

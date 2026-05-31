@@ -35,8 +35,7 @@
                                 <asp:TextBox ID="txtPassword" runat="server" CssClass="form-control" TextMode="Password"></asp:TextBox>
                             </div>
 
-                            <a href="Default.aspx" class="btn btn-primary w-100 mb-3">Ingresa sin contraseña
-                            </a>
+                            <asp:Button ID="btnMockLogin" runat="server" Text="Ingresar sin contraseña (Mock)" CssClass="btn btn-outline-secondary w-100 mb-3" OnClick="btnLoginFantasmin_Click" />
                             <asp:Button ID="btnLogin" runat="server" Text="Iniciar Sesión" CssClass="btn btn-primary w-100" OnClick="btnLogin_Click" />
                             <div class="text-center mt-3">
                                 <span class="text-muted">¿No tenés cuenta?</span>
