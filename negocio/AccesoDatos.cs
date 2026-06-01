@@ -23,9 +23,9 @@ namespace negocio
             try
             {
                 // conexion MSSQL
-                //conexion = new SqlConnection("server=(localdb)\\MSSQLLocalDB; database=TinyDesk_Web; integrated security=true");
+                conexion = new SqlConnection("server=(localdb)\\MSSQLLocalDB; database=TinyDesk_Web; integrated security=true");
                 //conexion sqlExpress
-                conexion = new SqlConnection("server=.\\SQLEXPRESS; database=TinyDesk_Web; integrated security=true");
+                //Zconexion = new SqlConnection("server=.\\SQLEXPRESS; database=TinyDesk_Web; integrated security=true");
                 comando = new SqlCommand();
 
             }
