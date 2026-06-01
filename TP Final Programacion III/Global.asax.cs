@@ -10,7 +10,7 @@ using System.Web.UI;
 
 namespace TP_Final_Programacion_III
 {
-    public class Global : HttpApplication
+    public class Global : HttpApplication 
     {
         void Application_Start(object sender, EventArgs e)
         {
