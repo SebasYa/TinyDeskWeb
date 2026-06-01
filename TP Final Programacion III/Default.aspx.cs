@@ -86,7 +86,6 @@ namespace TP_Final_Programacion_III
         {
 
         }
-
         protected void btnGuardarSprint_Click(object sender, EventArgs e)
         {
 
@@ -138,6 +137,11 @@ namespace TP_Final_Programacion_III
                 Session.Add("error", ex.ToString());
                 Response.Redirect("Default.aspx", false);
             }
+        }
+
+        protected void btnGuardarSprint_Click1(object sender, EventArgs e)
+        {
+
         }
     }
 }

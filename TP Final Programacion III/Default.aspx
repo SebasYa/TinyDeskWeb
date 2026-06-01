@@ -2,83 +2,83 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
-    <h1>Dashboard</h1>
-    <asp:Literal ID="litMensaje" runat="server"></asp:Literal>
-    <section>
-        <div class="row align-items-center mb-4">
-            <div class="col-12 col-md-auto mb-3 mb-md-0">
-                <h2 class="mb-0">Accesos rápidos</h2>
-            </div>
-    
-            <div class="col-12 col-md-auto">
-                <div class="d-flex flex-wrap gap-2">
-                    <button class="btn btn-primary" type="submit">
-                        <i class="bi bi-plus-circle"></i> Nuevo Proyecto</button>
-            
-                    <button type="button" class="btn btn-primary shadow-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#sprintModal">
-                        <i class="bi bi-plus-circle"></i> Crear Sprint
-                    </button>
-            
-                    <button class="btn btn-primary" type="submit">
-                        <i class="bi bi-plus-circle"></i> Nuevo Ticket</button>
-                    </div>
-            </div>
-        </div>
-    </section>
+     <h1>Dashboard</h1>
+ <asp:Literal ID="litMensaje" runat="server"></asp:Literal>
+ <section>
+     <div class="row align-items-center mb-4">
+         <div class="col-12 col-md-auto mb-3 mb-md-0">
+             <h2 class="mb-0">Accesos rápidos</h2>
+         </div>
+ 
+         <div class="col-12 col-md-auto">
+             <div class="d-flex flex-wrap gap-2">
+                 <button class="btn btn-primary" type="submit">
+                     <i class="bi bi-plus-circle"></i> Nuevo Proyecto</button>
+         
+                 <button type="button" class="btn btn-primary shadow-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#sprintModal">
+                     <i class="bi bi-plus-circle"></i> Crear Sprint
+                 </button>
+         
+                 <button class="btn btn-primary" type="submit">
+                     <i class="bi bi-plus-circle"></i> Nuevo Ticket</button>
+                 </div>
+         </div>
+     </div>
+ </section>
 
-    <!-- INICIO - CREAR SPRINT MODAL -->
-    <div class="modal fade" id="sprintModal" tabindex="-1" aria-labelledby="sprintModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg"> <div class="modal-content">
-                <div class="modal-header bg-light">
-                    <h5 class="modal-title fw-bold" id="sprintModalLabel">Nuevo Sprint</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <asp:Panel ID="pnlFormSprint" CssClass="row g-3" runat="server">
+ <!-- INICIO - CREAR SPRINT MODAL -->
+ <div class="modal fade" id="sprintModal" tabindex="-1" aria-labelledby="sprintModalLabel" aria-hidden="true">
+     <div class="modal-dialog modal-lg"> <div class="modal-content">
+             <div class="modal-header bg-light">
+                 <h5 class="modal-title fw-bold" id="sprintModalLabel">Nuevo Sprint</h5>
+                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+             </div>
+             <div class="modal-body">
+                 <asp:Panel ID="pnlFormSprint" CssClass="row g-3" runat="server">
 
 
-                        <div class="col-md-6">
-                            <label for="txtFechaInicio" class="form-label fw-semibold">Fecha Inicio</label>
-                            <asp:TextBox ID="txtFechaInicio" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
-                        </div>
+                     <div class="col-md-6">
+                         <label for="txtFechaInicio" class="form-label fw-semibold">Fecha Inicio</label>
+                         <asp:TextBox ID="txtFechaInicio" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                     </div>
 
-                        <div class="col-md-6">
-                            <label for="txtFechaEstimadaFin" class="form-label fw-semibold">Fecha Estimada Fin</label>
-                            <asp:TextBox ID="txtFechaEstimadaFin" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
-                        </div>
+                     <div class="col-md-6">
+                         <label for="txtFechaEstimadaFin" class="form-label fw-semibold">Fecha Estimada Fin</label>
+                         <asp:TextBox ID="txtFechaEstimadaFin" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                     </div>
 
-                        <div class="col-md-4">
-                            <label for="ddlProyecto" class="form-label fw-semibold">Proyecto</label>
-                            <asp:DropDownList ID="ddlProyecto" runat="server" CssClass="form-select">
-                                <asp:ListItem Text="Seleccione Proyecto..." Value="" />
-                            </asp:DropDownList>
-                        </div>
+                     <div class="col-md-4">
+                         <label for="ddlProyecto" class="form-label fw-semibold">Proyecto</label>
+                         <asp:DropDownList ID="ddlProyecto" runat="server" CssClass="form-select">
+                             <asp:ListItem Text="Seleccione Proyecto..." Value="" />
+                         </asp:DropDownList>
+                     </div>
 
-                        <div class="col-md-4">
-                            <label for="ddlEstado" class="form-label fw-semibold">Estado</label>
-                            <asp:DropDownList ID="ddlEstado" runat="server" CssClass="form-select">
-                                <asp:ListItem Text="Seleccione Estado..." Value="" />
-                            </asp:DropDownList>
-                        </div>
+                     <div class="col-md-4">
+                         <label for="ddlEstado" class="form-label fw-semibold">Estado</label>
+                         <asp:DropDownList ID="ddlEstado" runat="server" CssClass="form-select">
+                             <asp:ListItem Text="Seleccione Estado..." Value="" />
+                         </asp:DropDownList>
+                     </div>
 
-                        <div class="col-md-4">
-                            <label for="ddlArea" class="form-label fw-semibold">Área</label>
-                            <asp:DropDownList ID="ddlArea" runat="server" CssClass="form-select">
-                                <asp:ListItem Text="Seleccione Área..." Value="" />
-                            </asp:DropDownList>
-                        </div>
+                     <div class="col-md-4">
+                         <label for="ddlArea" class="form-label fw-semibold">Área</label>
+                         <asp:DropDownList ID="ddlArea" runat="server" CssClass="form-select">
+                             <asp:ListItem Text="Seleccione Área..." Value="" />
+                         </asp:DropDownList>
+                     </div>
 
-                    </asp:Panel>
-                </div>
-                <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <asp:Button ID="btnGuardarSprint" runat="server" CssClass="btn btn-primary" Text="Guardar Sprint" OnClick="btnGuardarSprint_Click" />
-                </div>
-            </div>
-        </div>
-    </div>
+                 </asp:Panel>
+             </div>
+             <div class="modal-footer bg-light">
+                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                 <asp:Button ID="btnGuardarSprint" runat="server" CssClass="btn btn-primary" Text="Guardar Sprint" OnClick="btnGuardarSprint_Click" />
+             </div>
+         </div>
+     </div>
+ </div>
 
-    <!-- FIN - CREAR SPRINT MODAL -->
+ <!-- FIN - CREAR SPRINT MODAL -->
 
     <section class="mt-4">
         <h2 class="mb-3">HighLights</h2>
