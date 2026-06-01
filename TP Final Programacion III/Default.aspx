@@ -95,21 +95,21 @@
                     <asp:Panel ID="pnlFormProyecto" CssClass="row g-3" runat="server">
                         <div class="col-md-12">
                             <label for="txtNombreProyecto" class="form-label fw-semibold">Nombre del Proyecto</label>
-                            <asp:TextBox ID="txtNombreProyecto" runat="server" CssClass="form-control" placeholder="Ej: Rediseño Web"></asp:TextBox>
+                            <asp:TextBox ID="txtNombreProyecto" runat="server" CssClass="form-control w-100 mw-100" placeholder="Ej: Rediseño Web"></asp:TextBox>
                         </div>
                         <div class="col-md-12">
                             <label for="txtDescripcionProyecto" class="form-label fw-semibold">Descripción</label>
-                            <asp:TextBox ID="txtDescripcionProyecto" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3" placeholder="Ingresá una descripción breve..."></asp:TextBox>
+                            <asp:TextBox ID="txtDescripcionProyecto" runat="server" CssClass="form-control w-100 mw-100" TextMode="MultiLine" Rows="3" placeholder="Ingresá una descripción breve..."></asp:TextBox>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="txtFechaInicioProyecto" class="form-label fw-semibold">Fecha Inicio</label>
                             <asp:TextBox ID="txtFechaInicioProyecto" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="txtFechaEstimadaFinProyecto" class="form-label fw-semibold">Fecha Estimada Fin</label>
                             <asp:TextBox ID="txtFechaEstimadaFinProyecto" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="ddlEstadoProyecto" class="form-label fw-semibold">Estado Inicial</label>
                             <asp:DropDownList ID="ddlEstadoProyecto" runat="server" CssClass="form-select">
                                 <asp:ListItem Text="Seleccione Estado..." Value="" />
