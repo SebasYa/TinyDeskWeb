@@ -1,4 +1,4 @@
-﻿using dominio;
+using dominio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +16,8 @@ namespace negocio
             {
                 datos.setearConsulta(@"
                     INSERT INTO PROYECTO 
-                    (Nombre, Descripcion, FechaInicio, FechaFin, FechaEstimadaFin, Activo, IdEstado)
-                    VALUES (@Nombre, @Descripcio, @FechaInicio, @FechaFin, @FechaEstimadaFin, @Activo, @IdEstado)
+                    (Nombre, Descripcion, FechaInicio, FechaFin, FechaEstimadaFin, Activo, IdEstado, IdEmpresa)
+                    VALUES (@Nombre, @Descripcion, @FechaInicio, @FechaFin, @FechaEstimadaFin, @Activo, @IdEstado, @IdEmpresa)
                     SELECT SCOPE_IDENTITY();"
                 );
                 datos.setearParametro("@Nombre", proyecto.Nombre);
@@ -34,6 +34,7 @@ namespace negocio
                 datos.setearParametro("@FechaEstimadaFin", proyecto.FechaEstimadaFin);
                 datos.setearParametro("@Activo", proyecto.Activo);
                 datos.setearParametro("@IdEstado", proyecto.Estado.Id);
+                datos.setearParametro("@IdEmpresa", proyecto.Empresa.Id);
 
                 return datos.ejecutarScalar();
             }
