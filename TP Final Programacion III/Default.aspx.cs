@@ -21,10 +21,17 @@ namespace TP_Final_Programacion_III
                     ProyectoNegocio proyectoNegocio = new ProyectoNegocio();
                     SprintNegocio sprintNegocio = new SprintNegocio();
                     TicketNegocio ticketNegocio = new TicketNegocio();
-                    int idEmpresa = ((Usuario)Session["Usuario"]).Empresa.Id;
+                    int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
                     lblProyectosActivos.Text = proyectoNegocio.ContarActivos(idEmpresa).ToString();
                     lblSprintsEnCurso.Text = sprintNegocio.ContarEnCurso(idEmpresa).ToString();
                     lblTicketsAbiertos.Text = ticketNegocio.ContarAbiertos(idEmpresa).ToString();
+
+                    EstadoNegocio estadoNegocio = new EstadoNegocio();
+                    ddlEstadoProyecto.DataSource = estadoNegocio.listar();
+                    ddlEstadoProyecto.DataValueField = "Id";
+                    ddlEstadoProyecto.DataTextField = "Nombre";
+                    ddlEstadoProyecto.DataBind();
+                    ddlEstadoProyecto.Items.Insert(0, new ListItem("Seleccione Estado..", ""));
 
                 }
                 catch (Exception ex)
@@ -100,9 +107,63 @@ namespace TP_Final_Programacion_III
             }
         }
 
-        protected void btnGuardarSprint_Click1(object sender, EventArgs e)
+        protected void btnGuardarProyecto_Click(object sender, EventArgs e)
         {
+            try
+            {
+                ProyectoNegocio proyectoNegocio = new ProyectoNegocio();
+                Proyecto nuevoProyecto = new Proyecto();
+                Usuario userLogueado = (Usuario)Session["usuario"];
 
+                nuevoProyecto.Nombre = txtNombreProyecto.Text;
+                nuevoProyecto.Descripcion = txtDescripcionProyecto.Text;
+                nuevoProyecto.FechaInicio = Convert.ToDateTime(txtFechaInicioProyecto.Text);
+                nuevoProyecto.FechaEstimadaFin = Convert.ToDateTime(txtFechaEstimadaFinProyecto.Text);
+                nuevoProyecto.Activo = true;
+
+                nuevoProyecto.Estado = new Estado();
+                nuevoProyecto.Estado.Id = int.Parse(ddlEstadoProyecto.SelectedValue);
+
+                nuevoProyecto.Empresa = new Empresa();
+                nuevoProyecto.Empresa.Id = userLogueado.Empresa.Id;
+
+                proyectoNegocio.agregar(nuevoProyecto);
+
+                // Actualizamos el contador de proyectos activos en el Dashboard
+                int idEmpresa = userLogueado.Empresa.Id;
+                lblProyectosActivos.Text = proyectoNegocio.ContarActivos(idEmpresa).ToString();
+
+                litMensaje.Text = @"
+                <div class='alert alert-success alert-dismissible fade show' role='alert'>
+                    <strong>¡Éxito!</strong> El Proyecto se guardó perfectamente.
+                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+
+                txtNombreProyecto.Text = "";
+                txtDescripcionProyecto.Text = "";
+                txtFechaInicioProyecto.Text = "";
+                txtFechaEstimadaFinProyecto.Text = "";
+                ddlEstadoProyecto.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                litMensaje.Text = $@"
+        <div class='alert alert-danger alert-dismissible fade show' role='alert'>
+            <strong>Hubo un error:</strong> {ex.Message}
+            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+        </div>";
+
+                Session.Add("error", ex.ToString());
+                //Response.Redirect("Default.aspx", false);
+            }
+        }
+        protected void btnCancelarProyecto_Click(object sender, EventArgs e)
+        {
+            txtNombreProyecto.Text = "";
+            txtDescripcionProyecto.Text = "";
+            txtFechaInicioProyecto.Text = "";
+            txtFechaEstimadaFinProyecto.Text = "";
+            ddlEstadoProyecto.SelectedIndex = 0;
         }
     }
 }

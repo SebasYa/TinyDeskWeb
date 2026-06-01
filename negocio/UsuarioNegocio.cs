@@ -242,5 +242,58 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
+
+        public List<Usuario> listar(int idEmpresa)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            List<Usuario> lista = new List<Usuario>();
+            try
+            {
+                datos.setearConsulta(@"SELECT U.Id, U.NombreUsuario, U.Nombre, U.Apellido, 
+                                              U.Activo, U.PermisoEscritura,
+                                              U.IdPuesto, P.Nombre AS NombrePuesto,
+                                              U.IdArea, A.Nombre AS NombreArea, U.IdEmpresa
+                                       FROM USUARIO U
+                                       INNER JOIN PUESTO P ON U.IdPuesto = P.Id
+                                       INNER JOIN AREA A ON U.IdArea = A.Id
+                                       WHERE U.IdEmpresa = @IdEmpresa"
+                );
+                datos.setearParametro("@IdEmpresa", idEmpresa);
+                datos.ejecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    Usuario usuarioNuevo = new Usuario();
+                    usuarioNuevo.Id = (int)datos.Lector["Id"];
+                    usuarioNuevo.NombreUsuario = (string)datos.Lector["NombreUsuario"];
+                    usuarioNuevo.Nombre = (string)datos.Lector["Nombre"];
+                    usuarioNuevo.Apellido = (string)datos.Lector["Apellido"];
+                    usuarioNuevo.Activo = (bool)datos.Lector["Activo"];
+                    usuarioNuevo.PermisoEscritura = (bool)datos.Lector["PermisoEscritura"];
+
+                    usuarioNuevo.Puesto = new Puesto();
+                    usuarioNuevo.Puesto.Id = (int)datos.Lector["IdPuesto"];
+                    usuarioNuevo.Puesto.Nombre = (string)datos.Lector["NombrePuesto"];
+
+                    usuarioNuevo.Area = new Area();
+                    usuarioNuevo.Area.Id = (int)datos.Lector["IdArea"];
+                    usuarioNuevo.Area.Nombre = (string)datos.Lector["NombreArea"];
+
+                    usuarioNuevo.Empresa = new Empresa();
+                    usuarioNuevo.Empresa.Id = (int)datos.Lector["IdEmpresa"];
+
+                    lista.Add(usuarioNuevo);
+                }
+                return lista;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
     }
 }

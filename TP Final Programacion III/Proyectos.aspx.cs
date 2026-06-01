@@ -15,7 +15,7 @@ namespace TP_Final_Programacion_III
         {
             if (!IsPostBack)
             {
-                int idEmpresa = ((Usuario)Session["Usuario"]).Empresa.Id;
+                int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
                 ProyectoNegocio negocio = new ProyectoNegocio();
                 List<Proyecto> lista = negocio.listar(idEmpresa);
                 repProyectos.DataSource = lista;

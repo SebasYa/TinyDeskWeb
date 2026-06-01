@@ -17,8 +17,7 @@ namespace negocio
                 datos.setearConsulta(@"
                     INSERT INTO PROYECTO 
                     (Nombre, Descripcion, FechaInicio, FechaFin, FechaEstimadaFin, Activo, IdEstado, IdEmpresa)
-                    VALUES (@Nombre, @Descripcion, @FechaInicio, @FechaFin, @FechaEstimadaFin, @Activo, @IdEstado, @IdEmpresa)
-                    SELECT SCOPE_IDENTITY();"
+                    VALUES (@Nombre, @Descripcion, @FechaInicio, @FechaFin, @FechaEstimadaFin, @Activo, @IdEstado, @IdEmpresa)"
                 );
                 datos.setearParametro("@Nombre", proyecto.Nombre);
                 datos.setearParametro("@Descripcion", proyecto.Descripcion);
@@ -53,12 +52,11 @@ namespace negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.setearConsulta(@"
-                    UPDATE PROYECTO 
-                    SET (Nombre = @Nombre, Descripcion = @Descripcion, FechaInicio = @FechaInicio, 
-                         FechaFin = @FechaFin, FechaEstimadaFin = @FechaEstimadaFin, Activo = @Activo, 
-                         IdEstado = @IdEstado)
-                    WHERE Id = @Id"
+                datos.setearConsulta(@"UPDATE PROYECTO 
+                                       SET (Nombre = @Nombre, Descripcion = @Descripcion, FechaInicio = @FechaInicio, 
+                                            FechaFin = @FechaFin, FechaEstimadaFin = @FechaEstimadaFin, 
+                                            Activo = @Activo, IdEstado = @IdEstado)
+                                       WHERE Id = @Id"
                 );
 
                 datos.setearParametro("@Nombre", proyecto.Nombre);
