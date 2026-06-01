@@ -65,7 +65,7 @@ namespace negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.setearConsulta("SELECT Id, EsFinal, EsSistema Descripcion FROM ESTADO");
+                datos.setearConsulta("SELECT Id, Nombre, EsFinal, EsSistema FROM ESTADO");
                 datos.ejecutarLectura();
 
                 while (datos.Lector.Read())
