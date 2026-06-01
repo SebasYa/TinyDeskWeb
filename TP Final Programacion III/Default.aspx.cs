@@ -18,52 +18,13 @@ namespace TP_Final_Programacion_III
             {
                 try
                 {
-                    Usuario userLogueado = (Usuario)Session["usuario"];
-                    AreaNegocio areaNegocio = new AreaNegocio();
-                    EstadoNegocio estadoNegocio = new EstadoNegocio();
                     ProyectoNegocio proyectoNegocio = new ProyectoNegocio();
                     SprintNegocio sprintNegocio = new SprintNegocio();
                     TicketNegocio ticketNegocio = new TicketNegocio();
-
                     int idEmpresa = ((Usuario)Session["Usuario"]).Empresa.Id;
                     lblProyectosActivos.Text = proyectoNegocio.ContarActivos(idEmpresa).ToString();
                     lblSprintsEnCurso.Text = sprintNegocio.ContarEnCurso(idEmpresa).ToString();
                     lblTicketsAbiertos.Text = ticketNegocio.ContarAbiertos(idEmpresa).ToString();
-
-                    /*--------------CREAR-SPRINTS desplegables--------------------------------*/
-
-                    if (Session["usuario"] == null)
-                    {
-                        Session.Add("error", "Debes iniciar sesión para acceder a esta pantalla.");
-                        Response.Redirect("Login.aspx", false);
-                        return;
-                    }
-
-                    if (userLogueado.Empresa == null)
-                    {
-                        Session.Add("error", "El usuario no tiene una empresa asignada.");
-                        Response.Redirect("Default.aspx", false);
-                        return;
-                    }
-
-                    ddlArea.DataSource = areaNegocio.listar(userLogueado.Empresa.Id);
-                    ddlArea.DataValueField = "Id";
-                    ddlArea.DataTextField = "Nombre";
-                    ddlArea.DataBind();
-                    ddlArea.Items.Insert(0, new ListItem("Seleccione un área...", ""));
-
-                    ddlEstado.DataSource = estadoNegocio.listar();
-                    ddlEstado.DataValueField = "Id";
-                    ddlEstado.DataTextField = "Nombre";
-                    ddlEstado.DataBind();
-                    ddlEstado.Items.Insert(0, new ListItem("Seleccione un puesto...", ""));
-
-                    ddlProyecto.DataSource = proyectoNegocio.listar(userLogueado.Empresa.Id);
-                    ddlProyecto.DataValueField = "Id";
-                    ddlProyecto.DataTextField = "Nombre";
-                    ddlProyecto.DataBind();
-                    ddlProyecto.Items.Insert(0, new ListItem("Seleccione un puesto...", ""));
-                    /*-----------------------------------------------------------------------*/
 
                 }
                 catch (Exception ex)
