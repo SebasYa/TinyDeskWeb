@@ -114,15 +114,6 @@ namespace TP_Final_Programacion_III
         protected global::System.Web.UI.WebControls.TextBox txtNombreProyecto;
 
         /// <summary>
-        /// Control rfvNombreProyecto.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvNombreProyecto;
-
-        /// <summary>
         /// Control txtDescripcionProyecto.
         /// </summary>
         /// <remarks>
