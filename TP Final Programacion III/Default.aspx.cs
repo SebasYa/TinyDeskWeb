@@ -33,7 +33,7 @@ namespace TP_Final_Programacion_III
                     ddlEstadoProyecto.DataBind();
                     ddlEstadoProyecto.Items.Insert(0, new ListItem("Seleccione Estado..", ""));
 
-                    ddlEstado.DataSource = estadoNegocio.listar();
+                    ddlEstado.DataSource = estadoNegocio.listar(idEmpresa);
                     ddlEstado.DataValueField = "Id";
                     ddlEstado.DataTextField = "Nombre";
                     ddlEstado.DataBind();
