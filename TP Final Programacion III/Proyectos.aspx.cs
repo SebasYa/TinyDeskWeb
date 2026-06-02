@@ -68,14 +68,17 @@ namespace TP_Final_Programacion_III
                 txtFechaInicioProyecto.Text = "";
                 txtFechaEstimadaFinProyecto.Text = "";
                 ddlEstadoProyecto.SelectedIndex = 0;
+
+                repProyectos.DataSource = proyectoNegocio.listar(userLogueado.Empresa.Id);
+                repProyectos.DataBind();
             }
             catch (Exception ex)
             {
                 litMensaje.Text = $@"
-        <div class='alert alert-danger alert-dismissible fade show' role='alert'>
-            <strong>Hubo un error:</strong> {ex.Message}
-            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-        </div>";
+                <div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                    <strong>Hubo un error:</strong> {ex.Message}
+                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
 
                 Session.Add("error", ex.ToString());
                 //Response.Redirect("Default.aspx", false);

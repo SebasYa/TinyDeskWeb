@@ -38,17 +38,23 @@ namespace negocio
                     usuario.Apellido = (string)datos.Lector["Apellido"];
                     usuario.PermisoEscritura = (bool)datos.Lector["PermisoEscritura"];
 
-                    usuario.Empresa = new Empresa();
-                    usuario.Empresa.Id = (int)datos.Lector["IdEmpresa"];
-                    usuario.Empresa.Nombre = (string)datos.Lector["NombreEmpresa"];
+                    usuario.Empresa = new Empresa()
+                    {
+                        Id = (int)datos.Lector["IdEmpresa"],
+                        Nombre = (string)datos.Lector["NombreEmpresa"] 
+                    };
 
-                    usuario.Puesto = new Puesto();
-                    usuario.Puesto.Id = (int)datos.Lector["IdPuesto"];
-                    usuario.Puesto.Nombre = (string)datos.Lector["NombrePuesto"];
+                    usuario.Puesto = new Puesto()
+                    {
+                        Id = (int)datos.Lector["IdPuesto"],
+                        Nombre = (string)datos.Lector["NombrePuesto"]
+                    };
 
-                    usuario.Area = new Area();
-                    usuario.Area.Id = (int)datos.Lector["IdArea"];
-                    usuario.Area.Nombre = (string)datos.Lector["NombreArea"];
+                    usuario.Area = new Area()
+                    {
+                        Id = (int)datos.Lector["IdArea"],
+                        Nombre = (string)datos.Lector["NombreArea"]
+                    };
                     return true;
                 }
                 else
@@ -174,26 +180,33 @@ namespace negocio
 
                 if (datos.Lector.Read())
                 {
-                    Usuario aux = new Usuario();
-                    aux.Id = (int)datos.Lector["Id"];
-                    aux.NombreUsuario = (string)datos.Lector["NombreUsuario"];
-                    aux.Nombre = (string)datos.Lector["Nombre"];
-                    aux.Apellido = (string)datos.Lector["Apellido"];
-                    aux.Activo = (bool)datos.Lector["Activo"];
-                    aux.PermisoEscritura = (bool)datos.Lector["PermisoEscritura"];
+                    Usuario usuario = new Usuario();
+                    usuario.Id = (int)datos.Lector["Id"];
+                    usuario.NombreUsuario = (string)datos.Lector["NombreUsuario"];
+                    usuario.Nombre = (string)datos.Lector["Nombre"];
+                    usuario.Apellido = (string)datos.Lector["Apellido"];
+                    usuario.Activo = (bool)datos.Lector["Activo"];
+                    usuario.PermisoEscritura = (bool)datos.Lector["PermisoEscritura"];
 
-                    aux.Puesto = new Puesto();
-                    aux.Puesto.Id = (int)datos.Lector["IdPuesto"];
-                    aux.Puesto.Nombre = (string)datos.Lector["NombrePuesto"];
+                    usuario.Empresa = new Empresa()
+                    {
+                        Id = (int)datos.Lector["IdEmpresa"],
+                        Nombre = (string)datos.Lector["NombreEmpresa"]
+                    };
 
-                    aux.Area = new Area();
-                    aux.Area.Id = (int)datos.Lector["IdArea"];
-                    aux.Area.Nombre = (string)datos.Lector["NombreArea"];
+                    usuario.Puesto = new Puesto()
+                    {
+                        Id = (int)datos.Lector["IdPuesto"],
+                        Nombre = (string)datos.Lector["NombrePuesto"]
+                    };
 
-                    aux.Empresa = new Empresa();
-                    aux.Empresa.Id = (int)datos.Lector["IdEmpresa"];
+                    usuario.Area = new Area()
+                    {
+                        Id = (int)datos.Lector["IdArea"],
+                        Nombre = (string)datos.Lector["NombreArea"]
+                    }; ;
 
-                    return aux;
+                    return usuario;
                 }
                 return null;
             }
@@ -263,26 +276,26 @@ namespace negocio
 
                 while (datos.Lector.Read())
                 {
-                    Usuario usuarioNuevo = new Usuario();
-                    usuarioNuevo.Id = (int)datos.Lector["Id"];
-                    usuarioNuevo.NombreUsuario = (string)datos.Lector["NombreUsuario"];
-                    usuarioNuevo.Nombre = (string)datos.Lector["Nombre"];
-                    usuarioNuevo.Apellido = (string)datos.Lector["Apellido"];
-                    usuarioNuevo.Activo = (bool)datos.Lector["Activo"];
-                    usuarioNuevo.PermisoEscritura = (bool)datos.Lector["PermisoEscritura"];
+                    Usuario usuario = new Usuario();
+                    usuario.Id = (int)datos.Lector["Id"];
+                    usuario.NombreUsuario = (string)datos.Lector["NombreUsuario"];
+                    usuario.Nombre = (string)datos.Lector["Nombre"];
+                    usuario.Apellido = (string)datos.Lector["Apellido"];
+                    usuario.Activo = (bool)datos.Lector["Activo"];
+                    usuario.PermisoEscritura = (bool)datos.Lector["PermisoEscritura"];
 
-                    usuarioNuevo.Puesto = new Puesto();
-                    usuarioNuevo.Puesto.Id = (int)datos.Lector["IdPuesto"];
-                    usuarioNuevo.Puesto.Nombre = (string)datos.Lector["NombrePuesto"];
+                    usuario.Puesto = new Puesto();
+                    usuario.Puesto.Id = (int)datos.Lector["IdPuesto"];
+                    usuario.Puesto.Nombre = (string)datos.Lector["NombrePuesto"];
 
-                    usuarioNuevo.Area = new Area();
-                    usuarioNuevo.Area.Id = (int)datos.Lector["IdArea"];
-                    usuarioNuevo.Area.Nombre = (string)datos.Lector["NombreArea"];
+                    usuario.Area = new Area();
+                    usuario.Area.Id = (int)datos.Lector["IdArea"];
+                    usuario.Area.Nombre = (string)datos.Lector["NombreArea"];
 
-                    usuarioNuevo.Empresa = new Empresa();
-                    usuarioNuevo.Empresa.Id = (int)datos.Lector["IdEmpresa"];
+                    usuario.Empresa = new Empresa();
+                    usuario.Empresa.Id = (int)datos.Lector["IdEmpresa"];
 
-                    lista.Add(usuarioNuevo);
+                    lista.Add(usuario);
                 }
                 return lista;
             }
