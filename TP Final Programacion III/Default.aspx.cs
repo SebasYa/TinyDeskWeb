@@ -33,6 +33,25 @@ namespace TP_Final_Programacion_III
                     ddlEstadoProyecto.DataBind();
                     ddlEstadoProyecto.Items.Insert(0, new ListItem("Seleccione Estado..", ""));
 
+                    ddlEstado.DataSource = estadoNegocio.listar();
+                    ddlEstado.DataValueField = "Id";
+                    ddlEstado.DataTextField = "Nombre";
+                    ddlEstado.DataBind();
+                    ddlEstado.Items.Insert(0, new ListItem("Seleccione Estado..", ""));
+
+                    AreaNegocio areaNegocio = new AreaNegocio();
+                    ddlArea.DataSource = areaNegocio.listar(idEmpresa);
+                    ddlArea.DataValueField = "Id";
+                    ddlArea.DataTextField = "Nombre";
+                    ddlArea.DataBind();
+                    ddlArea.Items.Insert(0, new ListItem("Seleccione un área...", ""));
+
+                    ddlProyecto.DataSource = proyectoNegocio.listar(idEmpresa);
+                    ddlProyecto.DataValueField = "Id";
+                    ddlProyecto.DataTextField = "Nombre";
+                    ddlProyecto.DataBind();
+                    ddlProyecto.Items.Insert(0, new ListItem("Seleccione un puesto...", ""));
+
                 }
                 catch (Exception ex)
                 {

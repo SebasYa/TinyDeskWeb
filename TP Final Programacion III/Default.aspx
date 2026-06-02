@@ -20,7 +20,7 @@
                         <i class="bi bi-plus-circle"></i>Crear Sprint
                     </button>
 
-                    <button class="btn btn-primary" type="submit">
+                    <button class="btn btn-primary shadow-sm d-flex align-items-center gap-2" type="submit">
                         <i class="bi bi-plus-circle"></i>Nuevo Ticket</button>
                 </div>
             </div>
