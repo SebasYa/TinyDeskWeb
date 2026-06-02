@@ -1,11 +1,13 @@
-﻿using System;
+﻿using dominio;
+using Microsoft.Ajax.Utilities;
+using negocio;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using dominio;
-using negocio;
 
 
 namespace TP_Final_Programacion_III
@@ -56,6 +58,11 @@ namespace TP_Final_Programacion_III
                     ddlProyecto.DataTextField = "Nombre";
                     ddlProyecto.DataBind();
                     ddlProyecto.Items.Insert(0, new ListItem("Seleccione un puesto...", ""));
+
+                    //Datagrid View de Sprints
+                    Session.Add("listaSprints", sprintNegocio.listar(userLogueado.Empresa.Id));
+                    dgvSprints.DataSource = Session["listaSprints"];
+                    dgvSprints.DataBind();
                 }
                 catch (Exception ex)
                 {
@@ -125,6 +132,53 @@ namespace TP_Final_Programacion_III
                 Session.Add("error", ex.ToString());
                 Response.Redirect("Default.aspx", false);
             }
+        }
+
+        public string GetClassEtiquetaEstado(object estadoNombre)
+        {
+            if (estadoNombre == null) return "badge text-bg-secondary";
+
+            string estado = estadoNombre.ToString().ToLower().Trim();
+
+            switch (estado)
+            {
+                case "en progreso":
+                    return "badge text-bg-primary px-3 py-2 fw-semibold";
+                case "finalizado":
+                    return "badge text-bg-success px-3 py-2 fw-semibold";
+                case "pendiente":
+                    return "badge text-bg-warning px-3 py-2 fw-semibold";
+                default:
+                    return "badge text-bg-dark px-3 py-2 fw-semibold border";
+            }
+        }
+
+
+        public string GetClassBarraProgreso(object estadoNombre)
+        {
+            if (estadoNombre == null) return "progress-bar bg-secondary";
+            string estado = estadoNombre.ToString().ToLower().Trim();
+
+            if (estado == "finalizado") return "progress-bar-striped bg-success";
+            if (estado == "pendiente" ) return "progress-bar-striped bg-light";
+            return "progress-bar-striped bg-primary"; 
+        }
+
+        
+        public string GetDiasRestantesTexto(object fechaFinEstimada, object esFinal)
+        {
+            if (esFinal != null && (bool)esFinal) return "Sprint cerrado";
+            if (fechaFinEstimada == null) return "";
+
+            DateTime fin = Convert.ToDateTime(fechaFinEstimada);
+            TimeSpan diferencia = fin - DateTime.Today;
+
+            if (diferencia.Days > 0)
+                return $"({diferencia.Days} días restantes)";
+            if (diferencia.Days == 0)
+                return "(Termina hoy)";
+
+            return $"({Math.Abs(diferencia.Days)} días de retraso)";
         }
 
         protected void ddlProyecto_SelectedIndexChanged(object sender, EventArgs e)

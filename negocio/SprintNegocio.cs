@@ -48,6 +48,71 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
+
+        public List<Sprint> listar(int idEmpresa)
+        {
+            List<Sprint> lista = new List<Sprint>();
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta(@"
+                    SELECT S.Id, S.NumeroSprint, S.FechaInicio, S.FechaEstimadaFin, S.FechaFin, S.Activo, 
+                           P.Nombre AS NombreProyecto, E.Id AS IdEstado, E.Nombre AS NombreEstado, 
+                           E.EsFinal, E.EsSistema, A.Nombre AS NombreArea,
+                           CASE 
+                                WHEN E.EsFinal = 1 THEN 100
+                                WHEN GETDATE() < S.FechaInicio THEN 0
+                                WHEN GETDATE() > S.FechaEstimadaFin THEN 100
+                                ELSE (DATEDIFF(DAY, S.FechaInicio, GETDATE()) * 100) / NULLIF(DATEDIFF(DAY, S.FechaInicio, S.FechaEstimadaFin), 0)
+                           END AS Progreso
+                    FROM SPRINT S
+                    INNER JOIN ESTADO E ON E.Id = S.IdEstado
+                    INNER JOIN PROYECTO P ON P.Id = S.IdProyecto
+                    INNER JOIN AREA A ON A.Id = S.IdArea
+                    WHERE P.IdEmpresa = @IdEmpresa  
+                ");
+                datos.setearParametro("@IdEmpresa", idEmpresa);
+                datos.ejecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    Sprint aux = new Sprint();
+                    aux.Id = (int)datos.Lector["Id"];
+                    aux.NumeroSprint = (int)datos.Lector["NumeroSprint"];
+                    aux.FechaInicio = (DateTime)datos.Lector["FechaInicio"];
+                    aux.FechaEstimadaFin = (DateTime)datos.Lector["FechaEstimadaFin"];
+                    if (datos.Lector["FechaFin"] != DBNull.Value)
+                    {
+                        aux.FechaFin = (DateTime)datos.Lector["FechaFin"];
+                    }
+                    aux.Activo = (bool)datos.Lector["Activo"];
+                    aux.Estado = new Estado();
+                    aux.Estado.Id = (int)datos.Lector["IdEstado"];
+                    aux.Estado.Nombre = (string)datos.Lector["NombreEstado"];
+                    aux.Estado.EsFinal = (bool)datos.Lector["EsFinal"];
+                    aux.Estado.EsSistema = (bool)datos.Lector["EsSistema"];
+                    aux.Proyecto = new Proyecto();
+                    aux.Proyecto.Nombre = (string)datos.Lector["NombreProyecto"];
+                    aux.Area = new Area();
+                    aux.Area.Nombre = (string)datos.Lector["NombreArea"];
+                    aux.Progreso = (int)datos.Lector["Progreso"];
+
+                    lista.Add(aux);
+                }
+                return lista;
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+
         public int ContarEnCurso(int idEmpresa)
         {
             AccesoDatos datos = new AccesoDatos();

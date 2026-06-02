@@ -63,23 +63,80 @@
         </div>
         <!-- FIN MODAL -->
         <!-- INICIO GRIDVIEW -->
-<asp:GridView ID="dgvSprints" runat="server" DataKeyNames="Id"
-     CssClass="table" AutoGenerateColumns="false"
-     OnSelectedIndexChanged="dgvSprints_SelectedIndexChanged"
-     OnPageIndexChanging="dgvSprints_PageIndexChanging"
-     AllowPaging="True" PageSize="5">
-<Columns>
-    <asp:BoundField HeaderText="Numero Sprint" DataField="NumeroSprint" />
-    <asp:BoundField HeaderText="Inicio" DataField="FechaInicio" />
-    <asp:BoundField HeaderText="Fin" DataField="FechaEstimadaFin" />
-    <asp:BoundField HeaderText="Finalizado" DataField="FechaFin" />
-    <asp:BoundField HeaderText="Proyecto" DataField="Proyecto" />
-    <asp:BoundField HeaderText="Area" DataField="Area" />
-    <asp:BoundField HeaderText="Estado" DataField="Estado" />
-    <asp:CheckBoxField HeaderText="Activo" DataField="Activo" />
-    <asp:CommandField HeaderText="Editar" ShowSelectButton="true" SelectText="✍" />
-</Columns>
-</asp:GridView>
+
+    <asp:GridView ID="dgvSprints" runat="server" DataKeyNames="Id"
+        CssClass="table table-hover align-middle bg-white border-0 shadow-sm rounded mb-0" 
+        AutoGenerateColumns="false"
+        OnSelectedIndexChanged="dgvSprints_SelectedIndexChanged"
+        OnPageIndexChanging="dgvSprints_PageIndexChanging"
+        AllowPaging="True" PageSize="10" GridLines="None">
+    
+        <HeaderStyle CssClass="table-light text-secondary fw-semibold border-bottom" />
+    
+        <Columns>
+        
+            <asp:TemplateField HeaderText="Sprint">
+                <ItemTemplate>
+                    <span class="text-dark fw-bold">Sprint <%# Eval("NumeroSprint") %></span>
+                </ItemTemplate>
+            </asp:TemplateField>
+
+            <asp:TemplateField HeaderText="Estado">
+                <ItemTemplate>
+                    <span class='<%# GetClassEtiquetaEstado(Eval("Estado.Nombre")) %>'>
+                        <%# Eval("Estado.Nombre") %>
+                    </span>
+                </ItemTemplate>
+            </asp:TemplateField>
+
+            <asp:TemplateField HeaderText="Fechas">
+                <ItemTemplate>
+                    <div class="text-dark small fw-medium">
+                        <%# Convert.ToDateTime(Eval("FechaInicio")).ToString("dd/MM/yyyy") %> - 
+                        <%# Convert.ToDateTime(Eval("FechaEstimadaFin")).ToString("dd/MM/yyyy") %>
+                    </div>
+                    <small class="text-muted text-xs d-block">
+                        <%# GetDiasRestantesTexto(Eval("FechaEstimadaFin"), Eval("Estado.EsFinal")) %>
+                    </small>
+                </ItemTemplate>
+            </asp:TemplateField>
+
+            <asp:TemplateField HeaderText="Progreso" ItemStyle-Width="150px">
+                <ItemTemplate>
+                    <div class="d-flex flex-column">
+                        <span class="small fw-bold text-dark mb-1"><%# Eval("Progreso") %>%</span>
+                        <div class="progress" style="height: 6px;">
+                            <div class='<%# GetClassBarraProgreso(Eval("Estado.Nombre")) %>' 
+                                 role="progressbar" 
+                                 style='width: <%# Eval("Progreso") %>%;' 
+                                 aria-valuenow='<%# Eval("Progreso") %>' 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
+                            </div>
+                        </div>
+                    </div>
+                </ItemTemplate>
+            </asp:TemplateField>
+
+            <asp:TemplateField HeaderText="Proyecto / Área">
+                <ItemTemplate>
+                    <div class="fw-semibold text-dark text-sm"><%# Eval("Proyecto.Nombre") %></div>
+                    <span class="badge bg-secondary-subtle text-secondary rounded-pill font-monospace" style="font-size: 0.75rem;"><%# Eval("Area.Nombre") %></span>
+                </ItemTemplate>
+            </asp:TemplateField>
+
+            <asp:TemplateField HeaderText="Editar">
+                <ItemTemplate>
+                    <div class="fw-semibold text-dark text-sm">
+                        <button class="btn btn-link text-muted p-0 lh-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-pencil me-2 text-muted"></i>
+                        </button>
+                    </div>
+                </ItemTemplate>
+            </asp:TemplateField>
+
+        </Columns>
+    </asp:GridView>
 
     </div>
 </asp:Content>
