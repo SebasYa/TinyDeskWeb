@@ -25,10 +25,16 @@ textarea {
 
 
 
-.sideBar:hover {
+.sideBar:hover{
     border-radius: 7px;
     background-color: #2d3239;
 }
+
+/* NO FUNCA
+.sideBar:active , .sideBar:focus {
+    border-radius: 7px;
+    background-color: blueviolet;
+}*/
 
 
 
