@@ -12,15 +12,15 @@
 
             <div class="col-12 col-md-auto">
                 <div class="d-flex flex-wrap gap-2">
-                    <button type="button" class="btn btn-primary shadow-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#proyectoModal">
+                    <button type="button" class="btn btn-primary shadow-sm d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#proyectoModal">
                         <i class="bi bi-plus-circle"></i>Nuevo Proyecto
                     </button>
 
-                    <button type="button" class="btn btn-primary shadow-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#sprintModal">
+                    <button type="button" class="btn btn-primary shadow-sm d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#sprintModal">
                         <i class="bi bi-plus-circle"></i>Crear Sprint
                     </button>
 
-                    <button class="btn btn-primary" type="submit">
+                    <button class="btn btn-primary shadow-sm d-flex align-items-center" type="submit">
                         <i class="bi bi-plus-circle"></i>Nuevo Ticket</button>
                 </div>
             </div>

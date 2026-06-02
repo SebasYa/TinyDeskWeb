@@ -5,7 +5,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h2 text-dark fw-bold">Sprints</h1>
             
-            <button type="button" class="btn btn-primary shadow-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#sprintModal">
+            <button type="button" class="btn btn-primary shadow-sm d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#sprintModal">
                 <i class="bi bi-plus-circle"></i> Crear Sprint
             </button>
         </div>
