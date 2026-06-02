@@ -59,23 +59,24 @@ namespace negocio
             }
         }
 
-        public List<Estado> listar()
+        public List<Estado> listar(int idEmpresa)
         {
             List<Estado> lista = new List<Estado>();
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.setearConsulta("SELECT Id, Nombre, EsFinal, EsSistema FROM ESTADO");
+                datos.setearConsulta("SELECT Id, Nombre, EsFinal, EsSistema FROM ESTADO WHERE idEmpresa = @IdEmpresa OR idEmpresa IS NULL");
+                datos.setearParametro("@idEmpresa", idEmpresa);
                 datos.ejecutarLectura();
 
                 while (datos.Lector.Read())
                 {
-                    Estado aux = new Estado();
-                    aux.Id = (int)datos.Lector["Id"];
-                    aux.Nombre = (string)datos.Lector["Nombre"];
-                    aux.EsFinal = (bool)datos.Lector["EsFinal"];
-                    aux.EsSistema = (bool)datos.Lector["EsSistema"];
-                    lista.Add(aux);
+                    Estado nuevoEstado = new Estado();
+                    nuevoEstado.Id = (int)datos.Lector["Id"];
+                    nuevoEstado.Nombre = (string)datos.Lector["Nombre"];
+                    nuevoEstado.EsFinal = (bool)datos.Lector["EsFinal"];
+                    nuevoEstado.EsSistema = (bool)datos.Lector["EsSistema"];
+                    lista.Add(nuevoEstado);
                 }
                 return lista;
 

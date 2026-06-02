@@ -11,6 +11,15 @@ namespace TP_Final_Programacion_III
 {
     public partial class SiteMaster : MasterPage
     {
+        protected void Page_Init(object sender, EventArgs e)
+        {
+            if (!Seguridad.sessionActiva(Session["usuario"]))
+            {
+                Response.Redirect("Login.aspx", true);
+                Context.ApplicationInstance.CompleteRequest();
+                return;
+            }
+        }
         protected void Page_Load(object sender, EventArgs e)
         {
             

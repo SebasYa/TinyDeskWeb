@@ -21,6 +21,7 @@ namespace TP_Final_Programacion_III
                 try
                 {
                     Usuario userLogueado = (Usuario)Session["usuario"];
+                    int idEmpresa = userLogueado.Empresa.Id;
                     AreaNegocio areaNegocio = new AreaNegocio();
                     EstadoNegocio estadoNegocio = new EstadoNegocio();
                     ProyectoNegocio proyectoNegocio = new ProyectoNegocio();
@@ -41,19 +42,19 @@ namespace TP_Final_Programacion_III
                         return;
                     }
 
-                    ddlArea.DataSource = areaNegocio.listar(userLogueado.Empresa.Id);
+                    ddlArea.DataSource = areaNegocio.listar(idEmpresa);
                     ddlArea.DataValueField = "Id";
                     ddlArea.DataTextField = "Nombre";
                     ddlArea.DataBind();
                     ddlArea.Items.Insert(0, new ListItem("Seleccione un área...", ""));
 
-                    ddlEstado.DataSource = estadoNegocio.listar();
+                    ddlEstado.DataSource = estadoNegocio.listar(idEmpresa);
                     ddlEstado.DataValueField = "Id";
                     ddlEstado.DataTextField = "Nombre";
                     ddlEstado.DataBind();
                     ddlEstado.Items.Insert(0, new ListItem("Seleccione un puesto...", ""));
 
-                    ddlProyecto.DataSource = proyectoNegocio.listar(userLogueado.Empresa.Id);
+                    ddlProyecto.DataSource = proyectoNegocio.listar(idEmpresa);
                     ddlProyecto.DataValueField = "Id";
                     ddlProyecto.DataTextField = "Nombre";
                     ddlProyecto.DataBind();

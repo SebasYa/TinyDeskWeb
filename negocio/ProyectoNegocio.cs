@@ -14,10 +14,11 @@ namespace negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.setearConsulta(@"
-                    INSERT INTO PROYECTO 
-                    (Nombre, Descripcion, FechaInicio, FechaFin, FechaEstimadaFin, Activo, IdEstado, IdEmpresa)
-                    VALUES (@Nombre, @Descripcion, @FechaInicio, @FechaFin, @FechaEstimadaFin, @Activo, @IdEstado, @IdEmpresa)"
+                datos.setearConsulta(@"INSERT INTO PROYECTO 
+                                              (Nombre, Descripcion, FechaInicio, FechaFin, 
+                                               FechaEstimadaFin, Activo, IdEstado, IdEmpresa)
+                                       VALUES (@Nombre, @Descripcion, @FechaInicio, @FechaFin,
+                                               @FechaEstimadaFin, @Activo, @IdEstado, @IdEmpresa)"
                 );
                 datos.setearParametro("@Nombre", proyecto.Nombre);
                 datos.setearParametro("@Descripcion", proyecto.Descripcion);

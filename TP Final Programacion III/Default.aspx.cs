@@ -27,7 +27,7 @@ namespace TP_Final_Programacion_III
                     lblTicketsAbiertos.Text = ticketNegocio.ContarAbiertos(idEmpresa).ToString();
 
                     EstadoNegocio estadoNegocio = new EstadoNegocio();
-                    ddlEstadoProyecto.DataSource = estadoNegocio.listar();
+                    ddlEstadoProyecto.DataSource = estadoNegocio.listar(idEmpresa);
                     ddlEstadoProyecto.DataValueField = "Id";
                     ddlEstadoProyecto.DataTextField = "Nombre";
                     ddlEstadoProyecto.DataBind();
@@ -59,19 +59,6 @@ namespace TP_Final_Programacion_III
                     throw ex;
                 }
             }
-        }
-
-        protected void btnNuevoProyecto_Click(object sender, EventArgs e)
-        {
-
-        }
-        protected void btnNuevoSprint_Click(object sender, EventArgs e)
-        {
-
-        }
-        protected void btnNuevoTicket_Click(object sender, EventArgs e)
-        {
-
         }
         protected void btnGuardarSprint_Click(object sender, EventArgs e)
         {
@@ -128,6 +115,13 @@ namespace TP_Final_Programacion_III
 
         protected void btnGuardarProyecto_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(txtNombreProyecto.Text) ||
+                string.IsNullOrWhiteSpace(txtFechaInicioProyecto.Text) ||
+                string.IsNullOrWhiteSpace(txtFechaEstimadaFinProyecto.Text) ||
+                string.IsNullOrWhiteSpace(ddlEstadoProyecto.SelectedValue))
+            {
+                return;
+            }
             try
             {
                 ProyectoNegocio proyectoNegocio = new ProyectoNegocio();
