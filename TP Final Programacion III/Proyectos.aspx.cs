@@ -36,6 +36,13 @@ namespace TP_Final_Programacion_III
         }
         protected void btnGuardarProyecto_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(txtNombreProyecto.Text) ||
+                string.IsNullOrWhiteSpace(txtFechaInicioProyecto.Text) ||
+                string.IsNullOrWhiteSpace(txtFechaEstimadaFinProyecto.Text) ||
+                string.IsNullOrWhiteSpace(ddlEstadoProyecto.SelectedValue))
+            {
+                return;
+            }
             try
             {
                 ProyectoNegocio proyectoNegocio = new ProyectoNegocio();

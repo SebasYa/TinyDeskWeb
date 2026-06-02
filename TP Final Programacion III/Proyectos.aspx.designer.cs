@@ -60,6 +60,15 @@ namespace TP_Final_Programacion_III
         protected global::System.Web.UI.WebControls.TextBox txtNombreProyecto;
 
         /// <summary>
+        /// Control rfvNombreProyecto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvNombreProyecto;
+
+        /// <summary>
         /// Control txtDescripcionProyecto.
         /// </summary>
         /// <remarks>
@@ -78,6 +87,15 @@ namespace TP_Final_Programacion_III
         protected global::System.Web.UI.WebControls.TextBox txtFechaInicioProyecto;
 
         /// <summary>
+        /// Control rfvFechaInicioProyecto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvFechaInicioProyecto;
+
+        /// <summary>
         /// Control txtFechaEstimadaFinProyecto.
         /// </summary>
         /// <remarks>
@@ -87,6 +105,15 @@ namespace TP_Final_Programacion_III
         protected global::System.Web.UI.WebControls.TextBox txtFechaEstimadaFinProyecto;
 
         /// <summary>
+        /// Control rfvFechaFinProyecto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvFechaFinProyecto;
+
+        /// <summary>
         /// Control ddlEstadoProyecto.
         /// </summary>
         /// <remarks>
@@ -94,6 +121,15 @@ namespace TP_Final_Programacion_III
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlEstadoProyecto;
+
+        /// <summary>
+        /// Control rfvEstadoProyecto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvEstadoProyecto;
 
         /// <summary>
         /// Control btnCancelarProyecto.
