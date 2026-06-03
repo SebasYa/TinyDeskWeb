@@ -53,10 +53,19 @@ namespace TP_Final_Programacion_III
                 nuevoProyecto.Descripcion = txtDescripcionProyecto.Text;
                 nuevoProyecto.FechaInicio = Convert.ToDateTime(txtFechaInicioProyecto.Text);
                 nuevoProyecto.FechaEstimadaFin = Convert.ToDateTime(txtFechaEstimadaFinProyecto.Text);
-                nuevoProyecto.Activo = true;
 
                 nuevoProyecto.Estado = new Estado();
                 nuevoProyecto.Estado.Id = int.Parse(ddlEstadoProyecto.SelectedValue);
+
+                if(ddlEstadoProyecto.SelectedItem.Text == "Finalizado")
+                {
+                    nuevoProyecto.Activo = false;
+                    nuevoProyecto.FechaFin = DateTime.Today;
+                }
+                else
+                {
+                    nuevoProyecto.Activo = true;
+                }
 
                 nuevoProyecto.Empresa = new Empresa();
                 nuevoProyecto.Empresa.Id = userLogueado.Empresa.Id;
@@ -98,6 +107,21 @@ namespace TP_Final_Programacion_III
             txtFechaInicioProyecto.Text = "";
             txtFechaEstimadaFinProyecto.Text = "";
             ddlEstadoProyecto.SelectedIndex = 0;
+        }
+        protected void repProyectos_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                Proyecto proyecto = (Proyecto)e.Item.DataItem;
+
+                Label lblFechaFin = (Label)e.Item.FindControl("lblFechaFin");
+
+                if (lblFechaFin != null && proyecto.FechaFin.HasValue)
+                {
+                    lblFechaFin.Text = $"Fecha Fin: {proyecto.FechaFin.Value.ToString("dd/MM/yyyy")}";
+                    lblFechaFin.Visible = true;
+                }
+            }
         }
     }
 }

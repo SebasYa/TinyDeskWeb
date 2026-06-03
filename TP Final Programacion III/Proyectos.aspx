@@ -13,7 +13,7 @@
     </div>
 
     <div class="row">
-        <asp:Repeater ID="repProyectos" runat="server">
+        <asp:Repeater ID="repProyectos" runat="server" OnItemDataBound="repProyectos_ItemDataBound">
             <ItemTemplate>
                 <div class="col-md-4">
                     <a
@@ -26,6 +26,7 @@
                             <p>Estado: <%# Eval("Estado.Nombre") %></p>
                             <p>Inicio: <%# Eval("FechaInicio", "{0:dd/MM/yyyy}") %> </p>
                             <p>Final Esperado: <%# Eval("FechaEstimadaFin", "{0:dd/MM/yyyy}") %> </p>
+                            <asp:Label ID="lblFechaFin" runat="server" CssClass="d-block" Visible="false"></asp:Label>
                         </div>
 
                     </a>
