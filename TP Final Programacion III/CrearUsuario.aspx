@@ -76,12 +76,12 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="txtPassword" class="form-label fw-semibold">Contraseña</label>
-                                    <asp:TextBox ID="txtPassword" runat="server" CssClass="form-control" TextMode="Password" placeholder="••••••••"></asp:TextBox>
+                                    <asp:TextBox ID="txtPassword" runat="server" CssClass="form-control" TextMode="Password" placeholder=""></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="rfvPassword" runat="server" ControlToValidate="txtPassword" ErrorMessage="La contraseña es obligatoria." CssClass="text-danger text-validation-error" Display="Dynamic" />
                                 </div>
                                 <div class="col-md-6">
                                     <label for="txtConfirmarPassword" class="form-label fw-semibold">Confirmar contraseña</label>
-                                    <asp:TextBox ID="txtConfirmarPassword" runat="server" CssClass="form-control" TextMode="Password" placeholder="••••••••"></asp:TextBox>
+                                    <asp:TextBox ID="txtConfirmarPassword" runat="server" CssClass="form-control" TextMode="Password" placeholder=""></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="rfvConfirmarPassword" runat="server" ControlToValidate="txtConfirmarPassword" ErrorMessage="Debe confirmar la contraseña." CssClass="text-danger text-validation-error" Display="Dynamic" />
                                     <asp:CompareValidator ID="cvConfirmarPassword" runat="server" ControlToValidate="txtConfirmarPassword" ControlToCompare="txtPassword" ErrorMessage="Las contraseñas no coinciden." CssClass="text-danger text-validation-error" Display="Dynamic" />
                                 </div>
