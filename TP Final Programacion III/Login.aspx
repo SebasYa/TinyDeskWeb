@@ -46,24 +46,24 @@
 
                             <h2 class="mb-1 text-center">Iniciar Sesión</h2>
                             <p class="text-muted text-center mb-4">Ingrese las credenciales para continuar</p>
-                            
+
                             <div class="mb-3">
                                 <label for="txtDni" class="form-label">Usuario</label>
                                 <asp:TextBox ID="txtNombreUsuario" runat="server" CssClass="form-control"></asp:TextBox>
                                 <asp:RequiredFieldValidator ID="rfvUsuario" runat="server" ControlToValidate="txtNombreUsuario" ErrorMessage="Ingrese un usuario válido." CssClass="text-danger text-validation-error" Display="Dynamic" />
-                                <asp:Label ID="lblErrorUsuario" runat="server" CssClass="alert alert-danger text-center d-block py-2 mb-3" Visible="false" style="font-size: 0.9em;"></asp:Label>
+                                <asp:Label ID="lblErrorUsuario" runat="server" CssClass="alert alert-danger text-center d-block py-2 mb-3" Visible="false" Style="font-size: 0.9em;"></asp:Label>
                             </div>
 
                             <div class="mb-3">
                                 <label for="txtPassword" class="form-label">Contraseña</label>
                                 <asp:TextBox ID="txtPassword" runat="server" CssClass="form-control" TextMode="Password"></asp:TextBox>
                                 <asp:RequiredFieldValidator ID="rfvPassword" runat="server" ControlToValidate="txtPassword" ErrorMessage="Ingrese una contraseña válida." CssClass="text-danger text-validation-error" Display="Dynamic" />
-                                <asp:Label ID="lblErrorPass" runat="server" CssClass="alert alert-danger text-center d-block py-2 mb-3" Visible="false" style="font-size: 0.9em;"></asp:Label>
+                                <asp:Label ID="lblErrorPass" runat="server" CssClass="alert alert-danger text-center d-block py-2 mb-3" Visible="false" Style="font-size: 0.9em;"></asp:Label>
 
                             </div>
 
                             <asp:Button ID="btnMockLogin" runat="server" Text="Ingresar sin contraseña (Mock)" CssClass="btn btn-outline-secondary w-100 mb-3" OnClick="btnLoginFantasmin_Click" CausesValidation="false" />
-                            <asp:Button ID="btnLogin" runat="server" Text="Iniciar Sesión" CssClass="btn btn-primary w-100" OnClick="btnLogin_Click" />
+                            <asp:Button ID="btnLogin" runat="server" Text="Iniciar Sesión" CssClass="btn btn-primary w-100" OnClick="btnLogin_Click" OnClientClick="clearErrors();" />
                             <div class="text-center mt-3">
                                 <span class="text-muted">¿No tenés cuenta?</span>
                                 <a href="Registro.aspx" class="text-decoration-none">Crear usuario</a>
@@ -77,65 +77,15 @@
 
     </form>
     <script type="text/javascript">
-        document.addEventListener("DOMContentLoaded", function () {
+        function clearErrors() {
+            // Elimina los carteles de incorrecto de la pantalla
+            document.getElementById("lblErrorUsuario")?.remove();
+            document.getElementById("lblErrorPass")?.remove();
 
-            // 1. Ocultar los labels de "incorrecto" y quitar el borde rojo cuando el usuario empieza a escribir
-            var txtUser = document.getElementById("txtNombreUsuario");
-            var txtPass = document.getElementById("txtPassword");
-
-            if (txtUser) {
-                txtUser.addEventListener("input", function () {
-                    var lblErrorUsuario = document.getElementById("lblErrorUsuario");
-                    if (lblErrorUsuario) lblErrorUsuario.style.display = "none";
-                    txtUser.classList.remove("is-invalid");
-                });
-            }
-
-            if (txtPass) {
-                txtPass.addEventListener("input", function () {
-                    var lblErrorPass = document.getElementById("lblErrorPass");
-                    if (lblErrorPass) lblErrorPass.style.display = "none";
-                    txtPass.classList.remove("is-invalid");
-                });
-            }
-
-            // 2. Interceptar la validación de ASP.NET
-            if (typeof ValidatorUpdateDisplay === 'function') {
-                var originalValidatorUpdateDisplay = ValidatorUpdateDisplay;
-                ValidatorUpdateDisplay = function (val) {
-                    originalValidatorUpdateDisplay(val);
-
-                    var control = document.getElementById(val.controltovalidate);
-                    if (control) {
-                        var isValid = true;
-                        for (var i = 0; i < Page_Validators.length; i++) {
-                            var v = Page_Validators[i];
-                            if (v.controltovalidate === val.controltovalidate && !v.isvalid) {
-                                isValid = false;
-                                break;
-                            }
-                        }
-
-                        if (!isValid) {
-                            control.classList.add('is-invalid');
-
-                            // Si el campo falla la validación del cliente (está vacío),
-                            // ocultamos de inmediato el mensaje anterior de "incorrecto".
-                            if (val.controltovalidate === "txtNombreUsuario") {
-                                var lblErrorUsuario = document.getElementById("lblErrorUsuario");
-                                if (lblErrorUsuario) lblErrorUsuario.style.display = "none";
-                            }
-                            if (val.controltovalidate === "txtPassword") {
-                                var lblErrorPass = document.getElementById("lblErrorPass");
-                                if (lblErrorPass) lblErrorPass.style.display = "none";
-                            }
-                        } else {
-                            control.classList.remove('is-invalid');
-                        }
-                    }
-                };
-            }
-        });
+            // Quita los bordes rojos anteriores
+            document.getElementById("txtNombreUsuario")?.classList.remove("is-invalid");
+            document.getElementById("txtPassword")?.classList.remove("is-invalid");
+        }
     </script>
 </body>
 </html>

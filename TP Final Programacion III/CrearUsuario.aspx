@@ -73,42 +73,4 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript">
-        document.addEventListener("DOMContentLoaded", function () {
-            if (typeof ValidatorUpdateDisplay === 'function') {
-                var originalValidatorUpdateDisplay = ValidatorUpdateDisplay;
-                ValidatorUpdateDisplay = function (val) {
-                    originalValidatorUpdateDisplay(val);
-                    var control = document.getElementById(val.controltovalidate);
-                    if (control) {
-                        var isValid = true;
-                        for (var i = 0; i < Page_Validators.length; i++) {
-                            var v = Page_Validators[i];
-                            if (v.controltovalidate === val.controltovalidate && !v.isvalid) {
-                                isValid = false;
-                                break;
-                            }
-                        }
-                        if (!isValid) {
-                            control.classList.add('is-invalid');
-                        } else {
-                            control.classList.remove('is-invalid');
-                        }
-                    }
-                };
-            }
-        });
-    </script>
-    <style>
-        .form-control.is-invalid, .form-select.is-invalid {
-            border-color: #dc3545 !important;
-            box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25) !important;
-        }
-
-        .text-validation-error {
-            font-size: 0.875em;
-            margin-top: 0.25rem;
-            display: block;
-        }
-    </style>
 </asp:Content>
