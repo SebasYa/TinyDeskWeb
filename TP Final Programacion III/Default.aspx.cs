@@ -178,5 +178,14 @@ namespace TP_Final_Programacion_III
             txtFechaEstimadaFinProyecto.Text = "";
             ddlEstadoProyecto.SelectedIndex = 0;
         }
+
+        protected void btnGuardarTicket_Click(object sender, EventArgs e)
+        {
+            litMensaje.Text = @"
+            <div class='alert alert-info alert-dismissible fade show' role='alert'>
+            Funcionalidad de Tickets en desarrollo.
+            <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+            </div>";
+        }
     }
 }

@@ -20,12 +20,38 @@
                         <i class="bi bi-plus-circle"></i>Crear Sprint
                     </button>
 
-                    <button class="btn btn-primary shadow-sm d-flex align-items-center gap-2" type="submit">
-                        <i class="bi bi-plus-circle"></i>Nuevo Ticket</button>
+                    <button type="button" class="btn btn-primary shadow-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#ticketModal">
+                        <i class="bi bi-plus-circle"></i>Nuevo Ticket
+                    </button>
                 </div>
             </div>
         </div>
     </section>
+
+       <!-- INICIO - CREAR TICKET MODAL -->
+        
+        <div class="modal fade" id="ticketModal" tabindex="-1" aria-labelledby="ticketModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title fw-bold" id="ticketModalLabel">Nuevo Ticket</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <asp:Panel ID="Panel1" CssClass="row g-3" runat="server">
+                    
+
+                </asp:Panel>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <asp:Button ID="Button1" runat="server" CssClass="btn btn-primary" Text="Guardar Ticket" OnClick="btnGuardarTicket_Click" />
+            </div>
+        </div>
+    </div>
+</div>
+
+       <!-- FIN - CREAR TICKET MODAL -->
 
     <!-- INICIO - CREAR SPRINT MODAL -->
     <div class="modal fade" id="sprintModal" tabindex="-1" aria-labelledby="sprintModalLabel" aria-hidden="true">
