@@ -40,7 +40,6 @@
             <div class="modal-content">
                 <div class="modal-header bg-light">
                     <h5 class="modal-title fw-bold" id="proyectoModalLabel">Nuevo Proyecto</h5>
-                    <!-- Botón cruz de ASP.NET -->
                     <asp:LinkButton ID="btnCloseProyecto" runat="server" CssClass="btn-close" OnClick="btnCancelarProyecto_Click" aria-label="Close"></asp:LinkButton>
                 </div>
                 <div class="modal-body">

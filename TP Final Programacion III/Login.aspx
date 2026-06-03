@@ -78,18 +78,36 @@
     </form>
     <script type="text/javascript">
         document.addEventListener("DOMContentLoaded", function () {
-            // Verificar si la función de validación de ASP.NET existe en el cliente
+
+            // 1. Ocultar los labels de "incorrecto" y quitar el borde rojo cuando el usuario empieza a escribir
+            var txtUser = document.getElementById("txtNombreUsuario");
+            var txtPass = document.getElementById("txtPassword");
+
+            if (txtUser) {
+                txtUser.addEventListener("input", function () {
+                    var lblErrorUsuario = document.getElementById("lblErrorUsuario");
+                    if (lblErrorUsuario) lblErrorUsuario.style.display = "none";
+                    txtUser.classList.remove("is-invalid");
+                });
+            }
+
+            if (txtPass) {
+                txtPass.addEventListener("input", function () {
+                    var lblErrorPass = document.getElementById("lblErrorPass");
+                    if (lblErrorPass) lblErrorPass.style.display = "none";
+                    txtPass.classList.remove("is-invalid");
+                });
+            }
+
+            // 2. Interceptar la validación de ASP.NET
             if (typeof ValidatorUpdateDisplay === 'function') {
                 var originalValidatorUpdateDisplay = ValidatorUpdateDisplay;
-                // Sobrescribir la función para añadir comportamiento personalizado
                 ValidatorUpdateDisplay = function (val) {
-                    // Llamar primero a la validación original de ASP.NET
                     originalValidatorUpdateDisplay(val);
-                    // Buscar el elemento del formulario (TextBox)
+
                     var control = document.getElementById(val.controltovalidate);
                     if (control) {
                         var isValid = true;
-                        // Comprobar si algún validador asociado a este TextBox falló
                         for (var i = 0; i < Page_Validators.length; i++) {
                             var v = Page_Validators[i];
                             if (v.controltovalidate === val.controltovalidate && !v.isvalid) {
@@ -97,9 +115,20 @@
                                 break;
                             }
                         }
-                        // Agregar o quitar la clase is-invalid según el estado
+
                         if (!isValid) {
                             control.classList.add('is-invalid');
+
+                            // Si el campo falla la validación del cliente (está vacío),
+                            // ocultamos de inmediato el mensaje anterior de "incorrecto".
+                            if (val.controltovalidate === "txtNombreUsuario") {
+                                var lblErrorUsuario = document.getElementById("lblErrorUsuario");
+                                if (lblErrorUsuario) lblErrorUsuario.style.display = "none";
+                            }
+                            if (val.controltovalidate === "txtPassword") {
+                                var lblErrorPass = document.getElementById("lblErrorPass");
+                                if (lblErrorPass) lblErrorPass.style.display = "none";
+                            }
                         } else {
                             control.classList.remove('is-invalid');
                         }

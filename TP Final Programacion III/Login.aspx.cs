@@ -13,7 +13,8 @@ namespace TP_Final_Programacion_III
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            lblErrorUsuario.Visible = false;
+            lblErrorPass.Visible = false;
         }
 
         protected void btnLogin_Click(object sender, EventArgs e)
@@ -22,6 +23,10 @@ namespace TP_Final_Programacion_III
             UsuarioNegocio negocio = new UsuarioNegocio();
             try
             {
+                if (string.IsNullOrWhiteSpace(txtNombreUsuario.Text) || string.IsNullOrWhiteSpace(txtPassword.Text)) 
+                {
+                    return; 
+                }
                 usuario.NombreUsuario = txtNombreUsuario.Text;
                 usuario.PasswordHash = txtPassword.Text;
 
@@ -68,11 +73,6 @@ namespace TP_Final_Programacion_III
                 {
                     Session.Add("usuario", usuario);
                     Response.Redirect("Default.aspx", false);
-                    txtNombreUsuario.Text = "";
-                    txtPassword.Text = "";
-                }
-                else
-                {
                     txtNombreUsuario.Text = "";
                     txtPassword.Text = "";
                 }

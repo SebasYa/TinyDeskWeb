@@ -50,9 +50,9 @@ namespace TP_Final_Programacion_III
         protected void btnCrearUsuario_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtNombreUsuario.Text) || string.IsNullOrWhiteSpace(txtNombre.Text) ||
-                string.IsNullOrWhiteSpace(txtApellido.Text) || string.IsNullOrWhiteSpace(ddlArea.SelectedValue) ||
-                string.IsNullOrWhiteSpace(ddlPuesto.SelectedValue) ||  string.IsNullOrWhiteSpace(txtPassword.Text) ||
-                txtPassword.Text != txtConfirmarPassword.Text)
+            string.IsNullOrWhiteSpace(txtApellido.Text) || string.IsNullOrWhiteSpace(ddlArea.SelectedValue) ||
+            string.IsNullOrWhiteSpace(ddlPuesto.SelectedValue) || string.IsNullOrWhiteSpace(txtPassword.Text) ||
+            txtPassword.Text != txtConfirmarPassword.Text)
             {
                 return;
             }

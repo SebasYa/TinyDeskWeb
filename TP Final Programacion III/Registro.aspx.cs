@@ -12,7 +12,11 @@ namespace TP_Final_Programacion_III
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (!IsPostBack)
+            {
+                txtPassword.Text = "";
+                txtConfirmarPassword.Text = "";
+            }
         }
 
         protected void btnCrearUsuario_Click(object sender, EventArgs e)

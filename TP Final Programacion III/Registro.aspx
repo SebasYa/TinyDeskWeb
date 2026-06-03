@@ -29,31 +29,37 @@
                                 <div class="col-md-6 mb-3">
                                     <label for="txtNombre" class="form-label">Nombre</label>
                                     <asp:TextBox ID="txtNombre" runat="server" CssClass="form-control"></asp:TextBox>
+                                    <asp:RequiredFieldValidator ID="rfvNombre" runat="server" ControlToValidate="txtNombre" ErrorMessage="El nombre es obligatorio." CssClass="text-danger text-validation-error" Display="Dynamic" />
                                 </div>
 
                                 <div class="col-md-6 mb-3">
                                     <label for="txtApellido" class="form-label">Apellido</label>
                                     <asp:TextBox ID="txtApellido" runat="server" CssClass="form-control"></asp:TextBox>
+                                    <asp:RequiredFieldValidator ID="rfvApellido" runat="server" ControlToValidate="txtApellido" ErrorMessage="El apellido es obligatorio." CssClass="text-danger text-validation-error" Display="Dynamic" />
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <label for="txtNombreEmpresa" class="form-label">Nombre de tu Empresa / Organización</label>
                                 <asp:TextBox ID="txtNombreEmpresa" runat="server" CssClass="form-control" placeholder="Ej: Mi Empresa S.A."></asp:TextBox>
+                                <asp:RequiredFieldValidator ID="rfvNombreEmpresa" runat="server" ControlToValidate="txtNombreEmpresa" ErrorMessage="El nombre de empresa es obligatorio.." CssClass="text-danger text-validation-error" Display="Dynamic" />
                             </div>
                             <div class="mb-3">
                                 <label for="txtNombreUsuario" class="form-label">Usuario</label>
                                 <asp:TextBox ID="txtNombreUsuario" runat="server" CssClass="form-control"></asp:TextBox>
+                                <asp:RequiredFieldValidator ID="rfvNombreUsuario" runat="server" ControlToValidate="txtNombreUsuario" ErrorMessage="El usuario es obligatorio." CssClass="text-danger text-validation-error" Display="Dynamic" />
                             </div>
 
 
                             <div class="mb-3">
                                 <label for="txtPassword" class="form-label">Contraseña</label>
                                 <asp:TextBox ID="txtPassword" runat="server" CssClass="form-control" TextMode="Password"></asp:TextBox>
+                                <asp:RequiredFieldValidator ID="rfvPassword" runat="server" ControlToValidate="txtPassword" ErrorMessage="La contraseña es obligatoria." CssClass="text-danger text-validation-error" Display="Dynamic" />
                             </div>
 
                             <div class="mb-4">
                                 <label for="txtConfirmarPassword" class="form-label">Confirmar contraseña</label>
                                 <asp:TextBox ID="txtConfirmarPassword" runat="server" CssClass="form-control" TextMode="Password"></asp:TextBox>
+                                <asp:RequiredFieldValidator ID="rfvConfirmarPassword" runat="server" ControlToValidate="txtConfirmarPassword" ErrorMessage="Debe confirmar la contraseña." CssClass="text-danger text-validation-error" Display="Dynamic" />
                             </div>
 
                             <asp:Button ID="btnCrearUsuario" runat="server" Text="Crear usuario" CssClass="btn btn-primary w-100" OnClick="btnCrearUsuario_Click" />
