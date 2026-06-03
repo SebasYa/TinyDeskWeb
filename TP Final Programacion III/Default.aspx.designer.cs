@@ -33,6 +33,24 @@ namespace TP_Final_Programacion_III
         protected global::System.Web.UI.WebControls.Panel Panel1;
 
         /// <summary>
+        /// Control txtDescripcionTicket.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDescripcionTicket;
+
+        /// <summary>
+        /// Control txtFechaInicioTicket.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtFechaInicioTicket;
+
+        /// <summary>
         /// Control Button1.
         /// </summary>
         /// <remarks>

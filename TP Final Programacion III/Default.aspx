@@ -40,6 +40,16 @@
             <div class="modal-body">
                 <asp:Panel ID="Panel1" CssClass="row g-3" runat="server">
                     
+            <div class="col-md-12">
+                <label for="txtDescripcionProyecto" class="form-label fw-semibold">Descripción</label>
+                <asp:TextBox ID="txtDescripcionTicket" runat="server" CssClass="form-control w-100 mw-100" TextMode="MultiLine" Rows="3" placeholder="Ingresá una descripción breve..."></asp:TextBox>
+            </div>
+            <div class="col-md-6">
+                <label for="txtFechaInicio" class="form-label fw-semibold">Fecha Inicio</label>
+                <asp:TextBox ID="txtFechaInicioTicket" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+            </div>
+
+
 
                 </asp:Panel>
             </div>
