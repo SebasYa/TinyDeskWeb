@@ -49,11 +49,12 @@ CREATE TABLE USUARIO (
     Id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
     NombreUsuario VARCHAR(30) NOT NULL UNIQUE,
     PasswordHash VARCHAR(200) NOT NULL,
+    Email VARCHAR(75) NOT NULL UNIQUE,
     Nombre VARCHAR(30) NOT NULL,
     Apellido VARCHAR(30) NOT NULL,
     Activo BIT NOT NULL DEFAULT 1,
     PermisoEscritura BIT NOT NULL DEFAULT 0, -- Permiso directo
-    IdPuesto INT NOT NULL,                   -- Clave foránea al puesto ocupado (ej: Owner, Developer)
+    IdPuesto INT NOT NULL,                   -- Clave foránea al puesto ocupado (ej: Owner, Developer Senior)
     IdArea INT NOT NULL,                         -- NO Nullable (el Owner necesita área Direccion)
     IdEmpresa INT NOT NULL,                  -- Clave foránea de la empresa del usuario
     FOREIGN KEY (IdPuesto) REFERENCES PUESTO(Id),
@@ -184,7 +185,6 @@ BEGIN
     SELECT @IdArea = Id FROM AREA WHERE Nombre = 'Direccion';
 
     -- Insertamos el usuario
-    INSERT INTO USUARIO (NombreUsuario, PasswordHash, Nombre, Apellido, Activo, PermisoEscritura, IdPuesto, IdArea, IdEmpresa)
-    VALUES ('phantom_user', '123', 'Casper', 'Gasparin', 1, 1, @IdPuesto, @IdArea, @IdEmpresa);
+    INSERT INTO USUARIO (NombreUsuario, PasswordHash, Email, Nombre, Apellido, Activo, PermisoEscritura, IdPuesto, IdArea, IdEmpresa)
+    VALUES ('phantom_user', '123', 'gasparin@gmail.com', 'Casper', 'Gasparin', 1, 1, @IdPuesto, @IdArea, @IdEmpresa);
 END
-GO

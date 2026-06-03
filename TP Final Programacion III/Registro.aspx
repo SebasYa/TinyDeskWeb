@@ -38,6 +38,14 @@
                                     <asp:RequiredFieldValidator ID="rfvApellido" runat="server" ControlToValidate="txtApellido" ErrorMessage="El apellido es obligatorio." CssClass="text-danger text-validation-error" Display="Dynamic" />
                                 </div>
                             </div>
+
+                            <div class="mb-3">
+                                <label for="txtEmail" class="form-label">Correo Electrónico</label>
+                                <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" placeholder="Ej: info@empresa.com" TextMode="Email"></asp:TextBox>
+                                <asp:RequiredFieldValidator ID="rfvEmail" runat="server" ControlToValidate="txtEmail" ErrorMessage="El correo electrónico es obligatorio." CssClass="text-danger text-validation-error" Display="Dynamic" />
+                                <asp:RegularExpressionValidator ID="revEmail" runat="server" ControlToValidate="txtEmail" ErrorMessage="El formato del correo es inválido." CssClass="text-danger text-validation-error" Display="Dynamic" ValidationExpression="^[^@\s]+@[^@\s]+\.[^@\s]+$" />
+                            </div>
+
                             <div class="mb-3">
                                 <label for="txtNombreEmpresa" class="form-label">Nombre de tu Empresa / Organización</label>
                                 <asp:TextBox ID="txtNombreEmpresa" runat="server" CssClass="form-control" placeholder="Ej: Mi Empresa S.A."></asp:TextBox>

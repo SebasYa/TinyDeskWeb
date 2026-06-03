@@ -13,6 +13,7 @@
                 <asp:BoundField DataField="Apellido" HeaderText="Apellido" />
                 <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
                 <asp:BoundField DataField="NombreUsuario" HeaderText="Usuario" />
+                <asp:BoundField DataField="Email" HeaderText="Correo Electrónico" /> 
 
                 <asp:TemplateField HeaderText="Área">
                     <ItemTemplate>

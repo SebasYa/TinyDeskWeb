@@ -17,7 +17,7 @@ namespace negocio
             {
                 datos.setearConsulta(@"
                     SELECT U.Id, U.PasswordHash, U.NombreUsuario, 
-                           U.Nombre, U.Apellido, U.PermisoEscritura, 
+                           U.Nombre, U.Apellido, U.Email, U.PermisoEscritura, 
                            U.IdEmpresa, E.Nombre AS NombreEmpresa, 
                            U.IdPuesto, P.Nombre AS NombrePuesto, 
                            U.IdArea, A.Nombre AS NombreArea
@@ -34,7 +34,8 @@ namespace negocio
                 {
                     usuario.Id = (int)datos.Lector["Id"];
                     usuario.NombreUsuario = (string)datos.Lector["NombreUsuario"];
-                    usuario.Nombre = (String)datos.Lector["Nombre"];
+                    usuario.Email = (string)datos.Lector["Email"];
+                    usuario.Nombre = (string)datos.Lector["Nombre"];
                     usuario.Apellido = (string)datos.Lector["Apellido"];
                     usuario.PermisoEscritura = (bool)datos.Lector["PermisoEscritura"];
 
@@ -73,7 +74,7 @@ namespace negocio
             }
         }
 
-        public bool RegistrarEmpresaYOwner(string nombreEmpresa, string nombreUsuario, string password, string nombre, string apellido)
+        public bool RegistrarEmpresaYOwner(string nombreEmpresa, string nombreUsuario, string password, string nombre, string apellido, string email)
         {
             AccesoDatos datos = new AccesoDatos();
             try
@@ -94,9 +95,9 @@ namespace negocio
                         SELECT @IdPuestoOwner = Id FROM PUESTO WHERE Nombre = 'Owner';
 
                         -- 4. Insertamos Usuario
-                        INSERT INTO USUARIO (NombreUsuario, PasswordHash, Nombre, Apellido, Activo, 
+                        INSERT INTO USUARIO (NombreUsuario, PasswordHash, Email, Nombre, Apellido, Activo, 
                                              PermisoEscritura, IdPuesto, IdArea, IdEmpresa)
-                        VALUES (@NombreUsuario, @Password, @Nombre, @Apellido, 1, 1, @IdPuestoOwner, @IdAreaOwner, @IdEmpresa);
+                        VALUES (@NombreUsuario, @Password, @Email, @Nombre, @Apellido, 1, 1, @IdPuestoOwner, @IdAreaOwner, @IdEmpresa);
 
                         -- Si todo fue exitoso, confirmamos los cambios
                         COMMIT TRANSACTION;
@@ -111,6 +112,7 @@ namespace negocio
 
                 datos.setearParametro("@NombreEmpresa", nombreEmpresa);
                 datos.setearParametro("@NombreUsuario", nombreUsuario);
+                datos.setearParametro("@Email", email);
                 datos.setearParametro("@Password", password);
                 datos.setearParametro("@Nombre", nombre);
                 datos.setearParametro("@Apellido", apellido);
@@ -135,13 +137,14 @@ namespace negocio
             try
             {
                 datos.setearConsulta(@"INSERT INTO USUARIO (
-                                       NombreUsuario, PasswordHash, Nombre, Apellido, Activo,
+                                       NombreUsuario, PasswordHash, Email, Nombre, Apellido, Activo,
                                        PermisoEscritura, IdPuesto, IdArea, IdEmpresa)
-                                       VALUES (@NombreUsuario, @PasswordHash, @Nombre, @Apellido, @Activo, 
+                                       VALUES (@NombreUsuario, @PasswordHash, @Email, @Nombre, @Apellido, @Activo, 
                                                @PermisoEscritura, @IdPuesto, @IdArea, @IdEmpresa)
         ");
                 datos.setearParametro("@NombreUsuario", nuevoUsuario.NombreUsuario);
                 datos.setearParametro("@PasswordHash", nuevoUsuario.PasswordHash);
+                datos.setearParametro("@Email", nuevoUsuario.Email);
                 datos.setearParametro("@Nombre", nuevoUsuario.Nombre);
                 datos.setearParametro("@Apellido", nuevoUsuario.Apellido);
                 datos.setearParametro("@Activo", nuevoUsuario.Activo);
@@ -166,7 +169,7 @@ namespace negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.setearConsulta(@"SELECT U.Id, U.NombreUsuario, U.Nombre, U.Apellido, 
+                datos.setearConsulta(@"SELECT U.Id, U.NombreUsuario, U.Email, U.Nombre, U.Apellido, 
                                               U.Activo, U.PermisoEscritura,
                                               U.IdPuesto, P.Nombre AS NombrePuesto,
                                               U.IdArea, A.Nombre AS NombreArea, U.IdEmpresa
@@ -183,6 +186,7 @@ namespace negocio
                     Usuario usuario = new Usuario();
                     usuario.Id = (int)datos.Lector["Id"];
                     usuario.NombreUsuario = (string)datos.Lector["NombreUsuario"];
+                    usuario.Email = (string)datos.Lector["Email"];
                     usuario.Nombre = (string)datos.Lector["Nombre"];
                     usuario.Apellido = (string)datos.Lector["Apellido"];
                     usuario.Activo = (bool)datos.Lector["Activo"];
@@ -226,7 +230,8 @@ namespace negocio
             try
             {
                 datos.setearConsulta(@"UPDATE USUARIO SET 
-                                        NombreUsuario = @NombreUsuario, 
+                                        NombreUsuario = @NombreUsuario,
+                                        Email = @Email,
                                         Nombre = @Nombre, 
                                         Apellido = @Apellido, 
                                         PermisoEscritura = @PermisoEscritura, 
@@ -236,6 +241,7 @@ namespace negocio
                 );
 
                 datos.setearParametro("@NombreUsuario", usuario.NombreUsuario);
+                datos.setearParametro("@Email", usuario.Email);
                 datos.setearParametro("@Nombre", usuario.Nombre);
                 datos.setearParametro("@Apellido", usuario.Apellido);
                 datos.setearParametro("@PermisoEscritura", usuario.PermisoEscritura);
@@ -262,7 +268,7 @@ namespace negocio
             List<Usuario> lista = new List<Usuario>();
             try
             {
-                datos.setearConsulta(@"SELECT U.Id, U.NombreUsuario, U.Nombre, U.Apellido, 
+                datos.setearConsulta(@"SELECT U.Id, U.NombreUsuario, U.Email, U.Nombre, U.Apellido, 
                                               U.Activo, U.PermisoEscritura,
                                               U.IdPuesto, P.Nombre AS NombrePuesto,
                                               U.IdArea, A.Nombre AS NombreArea, U.IdEmpresa
@@ -279,6 +285,7 @@ namespace negocio
                     Usuario usuario = new Usuario();
                     usuario.Id = (int)datos.Lector["Id"];
                     usuario.NombreUsuario = (string)datos.Lector["NombreUsuario"];
+                    usuario.Email = (string)datos.Lector["Email"];
                     usuario.Nombre = (string)datos.Lector["Nombre"];
                     usuario.Apellido = (string)datos.Lector["Apellido"];
                     usuario.Activo = (bool)datos.Lector["Activo"];

@@ -31,13 +31,13 @@ namespace TP_Final_Programacion_III
                     ddlArea.DataValueField = "Id";
                     ddlArea.DataTextField = "Nombre";
                     ddlArea.DataBind();
-                    ddlArea.Items.Insert(0, new ListItem("Seleccione un área...", ""));
+                    ddlArea.Items.Insert(0, new ListItem("Seleccione un área", ""));
 
                     ddlPuesto.DataSource = puestoNegocio.listar();
                     ddlPuesto.DataValueField = "Id";
                     ddlPuesto.DataTextField = "Nombre";
                     ddlPuesto.DataBind();
-                    ddlPuesto.Items.Insert(0, new ListItem("Seleccione un puesto...", ""));
+                    ddlPuesto.Items.Insert(0, new ListItem("Seleccione un puesto", ""));
                 }
                 catch (Exception ex)
                 {
@@ -51,8 +51,8 @@ namespace TP_Final_Programacion_III
         {
             if (string.IsNullOrWhiteSpace(txtNombreUsuario.Text) || string.IsNullOrWhiteSpace(txtNombre.Text) ||
             string.IsNullOrWhiteSpace(txtApellido.Text) || string.IsNullOrWhiteSpace(ddlArea.SelectedValue) ||
-            string.IsNullOrWhiteSpace(ddlPuesto.SelectedValue) || string.IsNullOrWhiteSpace(txtPassword.Text) ||
-            txtPassword.Text != txtConfirmarPassword.Text)
+            string.IsNullOrWhiteSpace(ddlPuesto.SelectedValue) || string.IsNullOrWhiteSpace(txtPassword.Text) || 
+            string.IsNullOrWhiteSpace(txtEmail.Text) || txtPassword.Text != txtConfirmarPassword.Text)
             {
                 return;
             }
@@ -65,6 +65,7 @@ namespace TP_Final_Programacion_III
 
                 nuevoUsuario.NombreUsuario = txtNombreUsuario.Text;
                 nuevoUsuario.PasswordHash = txtPassword.Text;
+                nuevoUsuario.Email = txtEmail.Text;
                 nuevoUsuario.Nombre = txtNombre.Text;
                 nuevoUsuario.Apellido = txtApellido.Text;
                 nuevoUsuario.Activo = true;

@@ -27,6 +27,7 @@ namespace TP_Final_Programacion_III
                 string.IsNullOrWhiteSpace(txtPassword.Text) ||
                 string.IsNullOrWhiteSpace(txtConfirmarPassword.Text) ||
                 string.IsNullOrWhiteSpace(txtNombreEmpresa.Text) ||
+                string.IsNullOrWhiteSpace(txtEmail.Text) ||
                 txtPassword.Text != txtConfirmarPassword.Text
                 )
             {
@@ -42,7 +43,8 @@ namespace TP_Final_Programacion_III
                     txtNombreUsuario.Text,
                     txtPassword.Text,
                     txtNombre.Text,
-                    txtApellido.Text))
+                    txtApellido.Text,
+                    txtEmail.Text))
                 {
                     Response.Redirect("Login.aspx", false);
                 }
