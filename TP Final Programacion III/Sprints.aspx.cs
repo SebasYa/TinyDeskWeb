@@ -195,6 +195,14 @@ namespace TP_Final_Programacion_III
         {
 
         }
+
+        protected void txtFiltroSprints_TextChanged(object sender, EventArgs e)
+        {
+            List<Sprint> lista = (List<Sprint>)Session["listaSprints"];
+            List<Sprint> listaFiltrada = lista.FindAll(x => x.Proyecto.Nombre.ToUpper().Contains(txtFiltroSprints.Text.ToUpper()));
+            dgvSprints.DataSource = listaFiltrada;
+            dgvSprints.DataBind();
+        }
     }
 
 
