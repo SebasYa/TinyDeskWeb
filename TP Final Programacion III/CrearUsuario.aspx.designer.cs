@@ -15,6 +15,15 @@ namespace TP_Final_Programacion_III
     {
 
         /// <summary>
+        /// Control lblTituloFormularioUsuario.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTituloFormularioUsuario;
+
+        /// <summary>
         /// Control txtNombre.
         /// </summary>
         /// <remarks>

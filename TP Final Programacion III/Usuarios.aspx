@@ -30,11 +30,10 @@
 
                 <asp:TemplateField HeaderText="Editar">
                     <ItemTemplate>
-                        <div class="fw-semibold text-dark text-sm">
-                            <button class="btn btn-link text-muted p-0 lh-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-pencil me-2 text-muted"></i>
-                            </button>
-                        </div>
+                        <asp:LinkButton ID="btnEditarUsuario" runat="server" CommandName="Select"
+                            Cssclass="btn btn-link text-muted p-0 lh-1">
+                            <i class="bi bi-pencil me-2 text-muted"></i>
+                        </asp:LinkButton>
                     </ItemTemplate>
                 </asp:TemplateField>
 

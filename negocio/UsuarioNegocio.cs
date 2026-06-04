@@ -172,10 +172,11 @@ namespace negocio
                 datos.setearConsulta(@"SELECT U.Id, U.NombreUsuario, U.Email, U.Nombre, U.Apellido, 
                                               U.Activo, U.PermisoEscritura,
                                               U.IdPuesto, P.Nombre AS NombrePuesto,
-                                              U.IdArea, A.Nombre AS NombreArea, U.IdEmpresa
+                                              U.IdArea, A.Nombre AS NombreArea, U.IdEmpresa, E.Nombre as NombreEmpresa
                                        FROM USUARIO U
                                        INNER JOIN PUESTO P ON U.IdPuesto = P.Id
                                        INNER JOIN AREA A ON U.IdArea = A.Id
+                                       INNER JOIN EMPRESA E ON U.IdEmpresa = E.id
                                        WHERE U.Id = @Id"
                 );
                 datos.setearParametro("@Id", id);
@@ -229,16 +230,20 @@ namespace negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.setearConsulta(@"UPDATE USUARIO SET 
+                string consulta = @"UPDATE USUARIO SET 
                                         NombreUsuario = @NombreUsuario,
                                         Email = @Email,
                                         Nombre = @Nombre, 
                                         Apellido = @Apellido, 
                                         PermisoEscritura = @PermisoEscritura, 
                                         IdPuesto = @IdPuesto, 
-                                        IdArea = @IdArea 
-                                    WHERE Id = @Id"
-                );
+                                        IdArea = @IdArea";
+                if (!string.IsNullOrWhiteSpace(usuario.PasswordHash))
+                {
+                    consulta += ", passwordHash = @PasswordHash";
+                }
+                consulta += "WHERE Id = @Id";
+                datos.setearConsulta(consulta);
 
                 datos.setearParametro("@NombreUsuario", usuario.NombreUsuario);
                 datos.setearParametro("@Email", usuario.Email);
@@ -249,7 +254,12 @@ namespace negocio
                 datos.setearParametro("@IdArea", usuario.Area.Id);
                 datos.setearParametro("@Id", usuario.Id);
 
-                datos.ejecutarAccion();
+                if (!string.IsNullOrWhiteSpace(usuario.PasswordHash))
+                {
+                    datos.setearParametro("@PasswordHash", usuario.PasswordHash);
+                }
+
+                    datos.ejecutarAccion();
                 return true;
             }
             catch (Exception ex)
