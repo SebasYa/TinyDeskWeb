@@ -10,7 +10,7 @@
                         <h3 class="mb-1 fw-bold">
                             <asp:Label ID="lblTituloFormularioUsuario" runat="server" Text="CrearUSuario"></asp:Label>
                         </h3>
-                        <p class="text-white-50 mb-0">Completá los datos para registrar un nuevo integrante del equipo</p>
+                        <p class="text-white-50 mb-0"><asp:Label ID="txtSubtitulo" runat="server" Visible="true" Text="Completá los datos para registrar un nuevo integrante del equipo"></asp:Label></p>
                     </div>
                     <div class="card-body p-4">
                         <!-- Sección 1: Datos Personales -->

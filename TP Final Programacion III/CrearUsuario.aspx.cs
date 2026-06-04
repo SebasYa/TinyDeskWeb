@@ -43,6 +43,7 @@ namespace TP_Final_Programacion_III
                     if (Request.QueryString["id"] != null)
                     {
                         lblTituloFormularioUsuario.Text = "Modificar Usuario";
+                        txtSubtitulo.Visible = false;
                         btnCrearUsuario.Text = "Guardar Cambios";
 
                         int idUsuario = int.Parse(Request.QueryString["id"]);
@@ -83,9 +84,8 @@ namespace TP_Final_Programacion_III
             bool esEdicion = Request.QueryString["id"] != null;
             if (string.IsNullOrWhiteSpace(txtNombreUsuario.Text) || string.IsNullOrWhiteSpace(txtNombre.Text) ||
             string.IsNullOrWhiteSpace(txtApellido.Text) || string.IsNullOrWhiteSpace(ddlArea.SelectedValue) ||
-            string.IsNullOrWhiteSpace(ddlPuesto.SelectedValue) || string.IsNullOrWhiteSpace(txtPassword.Text) || 
-            string.IsNullOrWhiteSpace(txtEmail.Text) || (!esEdicion && txtPassword.Text != txtConfirmarPassword.Text) ||
-           (!esEdicion && string.IsNullOrWhiteSpace(txtPassword.Text))
+            string.IsNullOrWhiteSpace(ddlPuesto.SelectedValue) || string.IsNullOrWhiteSpace(txtEmail.Text) || 
+            (!esEdicion && txtPassword.Text != txtConfirmarPassword.Text) || (!esEdicion && string.IsNullOrWhiteSpace(txtPassword.Text))
            )
             {
                 return;

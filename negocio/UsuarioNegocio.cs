@@ -242,7 +242,7 @@ namespace negocio
                 {
                     consulta += ", passwordHash = @PasswordHash";
                 }
-                consulta += "WHERE Id = @Id";
+                consulta += " WHERE Id = @Id";
                 datos.setearConsulta(consulta);
 
                 datos.setearParametro("@NombreUsuario", usuario.NombreUsuario);
