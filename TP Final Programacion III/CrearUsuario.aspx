@@ -8,7 +8,7 @@
                     <!-- Cabecera del Formulario -->
                     <div class="card-header bg-primary text-white py-3 text-center rounded-top">
                         <h3 class="mb-1 fw-bold">
-                            <asp:Label ID="lblTituloFormularioUsuario" runat="server" Text="CrearUSuario"></asp:Label>
+                            <asp:Label ID="lblTituloFormularioUsuario" runat="server" Text="Crear Usuario"></asp:Label>
                         </h3>
                         <p class="text-white-50 mb-0"><asp:Label ID="txtSubtitulo" runat="server" Visible="true" Text="Completá los datos para registrar un nuevo integrante del equipo"></asp:Label></p>
                     </div>
