@@ -29,5 +29,17 @@ namespace TP_Final_Programacion_III
                 }
             }
         }
+
+        protected void dgvUsuarios_PageIndexChanging(object obj, GridViewPageEventArgs e)
+        {
+            dgvUsuarios.PageIndex = e.NewPageIndex;
+            dgvUsuarios.DataBind();
+        } 
+
+        protected void dgvUsuarios_SelectedIndexChanged(object obj, EventArgs e)
+        {
+            string id = dgvUsuarios.SelectedDataKey.Value.ToString();
+            Response.Redirect("CrearUsuario.aspx?id=" + id);
+        }
     }
 }

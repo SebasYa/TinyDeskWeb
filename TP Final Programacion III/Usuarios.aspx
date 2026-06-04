@@ -8,12 +8,12 @@
             </a>
         </div>
 
-        <asp:GridView ID="dgvUsuarios" runat="server" AutoGenerateColumns="False" CssClass="table table-striped table-bordered shadow-sm">
+        <asp:GridView ID="dgvUsuarios" runat="server" AutoGenerateColumns="False" DataKeyNames="id" OnSelectedIndexChanged="dgvUsuarios_SelectedIndexChanged" OnPageIndexChanging="dgvUsuarios_PageIndexChanging" CssClass="table table-striped table-bordered shadow-sm">
             <Columns>
                 <asp:BoundField DataField="Apellido" HeaderText="Apellido" />
                 <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
                 <asp:BoundField DataField="NombreUsuario" HeaderText="Usuario" />
-                <asp:BoundField DataField="Email" HeaderText="Correo Electrónico" /> 
+                <asp:BoundField DataField="Email" HeaderText="Correo Electrónico" />
 
                 <asp:TemplateField HeaderText="Área">
                     <ItemTemplate>
@@ -27,6 +27,17 @@
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:CheckBoxField DataField="Activo" HeaderText="Activo" />
+
+                <asp:TemplateField HeaderText="Editar">
+                    <ItemTemplate>
+                        <div class="fw-semibold text-dark text-sm">
+                            <button class="btn btn-link text-muted p-0 lh-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-pencil me-2 text-muted"></i>
+                            </button>
+                        </div>
+                    </ItemTemplate>
+                </asp:TemplateField>
+
             </Columns>
         </asp:GridView>
     </div>
