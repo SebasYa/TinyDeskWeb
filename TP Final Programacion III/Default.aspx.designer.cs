@@ -51,6 +51,24 @@ namespace TP_Final_Programacion_III
         protected global::System.Web.UI.WebControls.TextBox txtFechaInicioTicket;
 
         /// <summary>
+        /// Control txtFechaEstimadaTicket.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtFechaEstimadaTicket;
+
+        /// <summary>
+        /// Control dllSprintTicket.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList dllSprintTicket;
+
+        /// <summary>
         /// Control Button1.
         /// </summary>
         /// <remarks>

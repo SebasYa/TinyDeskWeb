@@ -48,6 +48,18 @@
                 <label for="txtFechaInicio" class="form-label fw-semibold">Fecha Inicio</label>
                 <asp:TextBox ID="txtFechaInicioTicket" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
             </div>
+            
+            <div class="col-md-6">
+              <label for="txtFechaEstimadaFin" class="form-label fw-semibold">Fecha Estimada Fin</label>
+              <asp:TextBox ID="txtFechaEstimadaTicket" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+            </div>
+
+            <div class="col-md-4">
+                <label for="ddlProyecto" class="form-label fw-semibold">Proyecto</label>
+                <asp:DropDownList ID="dllSprintTicket" runat="server" CssClass="form-select">
+                <asp:ListItem Text="Seleccione Proyecto..." Value="" />
+                </asp:DropDownList>
+            </div>
 
 
 
