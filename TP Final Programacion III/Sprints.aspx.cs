@@ -16,6 +16,7 @@ namespace TP_Final_Programacion_III
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            litMensaje.Text = "";
             if (!IsPostBack)
             {
                 try
@@ -88,7 +89,7 @@ namespace TP_Final_Programacion_III
                 catch (Exception ex)
                 {
                     Session.Add("error", ex.ToString());
-                    Response.Redirect("Default.aspx", false);
+                    
                 }
             }
 
@@ -115,6 +116,24 @@ namespace TP_Final_Programacion_III
 
                 int idProyectoSeleccionado = int.Parse(ddlProyecto.SelectedValue);
                 nuevoSprint.NumeroSprint = sprintNegocio.ObtenerSiguienteNumeroSprint(idProyectoSeleccionado);
+                DateTime fechaInicio = Convert.ToDateTime(txtFechaInicio.Text);
+                DateTime fechaEstimadaFin = Convert.ToDateTime(txtFechaEstimadaFin.Text);
+
+                DateTime hoy = DateTime.Today;
+
+                 if (fechaInicio.Date <= hoy)
+                 {
+                   MostrarErrorValidacion("La nueva fecha de inicio no puede ser anterior al día de hoy.");
+                   return;
+                 }
+
+                // (FechaEstimadaFin >= FechaInicio)
+                if (fechaEstimadaFin.Date <= fechaInicio.Date)
+                {
+                    MostrarErrorValidacion("La fecha estimada de fin no puede ser anterior a la fecha de inicio.");
+                    return;
+                }
+
                 nuevoSprint.FechaInicio = Convert.ToDateTime(txtFechaInicio.Text);
                 nuevoSprint.FechaEstimadaFin = Convert.ToDateTime(txtFechaEstimadaFin.Text);
                 nuevoSprint.Area = new Area();
@@ -189,9 +208,10 @@ namespace TP_Final_Programacion_III
         }
 
         
-        public string GetDiasRestantesTexto(object fechaFinEstimada, object esFinal)
+        public string GetDiasRestantesTexto(object fechaFinEstimada, object esFinal, object fechaFin = null)
         {
-            if (esFinal != null && (bool)esFinal) return "Sprint cerrado";
+            DateTime fechaFinalizado = Convert.ToDateTime(fechaFin);
+            if (esFinal != null && (bool)esFinal) return "Sprint cerrado - "+ fechaFinalizado.ToString("dd/MM/yyyy");
             if (fechaFinEstimada == null) return "";
 
             DateTime fin = Convert.ToDateTime(fechaFinEstimada);
@@ -302,18 +322,39 @@ namespace TP_Final_Programacion_III
 
                 if (original != null)
                 {
-                    editarSprint.NumeroSprint = original.NumeroSprint; // Mantiene el número original (ej: 3)
+                    editarSprint.NumeroSprint = original.NumeroSprint; 
                 }
-                editarSprint.FechaInicio = Convert.ToDateTime(txtEditFechaInicio.Text);
-                editarSprint.FechaEstimadaFin = Convert.ToDateTime(txtEditFechaEstimadaFin.Text);
+                DateTime fechaInicio = Convert.ToDateTime(txtEditFechaInicio.Text);
+                DateTime fechaEstimadaFin = Convert.ToDateTime(txtEditFechaEstimadaFin.Text);
+
+                DateTime hoy = DateTime.Today;
+
+                // (FechaEstimadaFin >= FechaInicio)
+                if (fechaEstimadaFin.Date <= fechaInicio.Date)
+                {
+                    MostrarErrorValidacion("La fecha estimada de fin no puede ser anterior a la fecha de inicio.");
+                    return;
+                }
+
+                // (FechaFin IS NULL OR FechaFin >= FechaInicio)
                 if (!string.IsNullOrEmpty(txtEditFechaFin.Text))
                 {
-                    editarSprint.FechaFin = Convert.ToDateTime(txtEditFechaFin.Text);
+                    DateTime fechaFinReal = Convert.ToDateTime(txtEditFechaFin.Text);
+                    if (fechaFinReal.Date < fechaInicio.Date)
+                    {
+                        MostrarErrorValidacion("La fecha de finalización real no puede ser anterior a la fecha de inicio.");
+                        return;
+                    }
+                    editarSprint.FechaFin = fechaFinReal;
                 }
                 else
                 {
                     editarSprint.FechaFin = null;
                 }
+
+                editarSprint.FechaInicio = fechaInicio;
+                editarSprint.FechaEstimadaFin = fechaEstimadaFin;
+
                 editarSprint.Area = new Area();
                 editarSprint.Area.Id = int.Parse(ddlEditArea.SelectedValue);
                 editarSprint.Estado = new Estado();
@@ -351,13 +392,31 @@ namespace TP_Final_Programacion_III
                     <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                 </div>";
                 Session.Add("error", ex.ToString());
-                //Response.Redirect("Default.aspx", false);
+                
             }
         }
 
         protected void btnEliminar_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void MostrarErrorValidacion(string mensaje)
+        {
+            litMensaje.Text = $@"
+        <div class='alert alert-danger alert-dismissible fade show' role='alert'>
+            <strong>Error de Validación:</strong> {mensaje}
+            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+        </div>";
+
+            // Reabrimos el modal de edición usando ScriptManager para que el usuario no pierda lo que escribió
+            string scriptOpen = @"
+        document.addEventListener('DOMContentLoaded', function () {
+            var modalElement = document.getElementById('sprintEditarModal');
+            var myModal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+            myModal.show();
+        });";
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "KeepOpenEditValidationError", scriptOpen, true);
         }
     }
 

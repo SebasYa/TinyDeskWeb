@@ -120,7 +120,7 @@
                         <%# Convert.ToDateTime(Eval("FechaEstimadaFin")).ToString("dd/MM/yyyy") %>
                     </div>
                     <small class="text-muted text-xs d-block">
-                        <%# GetDiasRestantesTexto(Eval("FechaEstimadaFin"), Eval("Estado.EsFinal")) %>
+                        <%# GetDiasRestantesTexto(Eval("FechaEstimadaFin"), Eval("Estado.EsFinal"), Eval("FechaFin")) %>
                     </small>
                 </ItemTemplate>
             </asp:TemplateField>
@@ -248,7 +248,7 @@
         let esValido = true;
 
         //CAMPOS CREAR SPRINT
-        const txtInicioCrear = document.getElementById('<%= txtFechaInicio.ClientID %>');
+        //const txtInicioCrear = document.getElementById('<%= txtFechaInicio.ClientID %>');
         const txtEstFinCrear = document.getElementById('<%= txtFechaEstimadaFin.ClientID %>');
         const ddlProyectoCrear = document.getElementById('<%= ddlProyecto.ClientID %>');
         const ddlEstadoCrear = document.getElementById('<%= ddlEstado.ClientID %>');
@@ -288,9 +288,9 @@
         const hoyStr = new Date().toISOString().split('T')[0];
 
         // Validar Fecha Inicio (Requerida y >= Hoy)
-        const hasInicio = txtInicio.value !== "";
+        /*const hasInicio = txtInicio.value !== "";
         let inicioValido = hasInicio && (txtInicio.value >= hoyStr);
-        setValidacion(txtInicio, inicioValido);
+        setValidacion(txtInicio, inicioValido);*/
         const hasInicioCrear = txtInicioCrear.value !== "";
         let inicioValidoCrear = hasInicioCrear && (txtInicioCrear.value >= hoyStr);
         setValidacion(txtInicioCrear, inicioValidoCrear);
@@ -311,7 +311,8 @@
             // Si está vacía, no tiene error (remueve marcas anteriores)
             txtFinReal.classList.remove('is-invalid', 'is-valid');
         }
-
+        alert("¿El formulario es válido? " + esValido);
+        return esValido;
         // Retorna true (hace postback) o false (cancela postback y muestra errores)
         return esValido;
     }
