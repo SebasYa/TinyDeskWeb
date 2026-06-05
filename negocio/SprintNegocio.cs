@@ -69,7 +69,14 @@ namespace negocio
 
                 datos.setearParametro("@NumeroSprint", sprint.NumeroSprint);
                 datos.setearParametro("@FechaInicio", sprint.FechaInicio);
-                datos.setearParametro("@FechaFin", sprint.FechaFin);
+                if (sprint.FechaFin.HasValue)
+                {
+                    datos.setearParametro("@FechaFin", sprint.FechaFin.Value);
+                }
+                else
+                {
+                    datos.setearParametro("@FechaFin", DBNull.Value);
+                }
                 datos.setearParametro("@FechaEstimadaFin", sprint.FechaEstimadaFin);
                 datos.setearParametro("@Activo", sprint.Activo);
                 datos.setearParametro("@IdProyecto", sprint.Proyecto.Id);

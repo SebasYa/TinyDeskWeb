@@ -221,6 +221,7 @@ namespace TP_Final_Programacion_III
         {
             try
             {
+                litMensaje.Text = "";
                 int idSeleccionado = (int)(dgvSprints.SelectedDataKey.Value);
 
                 List<Sprint> listaSprints = (List<Sprint>)Session["listaSprints"];
@@ -350,7 +351,7 @@ namespace TP_Final_Programacion_III
                     <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                 </div>";
                 Session.Add("error", ex.ToString());
-                Response.Redirect("Default.aspx", false);
+                //Response.Redirect("Default.aspx", false);
             }
         }
 
