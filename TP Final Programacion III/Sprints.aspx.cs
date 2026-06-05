@@ -398,7 +398,50 @@ namespace TP_Final_Programacion_III
 
         protected void btnEliminar_Click(object sender, EventArgs e)
         {
+            try
+            {
+                if (Session["IdSprintEditar"] == null)
+                {
+                    litMensaje.Text = "<div class='alert alert-danger'>Error: No se pudo identificar el Sprint a editar.</div>";
+                    return;
+                }
 
+                SprintNegocio sprintNegocio = new SprintNegocio();
+                Sprint eliminarSprint = new Sprint();
+                Usuario userLogueado = (Usuario)Session["usuario"];
+
+                eliminarSprint.Id = (int)Session["IdSprintEditar"];
+
+                List<Sprint> listaSprints = (List<Sprint>)Session["listaSprints"];
+                Sprint original = listaSprints.Find(x => x.Id == eliminarSprint.Id);
+
+                eliminarSprint.Id = original.Id;
+
+                sprintNegocio.Desactivar(eliminarSprint);
+
+                litMensaje.Text = @"
+                <div class='alert alert-success alert-dismissible fade show' role='alert'>
+                    <strong>¡Éxito!</strong> El Sprint se eliminó perfectamente.
+                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+
+
+                Session.Add("listaSprints", sprintNegocio.listar(userLogueado.Empresa.Id));
+                dgvSprints.DataSource = Session["listaSprints"];
+                dgvSprints.DataBind();
+
+
+            }
+            catch (Exception ex)
+            {
+                litMensaje.Text = $@"
+                <div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                    <strong>Hubo un error al modificar:</strong> {ex.Message}
+                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+                Session.Add("error", ex.ToString());
+
+            }
         }
 
         private void MostrarErrorValidacion(string mensaje)

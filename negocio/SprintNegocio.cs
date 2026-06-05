@@ -97,6 +97,31 @@ namespace negocio
             }
         }
 
+        public bool Desactivar(Sprint sprint)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                string consulta = @"UPDATE SPRINT SET  
+                                        Activo = 0 
+                                        WHERE Id = @Id";
+                datos.setearConsulta(consulta);
+                datos.setearParametro("@Activo", sprint.Activo);
+                datos.setearParametro("@Id", sprint.Id);
+
+                datos.ejecutarAccion();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
         public List<Sprint> listar(int idEmpresa)
         {
             List<Sprint> lista = new List<Sprint>();
