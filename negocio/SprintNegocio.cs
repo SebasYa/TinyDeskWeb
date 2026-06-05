@@ -49,6 +49,47 @@ namespace negocio
             }
         }
 
+        public bool Modificar(Sprint sprint)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                string consulta = @"UPDATE SPRINT SET 
+                                        NumeroSprint = @NumeroSprint , 
+                                        FechaInicio = @FechaInicio,
+                                        FechaFin = @FechaFin, 
+                                        FechaEstimadaFin = @FechaEstimadaFin, 
+                                        Activo = @Activo, 
+                                        IdProyecto = @IdProyecto, 
+                                        IdEstado = @IdEstado, 
+                                        IdArea = @IdArea";
+
+                consulta += " WHERE Id = @Id";
+                datos.setearConsulta(consulta);
+
+                datos.setearParametro("@NumeroSprint", sprint.NumeroSprint);
+                datos.setearParametro("@FechaInicio", sprint.FechaInicio);
+                datos.setearParametro("@FechaFin", sprint.FechaFin);
+                datos.setearParametro("@FechaEstimadaFin", sprint.FechaEstimadaFin);
+                datos.setearParametro("@Activo", sprint.Activo);
+                datos.setearParametro("@IdProyecto", sprint.Proyecto.Id);
+                datos.setearParametro("@IdEstado", sprint.Estado.Id);
+                datos.setearParametro("@IdArea", sprint.Area.Id);
+                datos.setearParametro("@Id", sprint.Id);
+
+                datos.ejecutarAccion();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
         public List<Sprint> listar(int idEmpresa)
         {
             List<Sprint> lista = new List<Sprint>();
@@ -57,8 +98,8 @@ namespace negocio
             {
                 datos.setearConsulta(@"
                     SELECT S.Id, S.NumeroSprint, S.FechaInicio, S.FechaEstimadaFin, S.FechaFin, S.Activo, 
-                           P.Nombre AS NombreProyecto, E.Id AS IdEstado, E.Nombre AS NombreEstado, 
-                           E.EsFinal, E.EsSistema, A.Nombre AS NombreArea,
+                           P.Nombre AS NombreProyecto,P.Id AS IdProyecto, E.Id AS IdEstado, E.Nombre AS NombreEstado, 
+                           E.EsFinal, E.EsSistema, A.Nombre AS NombreArea, A.Id AS IdArea,
                            CASE 
                                 WHEN E.EsFinal = 1 THEN 100
                                 WHEN GETDATE() < S.FechaInicio THEN 0
@@ -92,8 +133,10 @@ namespace negocio
                     aux.Estado.EsFinal = (bool)datos.Lector["EsFinal"];
                     aux.Estado.EsSistema = (bool)datos.Lector["EsSistema"];
                     aux.Proyecto = new Proyecto();
+                    aux.Proyecto.Id = (int)datos.Lector["IdProyecto"];
                     aux.Proyecto.Nombre = (string)datos.Lector["NombreProyecto"];
                     aux.Area = new Area();
+                    aux.Area.Id = (int)datos.Lector["IdArea"];
                     aux.Area.Nombre = (string)datos.Lector["NombreArea"];
                     aux.Progreso = (int)datos.Lector["Progreso"];
 

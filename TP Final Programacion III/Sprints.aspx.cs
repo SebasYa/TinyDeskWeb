@@ -60,6 +60,26 @@ namespace TP_Final_Programacion_III
                     ddlProyecto.DataBind();
                     ddlProyecto.Items.Insert(0, new ListItem("Seleccione un puesto...", ""));
 
+
+                    ddlEditArea.DataSource = areaNegocio.listar(idEmpresa);
+                    ddlEditArea.DataValueField = "Id";
+                    ddlEditArea.DataTextField = "Nombre";
+                    ddlEditArea.DataBind();
+                    ddlEditArea.Items.Insert(0, new ListItem("Seleccione un área...", ""));
+
+                    ddlEditEstado.DataSource = estadoNegocio.listar(idEmpresa);
+                    ddlEditEstado.DataValueField = "Id";
+                    ddlEditEstado.DataTextField = "Nombre";
+                    ddlEditEstado.DataBind();
+                    ddlEditEstado.Items.Insert(0, new ListItem("Seleccione un puesto...", ""));
+
+                    ddlEditProyecto.DataSource = proyectoNegocio.listar(idEmpresa);
+                    ddlEditProyecto.DataValueField = "Id";
+                    ddlEditProyecto.DataTextField = "Nombre";
+                    ddlEditProyecto.DataBind();
+                    ddlEditProyecto.Items.Insert(0, new ListItem("Seleccione un puesto...", ""));
+
+
                     //Datagrid View de Sprints
                     Session.Add("listaSprints", sprintNegocio.listar(userLogueado.Empresa.Id));
                     dgvSprints.DataSource = Session["listaSprints"];
@@ -120,6 +140,9 @@ namespace TP_Final_Programacion_III
                 ddlEstado.SelectedIndex = 0;
                 ddlProyecto.SelectedIndex = 0;
 
+                Session.Add("listaSprints", sprintNegocio.listar(userLogueado.Empresa.Id));
+                dgvSprints.DataSource = Session["listaSprints"];
+                dgvSprints.DataBind();
 
 
             }
@@ -188,12 +211,64 @@ namespace TP_Final_Programacion_III
 
         protected void dgvSprints_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
+            dgvSprints.PageIndex = e.NewPageIndex;
+            dgvSprints.DataSource = Session["listaSprints"];
+            dgvSprints.DataBind();
 
         }
 
         protected void dgvSprints_SelectedIndexChanged(object sender, EventArgs e)
         {
+            try
+            {
+                int idSeleccionado = (int)(dgvSprints.SelectedDataKey.Value);
 
+                List<Sprint> listaSprints = (List<Sprint>)Session["listaSprints"];
+
+                Sprint sprintAEditar = listaSprints.Find(x => x.Id == idSeleccionado);
+
+                if (sprintAEditar != null)
+                {
+                    Session["IdSprintEditar"] = sprintAEditar.Id;
+                    lblModalEditarTitulo.Text = $"Editar Sprint {sprintAEditar.NumeroSprint}";
+
+                    txtEditFechaInicio.Text = sprintAEditar.FechaInicio.ToString("yyyy-MM-dd");
+                    txtEditFechaEstimadaFin.Text = sprintAEditar.FechaEstimadaFin.ToString("yyyy-MM-dd");
+
+                    if (sprintAEditar.FechaFin != null)
+                    {
+                        txtEditFechaFin.Text = ((DateTime)sprintAEditar.FechaFin).ToString("yyyy-MM-dd");
+                    }
+                    else
+                    {
+                        txtEditFechaFin.Text = ""; 
+                    }
+
+                   
+                    if (ddlEditProyecto.Items.FindByValue( sprintAEditar.Proyecto.Id.ToString()) != null)
+                        ddlEditProyecto.SelectedValue = sprintAEditar.Proyecto.Id.ToString();
+
+                    if (ddlEditEstado.Items.FindByValue(sprintAEditar.Estado.Id.ToString()) != null)
+                        ddlEditEstado.SelectedValue = sprintAEditar.Estado.Id.ToString();
+
+                    if (ddlEditArea.Items.FindByValue( sprintAEditar.Area.Id.ToString()) != null)
+                        ddlEditArea.SelectedValue = sprintAEditar.Area.Id.ToString();
+
+
+                    string scriptOpen = @"
+                        document.addEventListener('DOMContentLoaded', function () {
+                            var modalElement = document.getElementById('sprintEditarModal');
+                            var myModal = new bootstrap.Modal(modalElement);
+                            myModal.show();
+                        });";
+
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "OpenEditModal", scriptOpen, true);
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         protected void txtFiltroSprints_TextChanged(object sender, EventArgs e)
@@ -202,6 +277,86 @@ namespace TP_Final_Programacion_III
             List<Sprint> listaFiltrada = lista.FindAll(x => x.Proyecto.Nombre.ToUpper().Contains(txtFiltroSprints.Text.ToUpper()));
             dgvSprints.DataSource = listaFiltrada;
             dgvSprints.DataBind();
+        }
+
+        protected void btnGuardarEdicion_Click(object sender, EventArgs e)
+        {
+
+            try
+            {
+                if (Session["IdSprintEditar"] == null)
+                {
+                    litMensaje.Text = "<div class='alert alert-danger'>Error: No se pudo identificar el Sprint a editar.</div>";
+                    return;
+                }
+
+                SprintNegocio sprintNegocio = new SprintNegocio();
+                Sprint editarSprint = new Sprint();
+                Usuario userLogueado = (Usuario)Session["usuario"];
+
+                editarSprint.Id = (int)Session["IdSprintEditar"];
+
+                List<Sprint> listaSprints = (List<Sprint>)Session["listaSprints"];
+                Sprint original = listaSprints.Find(x => x.Id == editarSprint.Id);
+
+                if (original != null)
+                {
+                    editarSprint.NumeroSprint = original.NumeroSprint; // Mantiene el número original (ej: 3)
+                }
+                editarSprint.FechaInicio = Convert.ToDateTime(txtEditFechaInicio.Text);
+                editarSprint.FechaEstimadaFin = Convert.ToDateTime(txtEditFechaEstimadaFin.Text);
+                if (!string.IsNullOrEmpty(txtEditFechaFin.Text))
+                {
+                    editarSprint.FechaFin = Convert.ToDateTime(txtEditFechaFin.Text);
+                }
+                else
+                {
+                    editarSprint.FechaFin = null;
+                }
+                editarSprint.Area = new Area();
+                editarSprint.Area.Id = int.Parse(ddlEditArea.SelectedValue);
+                editarSprint.Estado = new Estado();
+                editarSprint.Estado.Id = int.Parse(ddlEditEstado.SelectedValue);
+                editarSprint.Proyecto = new Proyecto();
+                editarSprint.Proyecto.Id = int.Parse(ddlEditProyecto.SelectedValue);
+                editarSprint.Activo = true;
+
+                sprintNegocio.Modificar(editarSprint);
+
+                litMensaje.Text = @"
+                <div class='alert alert-success alert-dismissible fade show' role='alert'>
+                    <strong>¡Éxito!</strong> El Sprint se modificó perfectamente.
+                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+
+
+                txtFechaInicio.Text = "";
+                txtFechaEstimadaFin.Text = "";
+                ddlArea.SelectedIndex = 0;
+                ddlEstado.SelectedIndex = 0;
+                ddlProyecto.SelectedIndex = 0;
+
+                Session.Add("listaSprints", sprintNegocio.listar(userLogueado.Empresa.Id));
+                dgvSprints.DataSource = Session["listaSprints"];
+                dgvSprints.DataBind();
+
+
+            }
+            catch (Exception ex)
+            {
+                litMensaje.Text = $@"
+                <div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                    <strong>Hubo un error al modificar:</strong> {ex.Message}
+                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+                Session.Add("error", ex.ToString());
+                Response.Redirect("Default.aspx", false);
+            }
+        }
+
+        protected void btnEliminar_Click(object sender, EventArgs e)
+        {
+
         }
     }
 
