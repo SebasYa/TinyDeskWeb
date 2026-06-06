@@ -74,7 +74,7 @@ namespace negocio
             }
         }
 
-        public bool RegistrarEmpresaYOwner(string nombreEmpresa, string nombreUsuario, string password, string nombre, string apellido, string email)
+        public int RegistrarEmpresaYOwner(string nombreEmpresa, string nombreUsuario, string password, string nombre, string apellido, string email)
         {
             AccesoDatos datos = new AccesoDatos();
             try
@@ -100,6 +100,7 @@ namespace negocio
                         VALUES (@NombreUsuario, @Password, @Email, @Nombre, @Apellido, 1, 1, @IdPuestoOwner, @IdAreaOwner, @IdEmpresa);
 
                         -- Si todo fue exitoso, confirmamos los cambios
+                        SELECT CAST(SCOPE_IDENTITY() AS INT)
                         COMMIT TRANSACTION;
                     END TRY
                     BEGIN CATCH
@@ -118,8 +119,8 @@ namespace negocio
                 datos.setearParametro("@Apellido", apellido);
 
 
-                datos.ejecutarAccion();
-                return true;
+                int idUsuario = datos.ejecutarScalar();
+                return idUsuario;
             }
             catch (Exception ex)
             {
@@ -318,6 +319,30 @@ namespace negocio
             }
             catch (Exception ex)
             {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        public void VerificarMail(Usuario usuario)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.setearConsulta(@" UPDATE USUARIO SET EmailVerificado = 1, Activo = 1
+                                        WHERE Id = @Id
+                ");
+
+                datos.setearParametro("@Id", usuario.Id);
+                datos.ejecutarAccion();
+            }
+            catch (Exception ex)
+            {
+
                 throw ex;
             }
             finally

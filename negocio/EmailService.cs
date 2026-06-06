@@ -33,11 +33,12 @@ namespace negocio
 
         }
 
-        public void enviarEmail()
+        public bool enviarEmail()
         {
             try
             {
                 server.Send(email);
+                return true;
             }
             catch (Exception ex)
             {

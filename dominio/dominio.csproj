@@ -51,6 +51,7 @@
     <Compile Include="Sprint.cs" />
     <Compile Include="Ticket.cs" />
     <Compile Include="Usuario.cs" />
+    <Compile Include="UsuarioToken.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

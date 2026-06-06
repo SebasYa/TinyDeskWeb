@@ -184,6 +184,7 @@
     <Content Include="Sprints.aspx" />
     <Content Include="Ticket.aspx" />
     <Content Include="Usuarios.aspx" />
+    <Content Include="ValidarEmail.aspx" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config" />
     <Content Include="Bundle.config" />
@@ -279,6 +280,13 @@
     </Compile>
     <Compile Include="Usuarios.aspx.designer.cs">
       <DependentUpon>Usuarios.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ValidarEmail.aspx.cs">
+      <DependentUpon>ValidarEmail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ValidarEmail.aspx.designer.cs">
+      <DependentUpon>ValidarEmail.aspx</DependentUpon>
     </Compile>
     <Compile Include="ViewSwitcher.ascx.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>

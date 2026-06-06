@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace negocio
 {
-    internal class EmailTemplates
+    public class EmailTemplates
     {
         public static string ValidarCuenta(string nombre, string linkValidacion)
         {

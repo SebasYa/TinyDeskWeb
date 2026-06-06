@@ -54,6 +54,7 @@ CREATE TABLE USUARIO (
     Apellido VARCHAR(30) NOT NULL,
     Activo BIT NOT NULL DEFAULT 1,
     PermisoEscritura BIT NOT NULL DEFAULT 0, -- Permiso directo
+    EmailVerificado BIT NOT NULL DEFAULT 0,
     IdPuesto INT NOT NULL,                   -- Clave foránea al puesto ocupado (ej: Owner, Developer Senior)
     IdArea INT NOT NULL,                         -- NO Nullable (el Owner necesita área Direccion)
     IdEmpresa INT NOT NULL,                  -- Clave foránea de la empresa del usuario
@@ -188,3 +189,21 @@ BEGIN
     INSERT INTO USUARIO (NombreUsuario, PasswordHash, Email, Nombre, Apellido, Activo, PermisoEscritura, IdPuesto, IdArea, IdEmpresa)
     VALUES ('phantom_user', '123', 'gasparin@gmail.com', 'Casper', 'Gasparin', 1, 1, @IdPuesto, @IdArea, @IdEmpresa);
 END
+
+ALTER TABLE USUARIO
+ADD EmailVerificado BIT NOT NULL DEFAULT 0;
+UPDATE USUARIO SET EmailVerificado = 1 WHERE NombreUsuario = 'phantom_user'
+
+CREATE TABLE USUARIO_TOKEN(
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    IdUsuario INT NOT NULL, 
+    Token VARCHAR(200) NOT NULL, 
+    Tipo VARCHAR(30) NOT NULL, 
+    FechaCreacion DATETIME NOT NULL DEFAULT GETDATE(),
+    FechaVencimiento DATETIME NOT NULL,
+    FechaUso DATETIME NULL,
+    Usado BIT NOT NULL DEFAULT 0,
+
+    FOREIGN KEY (IdUsuario) REFERENCES USUARIO(Id)
+)
+

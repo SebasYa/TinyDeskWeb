@@ -1,4 +1,5 @@
-﻿using negocio;
+﻿using dominio;
+using negocio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,16 +39,33 @@ namespace TP_Final_Programacion_III
             {
                 UsuarioNegocio negocio = new UsuarioNegocio();
 
-                if (negocio.RegistrarEmpresaYOwner(
+                int idUsuario = negocio.RegistrarEmpresaYOwner(
                     txtNombreEmpresa.Text,
                     txtNombreUsuario.Text,
                     txtPassword.Text,
                     txtNombre.Text,
                     txtApellido.Text,
-                    txtEmail.Text))
+                    txtEmail.Text);
+                if(idUsuario <= 0)
                 {
-                    Response.Redirect("Login.aspx", false);
+                    return;
                 }
+
+                Usuario usuario = new Usuario();
+                usuario.Id = idUsuario;
+                usuario.Nombre = txtNombre.Text;
+                usuario.Email = txtEmail.Text;
+
+                UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
+                UsuarioToken usuarioToken = tokenNegocio.CrearToken(usuario, "ValidarEmail", 24);
+
+                string linkValidacion = Request.Url.GetLeftPart(UriPartial.Authority) + ResolveUrl("~/ValidarEmail.aspx") + "+token=" + Server.UrlEncode(usuarioToken.Token);
+                string cuerpo = EmailTemplates.ValidarCuenta(usuario.Nombre, linkValidacion);
+
+                EmailService emailService = new EmailService();
+                emailService.armarCorreo(usuario.Email, "Valida tu cuenta en TinyDesk", cuerpo);
+                if(emailService.enviarEmail()) Response.Redirect("Login.aspx", false);
+
             }
             catch (Exception ex)
             {

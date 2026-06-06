@@ -19,5 +19,6 @@ namespace dominio
         public Puesto Puesto { get; set; }
         public Empresa Empresa { get; set; }
         public Area Area { get; set; }
+        public bool EmailVerificado { get; set; }
     }
 }

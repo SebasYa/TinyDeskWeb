@@ -52,7 +52,9 @@
     <Compile Include="Seguridad.cs" />
     <Compile Include="SprintNegocio.cs" />
     <Compile Include="TicketNegocio.cs" />
+    <Compile Include="TokenHelper.cs" />
     <Compile Include="UsuarioNegocio.cs" />
+    <Compile Include="UsuarioTokenNegocio.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\dominio\dominio.csproj">
