@@ -25,7 +25,7 @@ namespace negocio
                     INNER JOIN EMPRESA E ON U.IdEmpresa = E.Id
                     INNER JOIN PUESTO P ON U.IdPuesto = P.Id
                     INNER JOIN AREA A ON U.IdArea = A.Id
-                    WHERE U.NombreUsuario = @NombreUsuario AND U.PasswordHash = @PasswordHash
+                    WHERE U.NombreUsuario = @NombreUsuario AND U.PasswordHash = @PasswordHash AND U.EmailVerificado = 1
         ");
                 datos.setearParametro("@NombreUsuario", usuario.NombreUsuario);
                 datos.setearParametro("@PasswordHash", usuario.PasswordHash);

@@ -59,7 +59,7 @@ namespace TP_Final_Programacion_III
                 UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
                 UsuarioToken usuarioToken = tokenNegocio.CrearToken(usuario, "ValidarEmail", 24);
 
-                string linkValidacion = Request.Url.GetLeftPart(UriPartial.Authority) + ResolveUrl("~/ValidarEmail.aspx") + "+token=" + Server.UrlEncode(usuarioToken.Token);
+                string linkValidacion = Request.Url.GetLeftPart(UriPartial.Authority) + ResolveUrl("~/ValidarEmail.aspx") + "?token=" + Server.UrlEncode(usuarioToken.Token);
                 string cuerpo = EmailTemplates.ValidarCuenta(usuario.Nombre, linkValidacion);
 
                 EmailService emailService = new EmailService();

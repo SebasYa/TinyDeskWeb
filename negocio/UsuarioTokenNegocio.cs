@@ -25,7 +25,7 @@ namespace negocio
                                        (IdUsuario, Token, Tipo, FechaCreacion, FechaExpiracion, Usado)
                                        VALUES (@IdUsuario, @Token, @Tipo, @FechaCreacion, @FechaExpiracion, @Usado)              
                 ");
-                datos.setearParametro("@IdUsuario", usuarioToken.Usuario);
+                datos.setearParametro("@IdUsuario", usuarioToken.Usuario.Id);
                 datos.setearParametro("@Token", usuarioToken.Token);
                 datos.setearParametro("@Tipo", usuarioToken.Tipo);
                 datos.setearParametro("@FechaCreacion", usuarioToken.FechaCreacion);

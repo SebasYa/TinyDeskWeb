@@ -27,6 +27,7 @@
                                     Aguarde unos instantes. Será redirigido al inicio de sesión.
                                 </p>
                             </asp:Panel>
+                            <asp:Literal ID="litRedireccion" runat="server"></asp:Literal>
                         </div>
                     </div>
                 </div>
@@ -34,6 +35,5 @@
         </div>
     </form>
 
-    <asp:Literal ID="litRedireccion" runat="server"></asp:Literal>
 </body>
 </html>
