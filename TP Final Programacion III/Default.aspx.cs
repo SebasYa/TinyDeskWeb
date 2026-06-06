@@ -181,11 +181,51 @@ namespace TP_Final_Programacion_III
 
         protected void btnGuardarTicket_Click(object sender, EventArgs e)
         {
-            litMensaje.Text = @"
-            <div class='alert alert-info alert-dismissible fade show' role='alert'>
-            Funcionalidad de Tickets en desarrollo.
-            <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
-            </div>";
+            try
+            {
+                // Creacion del ticket
+
+                TicketNegocio ticketNegocio = new TicketNegocio();
+                UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
+                Ticket nuevoTicket = new Ticket();
+
+
+
+                // Enviar mail al usuario asignado
+                //int idTicket = ticketNegocio.Agregar(nuevoTicket);
+                //nuevoTicket.Id = idTicket;
+
+                //Usuario usuarioAsignado = usuarioNegocio.BuscarPorId(nuevoTicket.Usuario.Id);
+
+                //string linkTicket = Request.Url.GetLeftPart(UriPartial.Authority) + ResolveUrl("~/Ticket.aspx") + "?id=" + nuevoTicket.Id;
+
+                //string cuerpo = EmailTemplates.TicketAsignado(usuarioAsignado.Nombre, nuevoTicket, usuarioAsignado.Area.Nombre, linkTicket
+                //);
+
+                //EmailService emailService = new EmailService();
+
+                //emailService.armarCorreo(usuarioAsignado.Email, "Nuevo ticket asignado en TinyDesk", cuerpo);
+
+                //emailService.enviarEmail();
+
+                //litMensaje.Text = @"<div class='alert alert-success alert-dismissible fade show' role='alert'>
+                //                        El ticket fue creado y se notificó al usuario asignado.
+                //                        <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                //                    </div>";
+
+
+                //Limpiar Campos
+            }
+            catch (Exception ex)
+            {
+
+                litMensaje.Text = @"
+                <div class='alert alert-info alert-dismissible fade show' role='alert'>
+                Funcionalidad de Tickets en desarrollo.
+                <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                </div>";
+                Session.Add("error", ex.ToString());
+            }
         }
     }
 }

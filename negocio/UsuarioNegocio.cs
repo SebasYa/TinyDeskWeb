@@ -263,13 +263,15 @@ namespace negocio
             }
         }
 
-        public List<Usuario> listar(int idEmpresa)
+        public List<Usuario> listar(int idEmpresa, int idArea = 0)
         {
             AccesoDatos datos = new AccesoDatos();
             List<Usuario> lista = new List<Usuario>();
             try
             {
-                datos.setearConsulta(@"SELECT U.Id, U.NombreUsuario, U.Email, U.Nombre, U.Apellido, 
+                if (idArea == 0)
+                {
+                    datos.setearConsulta(@"SELECT U.Id, U.NombreUsuario, U.Email, U.Nombre, U.Apellido, 
                                               U.Activo, U.PermisoEscritura,
                                               U.IdPuesto, P.Nombre AS NombrePuesto,
                                               U.IdArea, A.Nombre AS NombreArea, U.IdEmpresa
@@ -277,7 +279,21 @@ namespace negocio
                                        INNER JOIN PUESTO P ON U.IdPuesto = P.Id
                                        INNER JOIN AREA A ON U.IdArea = A.Id
                                        WHERE U.IdEmpresa = @IdEmpresa"
-                );
+                    );
+                }
+                else
+                {
+                    datos.setearConsulta(@"SELECT U.Id, U.NombreUsuario, U.Email, U.Nombre, U.Apellido, 
+                                              U.Activo, U.PermisoEscritura,
+                                              U.IdPuesto, P.Nombre AS NombrePuesto,
+                                              U.IdArea, A.Nombre AS NombreArea, U.IdEmpresa
+                                       FROM USUARIO U
+                                       INNER JOIN PUESTO P ON U.IdPuesto = P.Id
+                                       INNER JOIN AREA A ON U.IdArea = A.Id
+                                       WHERE U.IdEmpresa = @IdEmpresa AND U.IdArea = @IdArea"
+                    );
+                    datos.setearParametro("@IdArea", idArea);
+                }
                 datos.setearParametro("@IdEmpresa", idEmpresa);
                 datos.ejecutarLectura();
 

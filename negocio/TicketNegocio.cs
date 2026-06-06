@@ -33,5 +33,10 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
+
+        public int Agregar(Ticket ticket)
+        {
+            return 1;
+        }
     }
 }
