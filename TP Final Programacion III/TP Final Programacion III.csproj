@@ -118,6 +118,7 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\Site.css" />
+    <Content Include="CrearPassword.aspx" />
     <Content Include="CrearUsuario.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
@@ -206,6 +207,13 @@
     </Compile>
     <Compile Include="Contact.aspx.designer.cs">
       <DependentUpon>Contact.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CrearPassword.aspx.cs">
+      <DependentUpon>CrearPassword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CrearPassword.aspx.designer.cs">
+      <DependentUpon>CrearPassword.aspx</DependentUpon>
     </Compile>
     <Compile Include="CrearUsuario.aspx.cs">
       <DependentUpon>CrearUsuario.aspx</DependentUpon>

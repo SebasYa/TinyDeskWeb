@@ -132,39 +132,39 @@ namespace negocio
             }
         }
 
-        public bool Agregar(Usuario nuevoUsuario)
-        {
-            AccesoDatos datos = new AccesoDatos();
-            try
-            {
-                datos.setearConsulta(@"INSERT INTO USUARIO (
-                                       NombreUsuario, PasswordHash, Email, Nombre, Apellido, Activo,
-                                       PermisoEscritura, IdPuesto, IdArea, IdEmpresa)
-                                       VALUES (@NombreUsuario, @PasswordHash, @Email, @Nombre, @Apellido, @Activo, 
-                                               @PermisoEscritura, @IdPuesto, @IdArea, @IdEmpresa)
-        ");
-                datos.setearParametro("@NombreUsuario", nuevoUsuario.NombreUsuario);
-                datos.setearParametro("@PasswordHash", nuevoUsuario.PasswordHash);
-                datos.setearParametro("@Email", nuevoUsuario.Email);
-                datos.setearParametro("@Nombre", nuevoUsuario.Nombre);
-                datos.setearParametro("@Apellido", nuevoUsuario.Apellido);
-                datos.setearParametro("@Activo", nuevoUsuario.Activo);
-                datos.setearParametro("@PermisoEscritura", nuevoUsuario.PermisoEscritura);
-                datos.setearParametro("@IdPuesto", nuevoUsuario.Puesto.Id);
-                datos.setearParametro("@IdArea", nuevoUsuario.Area.Id);
-                datos.setearParametro("@IdEmpresa", nuevoUsuario.Empresa.Id);
-                datos.ejecutarAccion();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                datos.cerrarConexion();
-            }
-        }
+        //public bool Agregar(Usuario nuevoUsuario)
+        //{
+        //    AccesoDatos datos = new AccesoDatos();
+        //    try
+        //    {
+        //        datos.setearConsulta(@"INSERT INTO USUARIO (
+        //                               NombreUsuario, PasswordHash, Email, Nombre, Apellido, Activo,
+        //                               PermisoEscritura, IdPuesto, IdArea, IdEmpresa)
+        //                               VALUES (@NombreUsuario, @PasswordHash, @Email, @Nombre, @Apellido, @Activo, 
+        //                                       @PermisoEscritura, @IdPuesto, @IdArea, @IdEmpresa)
+        //");
+        //        datos.setearParametro("@NombreUsuario", nuevoUsuario.NombreUsuario);
+        //        datos.setearParametro("@PasswordHash", nuevoUsuario.PasswordHash);
+        //        datos.setearParametro("@Email", nuevoUsuario.Email);
+        //        datos.setearParametro("@Nombre", nuevoUsuario.Nombre);
+        //        datos.setearParametro("@Apellido", nuevoUsuario.Apellido);
+        //        datos.setearParametro("@Activo", nuevoUsuario.Activo);
+        //        datos.setearParametro("@PermisoEscritura", nuevoUsuario.PermisoEscritura);
+        //        datos.setearParametro("@IdPuesto", nuevoUsuario.Puesto.Id);
+        //        datos.setearParametro("@IdArea", nuevoUsuario.Area.Id);
+        //        datos.setearParametro("@IdEmpresa", nuevoUsuario.Empresa.Id);
+        //        datos.ejecutarAccion();
+        //        return true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    finally
+        //    {
+        //        datos.cerrarConexion();
+        //    }
+        //}
         public Usuario BuscarPorId(int id)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -231,20 +231,15 @@ namespace negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                string consulta = @"UPDATE USUARIO SET 
-                                        NombreUsuario = @NombreUsuario,
-                                        Email = @Email,
-                                        Nombre = @Nombre, 
-                                        Apellido = @Apellido, 
-                                        PermisoEscritura = @PermisoEscritura, 
-                                        IdPuesto = @IdPuesto, 
-                                        IdArea = @IdArea";
-                if (!string.IsNullOrWhiteSpace(usuario.PasswordHash))
-                {
-                    consulta += ", passwordHash = @PasswordHash";
-                }
-                consulta += " WHERE Id = @Id";
-                datos.setearConsulta(consulta);
+                datos.setearConsulta(@"UPDATE USUARIO SET 
+                                                    NombreUsuario = @NombreUsuario,
+                                                    Email = @Email,
+                                                    Nombre = @Nombre, 
+                                                    Apellido = @Apellido, 
+                                                    PermisoEscritura = @PermisoEscritura, 
+                                                    IdPuesto = @IdPuesto, 
+                                                    IdArea = @IdArea
+                                       WHERE Id = @Id");
 
                 datos.setearParametro("@NombreUsuario", usuario.NombreUsuario);
                 datos.setearParametro("@Email", usuario.Email);
@@ -254,11 +249,6 @@ namespace negocio
                 datos.setearParametro("@IdPuesto", usuario.Puesto.Id);
                 datos.setearParametro("@IdArea", usuario.Area.Id);
                 datos.setearParametro("@Id", usuario.Id);
-
-                if (!string.IsNullOrWhiteSpace(usuario.PasswordHash))
-                {
-                    datos.setearParametro("@PasswordHash", usuario.PasswordHash);
-                }
 
                     datos.ejecutarAccion();
                 return true;
@@ -337,6 +327,64 @@ namespace negocio
                                         WHERE Id = @Id
                 ");
 
+                datos.setearParametro("@Id", usuario.Id);
+                datos.ejecutarAccion();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+        public int AgregarInvitado(Usuario nuevoUsuario)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.setearConsulta(@" INSERT INTO USUARIO (NombreUsuario, PasswordHash, Email, Nombre, Apellido, Activo, 
+                                                             PermisoEscritura, EmailVerificado, IdPuesto, IdArea, IdEmpresa)
+                                        VALUES (@NombreUsuario, @PasswordHash, @Email, @Nombre, @Apellido, 0, @PermisoEscritura, 1, 
+                                                @IdPuesto, @IdArea, @IdEmpresa);
+                                        SELECT CAST(SCOPE_IDENTITY() AS INT);
+                ");
+
+                datos.setearParametro("@NombreUsuario", nuevoUsuario.NombreUsuario);
+                datos.setearParametro("@PasswordHash", nuevoUsuario.PasswordHash);
+                datos.setearParametro("@Email", nuevoUsuario.Email);
+                datos.setearParametro("@Nombre", nuevoUsuario.Nombre);
+                datos.setearParametro("@Apellido", nuevoUsuario.Apellido);
+                datos.setearParametro("@PermisoEscritura", nuevoUsuario.PermisoEscritura);
+                datos.setearParametro("@IdPuesto", nuevoUsuario.Puesto.Id);
+                datos.setearParametro("@IdArea", nuevoUsuario.Area.Id);
+                datos.setearParametro("@IdEmpresa", nuevoUsuario.Empresa.Id);
+                return datos.ejecutarScalar();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+        public void CrearPassInvitado(Usuario usuario, string pass)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.setearConsulta(@" UPDATE USUARIO SET PasswordHash = @PasswordHash, EmailVerificado = 1, Activo = 1
+                                        WHERE Id = @Id
+                ");
+
+                datos.setearParametro("@PasswordHash", pass);
                 datos.setearParametro("@Id", usuario.Id);
                 datos.ejecutarAccion();
             }

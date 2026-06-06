@@ -18,7 +18,6 @@ namespace TP_Final_Programacion_III
                 try
                 {
                     txtNombreUsuario.Text = "";
-                    txtPassword.Text = "";
                     txtNombre.Text = "";
                     txtApellido.Text = "";
                     chkPermisoEscritura.Checked = false;
@@ -61,13 +60,6 @@ namespace TP_Final_Programacion_III
 
                             chkPermisoEscritura.Checked = usuarioEditar.PermisoEscritura;
 
-                            txtPassword.Text = "";
-                            txtConfirmarPassword.Text = "";
-
-                            rfvPassword.Enabled = false;
-                            rfvConfirmarPassword.Enabled = false;
-                            cvConfirmarPassword.Enabled = false;
-
                         }
                     }
                 }
@@ -84,8 +76,7 @@ namespace TP_Final_Programacion_III
             bool esEdicion = Request.QueryString["id"] != null;
             if (string.IsNullOrWhiteSpace(txtNombreUsuario.Text) || string.IsNullOrWhiteSpace(txtNombre.Text) ||
             string.IsNullOrWhiteSpace(txtApellido.Text) || string.IsNullOrWhiteSpace(ddlArea.SelectedValue) ||
-            string.IsNullOrWhiteSpace(ddlPuesto.SelectedValue) || string.IsNullOrWhiteSpace(txtEmail.Text) || 
-            (!esEdicion && txtPassword.Text != txtConfirmarPassword.Text) || (!esEdicion && string.IsNullOrWhiteSpace(txtPassword.Text))
+            string.IsNullOrWhiteSpace(ddlPuesto.SelectedValue) || string.IsNullOrWhiteSpace(txtEmail.Text) 
            )
             {
                 return;
@@ -102,7 +93,6 @@ namespace TP_Final_Programacion_III
                 nuevoUsuario.Email = txtEmail.Text;
                 nuevoUsuario.Nombre = txtNombre.Text;
                 nuevoUsuario.Apellido = txtApellido.Text;
-                nuevoUsuario.Activo = true;
                 nuevoUsuario.PermisoEscritura = chkPermisoEscritura.Checked;
 
                 nuevoUsuario.Area = new Area();
@@ -116,17 +106,6 @@ namespace TP_Final_Programacion_III
 
                 if (esEdicion)
                 {
-                    if (!string.IsNullOrWhiteSpace(txtPassword.Text))
-                    {
-                        if(txtPassword.Text == txtConfirmarPassword.Text)
-                        {
-                            nuevoUsuario.PasswordHash = txtPassword.Text;
-                        }
-                        else
-                        {
-                            return;
-                        }
-                    }
                     nuevoUsuario.Id = int.Parse(Request.QueryString["id"]);
                     if (negocio.Modificar(nuevoUsuario))
                     {
@@ -135,12 +114,25 @@ namespace TP_Final_Programacion_III
                 }
                 else
                 {
-                    nuevoUsuario.PasswordHash = txtPassword.Text;
-                    if (negocio.Agregar(nuevoUsuario))
+                    nuevoUsuario.Activo = false;
+                    nuevoUsuario.EmailVerificado = false;
+                    nuevoUsuario.PasswordHash = TokenHelper.GenerarToken();
+                    int idUsuario = negocio.AgregarInvitado(nuevoUsuario);
+                    if (idUsuario <= 0)
                     {
-
-                        Response.Redirect("Usuarios.aspx", false);
+                        return;
                     }
+                    nuevoUsuario.Id = idUsuario;
+                    UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
+                    UsuarioToken usuarioToken = tokenNegocio.CrearToken(nuevoUsuario, "CrearPassword", 24);
+
+                    string linkCrearPass = Request.Url.GetLeftPart(UriPartial.Authority) + ResolveUrl("~/CrearPassword.aspx") + "?token=" + Server.UrlEncode(usuarioToken.Token);
+                    string cuerpo = EmailTemplates.CrearPasswordEmpleado(nuevoUsuario.Nombre, linkCrearPass);
+
+                    EmailService email = new EmailService();
+
+                    email.armarCorreo(nuevoUsuario.Email, "Crea tu contraseña en TinyDesk", cuerpo);
+                    if(email.enviarEmail()) Response.Redirect("Usuarios.aspx", false);
                 }
             }
             catch (Exception ex)

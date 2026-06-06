@@ -10,7 +10,9 @@
                         <h3 class="mb-1 fw-bold">
                             <asp:Label ID="lblTituloFormularioUsuario" runat="server" Text="Crear Usuario"></asp:Label>
                         </h3>
-                        <p class="text-white-50 mb-0"><asp:Label ID="txtSubtitulo" runat="server" Visible="true" Text="Completá los datos para registrar un nuevo integrante del equipo"></asp:Label></p>
+                        <p class="text-white-50 mb-0">
+                            <asp:Label ID="txtSubtitulo" runat="server" Visible="true" Text="Completá los datos para registrar un nuevo integrante del equipo"></asp:Label>
+                        </p>
                     </div>
                     <div class="card-body p-4">
                         <!-- Sección 1: Datos Personales -->
@@ -76,6 +78,7 @@
                                     <asp:TextBox ID="txtNombreUsuario" runat="server" CssClass="form-control" placeholder="Ej: jperez"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="rfvNombreUsuario" runat="server" ControlToValidate="txtNombreUsuario" ErrorMessage="El usuario es obligatorio." CssClass="text-danger text-validation-error" Display="Dynamic" />
                                 </div>
+                                <!-- 
                                 <div class="col-md-6">
                                     <label for="txtPassword" class="form-label fw-semibold">Contraseña</label>
                                     <asp:TextBox ID="txtPassword" runat="server" CssClass="form-control" TextMode="Password" placeholder=""></asp:TextBox>
@@ -87,6 +90,7 @@
                                     <asp:RequiredFieldValidator ID="rfvConfirmarPassword" runat="server" ControlToValidate="txtConfirmarPassword" ErrorMessage="Debe confirmar la contraseña." CssClass="text-danger text-validation-error" Display="Dynamic" />
                                     <asp:CompareValidator ID="cvConfirmarPassword" runat="server" ControlToValidate="txtConfirmarPassword" ControlToCompare="txtPassword" ErrorMessage="Las contraseñas no coinciden." CssClass="text-danger text-validation-error" Display="Dynamic" />
                                 </div>
+                                    -->
                             </div>
                         </div>
                         <!-- Botón de Guardado -->
