@@ -25,7 +25,7 @@ namespace negocio
                     INNER JOIN EMPRESA E ON U.IdEmpresa = E.Id
                     INNER JOIN PUESTO P ON U.IdPuesto = P.Id
                     INNER JOIN AREA A ON U.IdArea = A.Id
-                    WHERE U.NombreUsuario = @NombreUsuario AND U.PasswordHash = @PasswordHash AND U.EmailVerificado = 1
+                    WHERE U.NombreUsuario = @NombreUsuario AND U.PasswordHash = @PasswordHash AND U.EmailVerificado = 1 AND U.Activo = 1
         ");
                 datos.setearParametro("@NombreUsuario", usuario.NombreUsuario);
                 datos.setearParametro("@PasswordHash", usuario.PasswordHash);
@@ -96,8 +96,8 @@ namespace negocio
 
                         -- 4. Insertamos Usuario
                         INSERT INTO USUARIO (NombreUsuario, PasswordHash, Email, Nombre, Apellido, Activo, 
-                                             PermisoEscritura, IdPuesto, IdArea, IdEmpresa)
-                        VALUES (@NombreUsuario, @Password, @Email, @Nombre, @Apellido, 1, 1, @IdPuestoOwner, @IdAreaOwner, @IdEmpresa);
+                                             PermisoEscritura, EmailVerificado, IdPuesto, IdArea, IdEmpresa)
+                        VALUES (@NombreUsuario, @Password, @Email, @Nombre, @Apellido, 0, 1, 1, @IdPuestoOwner, @IdAreaOwner, @IdEmpresa);
 
                         -- Si todo fue exitoso, confirmamos los cambios
                         SELECT CAST(SCOPE_IDENTITY() AS INT)
@@ -339,6 +339,32 @@ namespace negocio
 
                 datos.setearParametro("@Id", usuario.Id);
                 datos.ejecutarAccion();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        public bool MailPendienteVerificacion(Usuario usuario)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.setearConsulta(@" SELECT COUNT(1) FROM USUARIO
+                                        WHERE NombreUsuario = @NombreUsuario AND PasswordHash = @PasswordHash AND EmailVerificado = 0
+                ");
+
+                datos.setearParametro("@NombreUsuario", usuario.NombreUsuario);
+                datos.setearParametro("@PasswordHash", usuario.PasswordHash);
+                return datos.ejecutarScalar() > 0;
+
             }
             catch (Exception ex)
             {

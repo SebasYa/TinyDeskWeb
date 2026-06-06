@@ -64,6 +64,8 @@ namespace negocio
                 lector.Close();
                 conexion.Close();
             }
+
+            if (conexion != null && conexion.State == System.Data.ConnectionState.Open) conexion.Close();
         }
 
         internal void setearParametro(string nombre, object valor)

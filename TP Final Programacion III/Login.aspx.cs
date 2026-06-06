@@ -38,6 +38,20 @@ namespace TP_Final_Programacion_III
                     txtPassword.Text = "";
 
                 }
+                else if (negocio.MailPendienteVerificacion(usuario))
+                {
+                    Session.Remove("usuario");
+                    txtPassword.Text = "";
+
+                    lblErrorUsuario.Text = "Tu cuenta está pendiente de verificación. Revisá tu correo electrónico para poder iniciar sesión.";
+                    lblErrorUsuario.Visible = true;
+
+                    lblErrorPass.Text = "";
+                    lblErrorPass.Visible = false;
+
+                    txtNombreUsuario.CssClass = "form-control is-invalid";
+                    txtPassword.CssClass = "form-control";
+                }
                 else
                 {
                     Session.Remove("usuario");

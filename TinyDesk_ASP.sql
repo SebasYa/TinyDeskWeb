@@ -52,7 +52,7 @@ CREATE TABLE USUARIO (
     Email VARCHAR(75) NOT NULL UNIQUE,
     Nombre VARCHAR(30) NOT NULL,
     Apellido VARCHAR(30) NOT NULL,
-    Activo BIT NOT NULL DEFAULT 1,
+    Activo BIT NOT NULL DEFAULT 0,
     PermisoEscritura BIT NOT NULL DEFAULT 0, -- Permiso directo
     EmailVerificado BIT NOT NULL DEFAULT 0,
     IdPuesto INT NOT NULL,                   -- Clave foránea al puesto ocupado (ej: Owner, Developer Senior)
