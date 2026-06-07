@@ -192,7 +192,8 @@ END
 
 ALTER TABLE USUARIO
 ADD EmailVerificado BIT NOT NULL DEFAULT 0;
-UPDATE USUARIO SET EmailVerificado = 1 WHERE NombreUsuario = 'phantom_user'
+--UPDATE USUARIO SET EmailVerificado = 1 WHERE NombreUsuario = 'phantom_user'
+UPDATE USUARIO SET EmailVerificado = 1 WHERE EmailVerificado = 0;
 
 CREATE TABLE USUARIO_TOKEN(
     Id INT PRIMARY KEY IDENTITY(1,1),
@@ -206,4 +207,3 @@ CREATE TABLE USUARIO_TOKEN(
 
     FOREIGN KEY (IdUsuario) REFERENCES USUARIO(Id)
 )
-
