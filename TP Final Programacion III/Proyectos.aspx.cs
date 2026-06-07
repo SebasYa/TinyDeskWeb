@@ -41,8 +41,30 @@ namespace TP_Final_Programacion_III
                 string.IsNullOrWhiteSpace(txtFechaEstimadaFinProyecto.Text) ||
                 string.IsNullOrWhiteSpace(ddlEstadoProyecto.SelectedValue))
             {
+                MostrarErrorProyecto("Completá todos los campos obligatorios.");
                 return;
             }
+
+            DateTime fechaInicio = Convert.ToDateTime(txtFechaInicioProyecto.Text);
+            DateTime fechaEstimadaFin = Convert.ToDateTime(txtFechaEstimadaFinProyecto.Text);
+            DateTime fechaMaxima = fechaInicio.AddYears(10);
+
+            if(fechaEstimadaFin.Date > fechaMaxima.Date)
+            {
+                MostrarErrorProyecto("La fecha estimada final no debe superar los 10 años desde la fecha inicial.");
+                return;
+            }
+            if (fechaEstimadaFin.Date < fechaInicio.Date)
+            {
+                MostrarErrorProyecto("La fecha estimada final no puede ser anterior a la fecha de inicio.");
+                return;
+            }
+            if(fechaInicio.Date < DateTime.Today)
+            {
+                MostrarErrorProyecto("La fecha inicial no puede ser anterior a la fecha de hoy.");
+                return;
+            }
+
             try
             {
                 ProyectoNegocio proyectoNegocio = new ProyectoNegocio();
@@ -53,11 +75,10 @@ namespace TP_Final_Programacion_III
                 nuevoProyecto.Descripcion = txtDescripcionProyecto.Text;
                 nuevoProyecto.FechaInicio = Convert.ToDateTime(txtFechaInicioProyecto.Text);
                 nuevoProyecto.FechaEstimadaFin = Convert.ToDateTime(txtFechaEstimadaFinProyecto.Text);
-
                 nuevoProyecto.Estado = new Estado();
                 nuevoProyecto.Estado.Id = int.Parse(ddlEstadoProyecto.SelectedValue);
 
-                if(ddlEstadoProyecto.SelectedItem.Text == "Finalizado")
+                if (ddlEstadoProyecto.SelectedItem.Text == "Finalizado")
                 {
                     nuevoProyecto.Activo = false;
                     nuevoProyecto.FechaFin = DateTime.Today;
@@ -72,12 +93,7 @@ namespace TP_Final_Programacion_III
 
                 proyectoNegocio.agregar(nuevoProyecto);
 
-
-                litMensaje.Text = @"
-                <div class='alert alert-success alert-dismissible fade show' role='alert'>
-                    <strong>¡Éxito!</strong> El Proyecto se guardó perfectamente.
-                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                </div>";
+                MostrarExitoProyecto("El Proyecto se guardó perfectamente.");
 
                 txtNombreProyecto.Text = "";
                 txtDescripcionProyecto.Text = "";
@@ -90,14 +106,8 @@ namespace TP_Final_Programacion_III
             }
             catch (Exception ex)
             {
-                litMensaje.Text = $@"
-                <div class='alert alert-danger alert-dismissible fade show' role='alert'>
-                    <strong>Hubo un error:</strong> {ex.Message}
-                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                </div>";
-
                 Session.Add("error", ex.ToString());
-                //Response.Redirect("Default.aspx", false);
+                MostrarErrorProyecto(ex.ToString());
             }
         }
         protected void btnCancelarProyecto_Click(object sender, EventArgs e)
@@ -122,6 +132,21 @@ namespace TP_Final_Programacion_III
                     lblFechaFin.Visible = true;
                 }
             }
+        }
+        private void MostrarErrorProyecto(string mensaje)
+        {
+            litMensaje.Text = $@"<div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                                    <strong>Error:</strong> {mensaje}
+                                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                                </div>";
+        }
+
+        private void MostrarExitoProyecto(string mensaje)
+        {
+            litMensaje.Text = $@"<div class='alert alert-success alert-dismissible fade show' role='alert'>
+                                    <strong>¡Éxito!</strong> {mensaje}
+                                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                                </div>";
         }
     }
 }
