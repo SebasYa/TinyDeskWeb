@@ -20,7 +20,9 @@ GO
 
 CREATE TABLE PUESTO (
     Id INT PRIMARY KEY IDENTITY(1,1),
-    Nombre VARCHAR(50) NOT NULL UNIQUE
+    Nombre VARCHAR(50) NOT NULL UNIQUE,
+    IdEmpresa INT NULL,
+    FOREIGN KEY (IdEmpresa) REFERENCES EMPRESA(Id)
 )
 GO
 /*-------------------------------------------------------------------------------
@@ -190,6 +192,8 @@ BEGIN
     VALUES ('phantom_user', '123', 'gasparin@gmail.com', 'Casper', 'Gasparin', 1, 1, @IdPuesto, @IdArea, @IdEmpresa);
 END
 
+--MODIFICACIONES, EJECUTARLAS SI O SI
+
 ALTER TABLE USUARIO
 ADD EmailVerificado BIT NOT NULL DEFAULT 0;
 --UPDATE USUARIO SET EmailVerificado = 1 WHERE NombreUsuario = 'phantom_user'
@@ -207,3 +211,7 @@ CREATE TABLE USUARIO_TOKEN(
 
     FOREIGN KEY (IdUsuario) REFERENCES USUARIO(Id)
 )
+
+-- Puesto se le agrega idEmpresa null
+alter table PUESTO add IdEmpresa INT NULL;
+alter table PUESTO add CONSTRAINT FK_PUESTO_EMPRESA FOREIGN KEY (IdEmpresa) REFERENCES EMPRESA(Id);
