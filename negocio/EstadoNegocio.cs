@@ -9,7 +9,7 @@ namespace negocio
 {
     public class EstadoNegocio
     {
-        public int agregar(Estado estado, int idEmpresa)
+        public int agregar(Estado estado)
         {
             AccesoDatos datos = new AccesoDatos();
 
@@ -22,7 +22,7 @@ namespace negocio
 
                 datos.setearParametro("@Nombre", estado.Nombre);
                 datos.setearParametro("@EsFinal", estado.EsFinal);
-                datos.setearParametro("@IdEmpresa", idEmpresa);
+                datos.setearParametro("@IdEmpresa", estado.Empresa.Id);
 
                 return datos.ejecutarScalar();
             }

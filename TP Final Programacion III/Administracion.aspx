@@ -23,7 +23,6 @@
                 .admin-tabs .btn.active {
                     background: #212529;
                     color: #fff;
-                    box-shadow: 0 6px 18px rgba(33, 37, 41, .18);
                 }
 
         .admin-action {
@@ -37,21 +36,23 @@
         }
     </style>
 
+    <asp:HiddenField ID="hfTipoActual" runat="server" Value="1" />
+
     <div class="container mt-4">
         <asp:Literal ID="litMensaje" runat="server"></asp:Literal>
 
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
             <div class="admin-tabs">
                 <asp:LinkButton ID="btnArea" runat="server" OnClick="btnArea_Click">
-                <i class="bi bi-diagram-3 me-1"></i>Área
+                    <i class="bi bi-diagram-3 me-1"></i>Área
                 </asp:LinkButton>
 
                 <asp:LinkButton ID="btnEstado" runat="server" OnClick="btnEstado_Click">
-                <i class="bi bi-check2-circle me-1"></i>Estado
+                    <i class="bi bi-check2-circle me-1"></i>Estado
                 </asp:LinkButton>
 
                 <asp:LinkButton ID="btnPuesto" runat="server" OnClick="btnPuesto_Click">
-                <i class="bi bi-person-badge me-1"></i>Puestos
+                    <i class="bi bi-person-badge me-1"></i>Puestos
                 </asp:LinkButton>
             </div>
 
@@ -63,7 +64,7 @@
         <div class="row">
             <div class="col-6">
                 <div class="mb-3">
-                    <asp:TextBox runat="server" ID="txtFiltro" CssClass="form-control" AutoPostBack="true" OnTextChanged="txtFiltro_TextChanged" />
+                    <asp:TextBox ID="txtFiltro" runat="server" CssClass="form-control" AutoPostBack="true" OnTextChanged="txtFiltro_TextChanged" />
                 </div>
             </div>
 
@@ -117,18 +118,16 @@
                             CommandName="EditarRegistro"
                             CommandArgument='<%# Eval("Id") %>'
                             Enabled='<%# PuedeEditarEliminar(Container.DataItem) %>'
-                            CssClass='<%# GetBotonAccionClass(Container.DataItem, "edit") %>'
-                            ToolTip='<%# GetToolTipAccion(Container.DataItem, "Editar") %>'>
-                        <i class="bi bi-pencil"></i>
+                            CssClass='<%# GetBotonAccionClass(Container.DataItem, "edit") %>'>
+                            <i class="bi bi-pencil"></i>
                         </asp:LinkButton>
 
                         <asp:LinkButton ID="btnEliminar" runat="server"
                             CommandName="EliminarRegistro"
                             CommandArgument='<%# Eval("Id") %>'
                             Enabled='<%# PuedeEditarEliminar(Container.DataItem) %>'
-                            CssClass='<%# GetBotonAccionClass(Container.DataItem, "delete") %>'
-                            ToolTip='<%# GetToolTipAccion(Container.DataItem, "Eliminar") %>'>
-                        <i class="bi bi-trash"></i>
+                            CssClass='<%# GetBotonAccionClass(Container.DataItem, "delete") %>'>
+                            <i class="bi bi-trash"></i>
                         </asp:LinkButton>
                     </ItemTemplate>
                 </asp:TemplateField>
@@ -155,10 +154,14 @@
                         <asp:Label ID="lblErrorModal" runat="server" CssClass="text-danger small mt-1 d-block" Visible="false"></asp:Label>
                     </div>
 
-                    <asp:Panel ID="pnlEstadoExtra" runat="server" CssClass="form-check form-switch">
-                        <asp:CheckBox ID="chkEsFinal" runat="server" CssClass="form-check-input" />
-                        <asp:Label runat="server" AssociatedControlID="chkEsFinal" CssClass="form-check-label fw-semibold" Text="Estado final"></asp:Label>
-                    </asp:Panel>
+                    <div id="pnlEstadoExtra" runat="server" class="mt-3">
+                        <div class="form-check form-switch ps-5 fs-6">
+                            <input id="chkEsFinal" runat="server" type="checkbox" class="form-check-input" />
+                            <label class="form-check-label fw-semibold ps-2" for="chkEsFinal">
+                                Estado final
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="modal-footer bg-light">
@@ -188,8 +191,8 @@
 
                     <p class="text-muted small mb-3">
                         Para confirmar, escribí el nombre en mayúscula:
-                    <strong>
-                        <asp:Literal ID="litNombreConfirmacion" runat="server"></asp:Literal></strong>
+                        <strong>
+                            <asp:Literal ID="litNombreConfirmacion" runat="server"></asp:Literal></strong>
                     </p>
 
                     <asp:TextBox ID="txtConfirmarEliminar" runat="server" CssClass="form-control" autocomplete="off"></asp:TextBox>

@@ -17,7 +17,7 @@ namespace negocio
             {
                 datos.setearConsulta(@"SELECT A.Id, A.Nombre, A.IdEmpresa, E.Nombre AS NombreEmpresa 
                                        FROM AREA A
-                                       INNER JOIN EMPRESA E ON E.Id = A.IdEmpresa
+                                       LEFT JOIN EMPRESA E ON E.Id = A.IdEmpresa
                                        WHERE IdEmpresa = @IdEmpresa OR IdEmpresa IS NULL");
                 datos.setearParametro("@IdEmpresa", idEmpresa);
                 datos.ejecutarLectura();

@@ -15,6 +15,15 @@ namespace TP_Final_Programacion_III
     {
 
         /// <summary>
+        /// Control hfTipoActual.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hfTipoActual;
+
+        /// <summary>
         /// Control litMensaje.
         /// </summary>
         /// <remarks>
@@ -138,7 +147,7 @@ namespace TP_Final_Programacion_III
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlEstadoExtra;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlEstadoExtra;
 
         /// <summary>
         /// Control chkEsFinal.
@@ -147,7 +156,7 @@ namespace TP_Final_Programacion_III
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkEsFinal;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkEsFinal;
 
         /// <summary>
         /// Control btnGuardar.

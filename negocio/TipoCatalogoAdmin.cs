@@ -8,9 +8,8 @@ namespace negocio
 {
     public enum TipoCatalogoAdmin
     {
-        Area = '1',
-        Estado ='2',
-        Prioridad ='3',
-        Puesto ='4'
+        Area =  1,
+        Estado = 2,
+        Puesto = 3
     }
 }

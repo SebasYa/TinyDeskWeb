@@ -32,7 +32,7 @@ namespace TP_Final_Programacion_III
                     ddlArea.DataBind();
                     ddlArea.Items.Insert(0, new ListItem("Seleccione un área", ""));
 
-                    ddlPuesto.DataSource = puestoNegocio.listar();
+                    ddlPuesto.DataSource = puestoNegocio.listar(idEmpresa);
                     ddlPuesto.DataValueField = "Id";
                     ddlPuesto.DataTextField = "Nombre";
                     ddlPuesto.DataBind();
@@ -48,7 +48,7 @@ namespace TP_Final_Programacion_III
                         int idUsuario = int.Parse(Request.QueryString["id"]);
                         UsuarioNegocio negocio = new UsuarioNegocio();
                         Usuario usuarioEditar = negocio.BuscarPorId(idUsuario);
-                        if(usuarioEditar != null)
+                        if (usuarioEditar != null)
                         {
                             txtNombreUsuario.Text = usuarioEditar.NombreUsuario;
                             txtEmail.Text = usuarioEditar.Email;
@@ -76,7 +76,7 @@ namespace TP_Final_Programacion_III
             bool esEdicion = Request.QueryString["id"] != null;
             if (string.IsNullOrWhiteSpace(txtNombreUsuario.Text) || string.IsNullOrWhiteSpace(txtNombre.Text) ||
             string.IsNullOrWhiteSpace(txtApellido.Text) || string.IsNullOrWhiteSpace(ddlArea.SelectedValue) ||
-            string.IsNullOrWhiteSpace(ddlPuesto.SelectedValue) || string.IsNullOrWhiteSpace(txtEmail.Text) 
+            string.IsNullOrWhiteSpace(ddlPuesto.SelectedValue) || string.IsNullOrWhiteSpace(txtEmail.Text)
            )
             {
                 return;
@@ -89,7 +89,7 @@ namespace TP_Final_Programacion_III
                 Usuario userLogueado = (Usuario)Session["usuario"];
 
                 nuevoUsuario.NombreUsuario = txtNombreUsuario.Text;
-                
+
                 nuevoUsuario.Email = txtEmail.Text;
                 nuevoUsuario.Nombre = txtNombre.Text;
                 nuevoUsuario.Apellido = txtApellido.Text;
@@ -132,7 +132,7 @@ namespace TP_Final_Programacion_III
                     EmailService email = new EmailService();
 
                     email.armarCorreo(nuevoUsuario.Email, "Crea tu contraseña en TinyDesk", cuerpo);
-                    if(email.enviarEmail()) Response.Redirect("Usuarios.aspx", false);
+                    if (email.enviarEmail()) Response.Redirect("Usuarios.aspx", false);
                 }
             }
             catch (Exception ex)
