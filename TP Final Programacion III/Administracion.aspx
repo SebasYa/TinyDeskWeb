@@ -44,7 +44,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
             <div class="admin-tabs">
                 <asp:LinkButton ID="btnArea" runat="server" OnClick="btnArea_Click">
-                    <i class="bi bi-diagram-3 me-1"></i>Área
+                    <i class="bi bi-diagram-3 me-1"></i>Area
                 </asp:LinkButton>
 
                 <asp:LinkButton ID="btnEstado" runat="server" OnClick="btnEstado_Click">

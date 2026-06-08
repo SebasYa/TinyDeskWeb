@@ -26,6 +26,7 @@ namespace TP_Final_Programacion_III
                     txtApellido.Text = "";
                     chkPermisoEscritura.Checked = false;
                     chkEsAdmin.Checked = false;
+                    litMensajeFormulario.Text = "";
                     int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
 
                     AreaNegocio areaNegocio = new AreaNegocio();
@@ -72,7 +73,7 @@ namespace TP_Final_Programacion_III
                             chkPermisoEscritura.Checked = usuarioEditar.PermisoEscritura;
                             chkEsAdmin.Checked = usuarioEditar.EsAdmin;
 
-                            if(usuarioEditar.Seniority != null)
+                            if (usuarioEditar.Seniority != null)
                             {
                                 ddlSeniority.SelectedValue = usuarioEditar.Seniority.Id.ToString();
                             }
@@ -96,6 +97,7 @@ namespace TP_Final_Programacion_III
             string.IsNullOrWhiteSpace(ddlPuesto.SelectedValue) || string.IsNullOrWhiteSpace(txtEmail.Text)
            )
             {
+                MostrarErrorFormulario("Completá todos los campos obligatorios.");
                 return;
             }
 
@@ -135,7 +137,16 @@ namespace TP_Final_Programacion_III
 
                 if (esEdicion)
                 {
-                    nuevoUsuario.Id = int.Parse(Request.QueryString["id"]);
+                    string duplicado = negocio.ObtenerDuplicadoUsuario(nuevoUsuario.NombreUsuario.Trim(),
+                                                                       nuevoUsuario.Email.Trim(),
+                                                                       nuevoUsuario.Id
+                                                                       );
+
+                    if (duplicado != null)
+                    {
+                        MostrarErrorDuplicado(duplicado);
+                        return;
+                    }
                     if (negocio.Modificar(nuevoUsuario))
                     {
                         Response.Redirect("Usuarios.aspx", false);
@@ -146,9 +157,18 @@ namespace TP_Final_Programacion_III
                     nuevoUsuario.Activo = false;
                     nuevoUsuario.EmailVerificado = false;
                     nuevoUsuario.PasswordHash = TokenHelper.GenerarToken();
+                    string duplicado = negocio.ObtenerDuplicadoUsuario(txtNombreUsuario.Text.Trim(), txtEmail.Text.Trim());
+
+                    if (duplicado != null)
+                    {
+                        MostrarErrorDuplicado(duplicado);
+                        return;
+                    }
+
                     int idUsuario = negocio.AgregarInvitado(nuevoUsuario);
                     if (idUsuario <= 0)
                     {
+                        MostrarErrorFormulario("No se pudo generar el usuario.");
                         return;
                     }
                     nuevoUsuario.Id = idUsuario;
@@ -162,6 +182,7 @@ namespace TP_Final_Programacion_III
 
                     email.armarCorreo(nuevoUsuario.Email, "Crea tu contraseña en TinyDesk", cuerpo);
                     if (email.enviarEmail()) Response.Redirect("Usuarios.aspx", false);
+                    else MostrarErrorFormulario("No se pudo enviar el correo.");
                 }
             }
             catch (Exception ex)
@@ -170,6 +191,48 @@ namespace TP_Final_Programacion_III
                 Response.Redirect("Default.aspx", false);
             }
         }
+        private void LimpiarErroresFormulario()
+        {
+            litMensajeFormulario.Text = "";
+            txtNombreUsuario.CssClass = "form-control";
+            txtEmail.CssClass = "form-control";
+        }
 
+        private void MostrarErrorFormulario(string mensaje)
+        {
+            litMensajeFormulario.Text = $@"<div class='alert alert-danger mb-3' role='alert'>
+                                      {mensaje}
+                                   </div>";
+        }
+
+        private void MostrarErrorDuplicado(string tipoDuplicado)
+        {
+            LimpiarErroresFormulario();
+
+            switch (tipoDuplicado)
+            {
+                case "usuario":
+                    txtNombreUsuario.CssClass = "form-control is-invalid";
+                    MostrarErrorFormulario("Ya existe un usuario con ese nombre de usuario.");
+                    break;
+
+                case "email":
+                    txtEmail.CssClass = "form-control is-invalid";
+                    MostrarErrorFormulario("Ya existe un usuario con ese correo electrónico.");
+                    break;
+
+                case "ambos":
+                    txtNombreUsuario.CssClass = "form-control is-invalid";
+                    txtEmail.CssClass = "form-control is-invalid";
+                    MostrarErrorFormulario("Ya existe un usuario con ese nombre de usuario y ese correo electrónico.");
+                    break;
+
+                default:
+                    txtNombreUsuario.CssClass = "form-control is-invalid";
+                    txtEmail.CssClass = "form-control is-invalid";
+                    MostrarErrorFormulario("Ya existe un usuario con ese nombre de usuario o correo electrónico.");
+                    break;
+            }
+        }
     }
 }

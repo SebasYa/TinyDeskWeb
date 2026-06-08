@@ -407,8 +407,8 @@ namespace TP_Final_Programacion_III
             switch (tipo)
             {
                 case TipoCatalogoAdmin.Area:
-                    txtFiltro.Attributes["placeholder"] = "Filtrar por Área";
-                    litCrearTexto.Text = "Crear Área";
+                    txtFiltro.Attributes["placeholder"] = "Filtrar por Area";
+                    litCrearTexto.Text = "Crear Area";
                     txtNombre.MaxLength = 30;
                     break;
 

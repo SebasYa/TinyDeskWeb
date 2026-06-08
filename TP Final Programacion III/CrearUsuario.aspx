@@ -15,6 +15,7 @@
                         </p>
                     </div>
                     <div class="card-body p-4">
+                        <asp:Literal ID="litMensajeFormulario" runat="server"></asp:Literal>
                         <!-- Sección 1: Datos Personales -->
                         <div class="mb-4">
                             <h5 class="text-primary border-bottom pb-2 mb-3">
@@ -39,7 +40,7 @@
                                 </div>
                             </div>
                         </div>
-
+                        <!-- Sección 1: Datos Labolares -->
                         <div class="mb-4">
                             <h5 class="text-primary border-bottom pb-2 mb-3">
                                 <i class="bi bi-briefcase-fill me-2"></i>2. Asignación Laboral
@@ -66,7 +67,6 @@
                                     <asp:DropDownList ID="ddlSeniority" runat="server" CssClass="form-select">
                                         <asp:ListItem Text="Seleccione un seniority..." Value="" />
                                     </asp:DropDownList>
-                                    <asp:RequiredFieldValidator ID="rfvSeniority" runat="server" ControlToValidate="ddlSeniority" InitialValue="" ErrorMessage="Debe seleccionar un seniority." CssClass="text-danger text-validation-error" Display="Dynamic" />
                                 </div>
 
                                 <div class="col-12 mt-3">
@@ -95,19 +95,6 @@
                                     <asp:TextBox ID="txtNombreUsuario" runat="server" CssClass="form-control" placeholder="Ej: jperez"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="rfvNombreUsuario" runat="server" ControlToValidate="txtNombreUsuario" ErrorMessage="El usuario es obligatorio." CssClass="text-danger text-validation-error" Display="Dynamic" />
                                 </div>
-                                <!-- 
-                                <div class="col-md-6">
-                                    <label for="txtPassword" class="form-label fw-semibold">Contraseña</label>
-                                    <asp:TextBox ID="txtPassword" runat="server" CssClass="form-control" TextMode="Password" placeholder=""></asp:TextBox>
-                                    <asp:RequiredFieldValidator ID="rfvPassword" runat="server" ControlToValidate="txtPassword" ErrorMessage="La contraseña es obligatoria." CssClass="text-danger text-validation-error" Display="Dynamic" />
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="txtConfirmarPassword" class="form-label fw-semibold">Confirmar contraseña</label>
-                                    <asp:TextBox ID="txtConfirmarPassword" runat="server" CssClass="form-control" TextMode="Password" placeholder=""></asp:TextBox>
-                                    <asp:RequiredFieldValidator ID="rfvConfirmarPassword" runat="server" ControlToValidate="txtConfirmarPassword" ErrorMessage="Debe confirmar la contraseña." CssClass="text-danger text-validation-error" Display="Dynamic" />
-                                    <asp:CompareValidator ID="cvConfirmarPassword" runat="server" ControlToValidate="txtConfirmarPassword" ControlToCompare="txtPassword" ErrorMessage="Las contraseñas no coinciden." CssClass="text-danger text-validation-error" Display="Dynamic" />
-                                </div>
-                                    -->
                             </div>
                         </div>
                         <!-- Botón de Guardado -->

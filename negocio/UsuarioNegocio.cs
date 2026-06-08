@@ -48,7 +48,7 @@ namespace negocio
                     usuario.Empresa = new Empresa()
                     {
                         Id = (int)datos.Lector["IdEmpresa"],
-                        Nombre = (string)datos.Lector["NombreEmpresa"] 
+                        Nombre = (string)datos.Lector["NombreEmpresa"]
                     };
 
                     usuario.Puesto = new Puesto()
@@ -243,7 +243,7 @@ namespace negocio
                 datos.setearParametro("@IdSeniority", usuario.Seniority != null ? (object)usuario.Seniority.Id : DBNull.Value);
                 datos.setearParametro("@Id", usuario.Id);
 
-                    datos.ejecutarAccion();
+                datos.ejecutarAccion();
                 return true;
             }
             catch (Exception ex)
@@ -443,6 +443,56 @@ namespace negocio
             catch (Exception ex)
             {
 
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+        public string ObtenerDuplicadoUsuario(string nombreUsuario, string email, int id = 0)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.setearConsulta(@"
+            SELECT
+                (SELECT COUNT(*) 
+                 FROM USUARIO 
+                 WHERE NombreUsuario = @NombreUsuario
+                   AND Id <> @Id) AS CoincidenciasUsuario,
+                (SELECT COUNT(*) 
+                 FROM USUARIO 
+                 WHERE Email = @Email
+                   AND Id <> @Id) AS CoincidenciasEmail
+        ");
+
+                datos.setearParametro("@NombreUsuario", nombreUsuario);
+                datos.setearParametro("@Email", email);
+                datos.setearParametro("@Id", id);
+
+                datos.ejecutarLectura();
+
+                if (datos.Lector.Read())
+                {
+                    bool usuarioRepetido = (int)datos.Lector["CoincidenciasUsuario"] > 0;
+                    bool emailRepetido = (int)datos.Lector["CoincidenciasEmail"] > 0;
+
+                    if (usuarioRepetido && emailRepetido)
+                        return "ambos";
+
+                    if (usuarioRepetido)
+                        return "usuario";
+
+                    if (emailRepetido)
+                        return "email";
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
                 throw ex;
             }
             finally
