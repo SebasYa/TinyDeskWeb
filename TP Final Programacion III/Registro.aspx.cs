@@ -28,10 +28,15 @@ namespace TP_Final_Programacion_III
                 string.IsNullOrWhiteSpace(txtPassword.Text) ||
                 string.IsNullOrWhiteSpace(txtConfirmarPassword.Text) ||
                 string.IsNullOrWhiteSpace(txtNombreEmpresa.Text) ||
-                string.IsNullOrWhiteSpace(txtEmail.Text) ||
-                txtPassword.Text != txtConfirmarPassword.Text
+                string.IsNullOrWhiteSpace(txtEmail.Text)
                 )
             {
+                MostrarError("Completa todos los datos Obligatorios.");
+                return;
+            }
+            if (txtPassword.Text != txtConfirmarPassword.Text)
+            {
+                MostrarError("Las constraseñas no coinciden.");
                 return;
             }
 
@@ -39,15 +44,17 @@ namespace TP_Final_Programacion_III
             {
                 UsuarioNegocio negocio = new UsuarioNegocio();
 
-                int idUsuario = negocio.RegistrarEmpresaYOwner(
-                    txtNombreEmpresa.Text,
-                    txtNombreUsuario.Text,
-                    txtPassword.Text,
-                    txtNombre.Text,
-                    txtApellido.Text,
-                    txtEmail.Text);
-                if(idUsuario <= 0)
+                int idUsuario = negocio.RegistrarEmpresaYOwner(txtNombreEmpresa.Text,
+                                                               txtNombreUsuario.Text,
+                                                               txtPassword.Text,
+                                                               txtNombre.Text,
+                                                               txtApellido.Text,
+                                                               txtEmail.Text
+                                                               );
+
+                if (idUsuario <= 0)
                 {
+                    MostrarError("No se pudo crear la empresa.");
                     return;
                 }
 
@@ -64,7 +71,8 @@ namespace TP_Final_Programacion_III
 
                 EmailService emailService = new EmailService();
                 emailService.armarCorreo(usuario.Email, "Valida tu cuenta en TinyDesk", cuerpo);
-                if(emailService.enviarEmail()) Response.Redirect("Login.aspx", false);
+                if (emailService.enviarEmail()) Response.Redirect("Login.aspx", false);
+                MostrarError("No se pudo enviar el correo de validación.");
 
             }
             catch (Exception ex)
@@ -72,5 +80,13 @@ namespace TP_Final_Programacion_III
                 throw ex;
             }
         }
+            private void MostrarError(string mensaje)
+        {
+            litMensaje.Text = $@"<div class='alert alert-danger alert-dismissible fade show mb-3' role='alert'>
+                                    {mensaje}
+                                    <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                                 </div>";
+        }
     }
+
 }

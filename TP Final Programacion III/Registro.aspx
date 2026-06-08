@@ -22,6 +22,7 @@
                     <div class="card shadow-sm">
                         <div class="card-body p-4">
 
+                            <asp:Literal ID="litMensaje" runat="server"></asp:Literal>
                             <h2 class="mb-1 text-center">Crear usuario</h2>
                             <p class="text-muted text-center mb-4">Completá tus datos para registrarte</p>
 

@@ -109,7 +109,7 @@ namespace negocio
                         -- 4. Insertamos Usuario
                         INSERT INTO USUARIO (NombreUsuario, PasswordHash, Email, Nombre, Apellido, Activo, 
                                              PermisoEscritura, EmailVerificado, IdPuesto, IdArea, IdEmpresa, EsAdmin, IdSeniority)
-                        VALUES (@NombreUsuario, @Password, @Email, @Nombre, @Apellido, 0, 1, 1, @IdPuestoOwner, @IdAreaOwner, @IdEmpresa, 1, NULL);
+                        VALUES (@NombreUsuario, @Password, @Email, @Nombre, @Apellido, 0, 1, 0, @IdPuestoOwner, @IdAreaOwner, @IdEmpresa, 1, NULL);
 
                         -- Si todo fue exitoso, confirmamos los cambios
                         SELECT CAST(SCOPE_IDENTITY() AS INT)
