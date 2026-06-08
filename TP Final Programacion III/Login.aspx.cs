@@ -33,10 +33,16 @@ namespace TP_Final_Programacion_III
                 if (negocio.Login(usuario))
                 {
                     Session.Add("usuario", usuario);
-                    Response.Redirect("Default.aspx", false);
                     txtNombreUsuario.Text = "";
                     txtPassword.Text = "";
-
+                    if (usuario.PermisoEscritura == true)
+                    {
+                        Response.Redirect("Default.aspx", false);
+                    }
+                    else
+                    {
+                        Response.Redirect("Default.aspx", false);
+                    }
                 }
                 else if (negocio.MailPendienteVerificacion(usuario))
                 {

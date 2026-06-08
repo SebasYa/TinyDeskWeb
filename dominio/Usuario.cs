@@ -20,5 +20,7 @@ namespace dominio
         public Empresa Empresa { get; set; }
         public Area Area { get; set; }
         public bool EmailVerificado { get; set; }
+        public bool EsAdmin { get; set; }
+        public Seniority Seniority { get; set; }
     }
 }

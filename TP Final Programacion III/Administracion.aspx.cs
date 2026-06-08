@@ -15,9 +15,6 @@ namespace TP_Final_Programacion_III
         {
             litMensaje.Text = "";
 
-            if (!ValidarSesion())
-                return;
-
             if (!IsPostBack)
             {
                 SetearTipoActual(TipoCatalogoAdmin.Area);
@@ -70,12 +67,18 @@ namespace TP_Final_Programacion_III
 
             TipoCatalogoAdmin tipo = ObtenerTipoActual();
 
-            if (tipo == TipoCatalogoAdmin.Area)
-                FiltrarAreas();
-            else if (tipo == TipoCatalogoAdmin.Estado)
-                FiltrarEstados();
-            else if (tipo == TipoCatalogoAdmin.Puesto)
-                FiltrarPuestos();
+            switch (tipo)
+            {
+                case TipoCatalogoAdmin.Area:
+                    FiltrarAreas();
+                    break;
+                case TipoCatalogoAdmin.Estado:
+                    FiltrarEstados();
+                    break;
+                case TipoCatalogoAdmin.Puesto:
+                    FiltrarPuestos();
+                    break;
+            }
         }
 
         protected void dgvCatalogo_PageIndexChanging(object sender, GridViewPageEventArgs e)
@@ -84,12 +87,15 @@ namespace TP_Final_Programacion_III
 
             TipoCatalogoAdmin tipo = ObtenerTipoActual();
 
-            if (tipo == TipoCatalogoAdmin.Area)
-                FiltrarAreas();
-            else if (tipo == TipoCatalogoAdmin.Estado)
-                FiltrarEstados();
-            else if (tipo == TipoCatalogoAdmin.Puesto)
-                FiltrarPuestos();
+            switch (tipo)
+            {
+                case TipoCatalogoAdmin.Area: FiltrarAreas();
+                    break;
+                case TipoCatalogoAdmin.Estado: FiltrarEstados();
+                    break;
+                case TipoCatalogoAdmin.Puesto: FiltrarPuestos();
+                    break;
+            }
         }
 
         protected void dgvCatalogo_RowCommand(object sender, GridViewCommandEventArgs e)
@@ -265,23 +271,25 @@ namespace TP_Final_Programacion_III
 
                 TipoCatalogoAdmin tipo = ObtenerTipoActual();
 
-                if (tipo == TipoCatalogoAdmin.Area)
+                switch (tipo)
                 {
-                    AreaNegocio negocioArea = new AreaNegocio();
-                    negocioArea.eliminar((Area)item);
-                    CargarAreas();
-                }
-                else if (tipo == TipoCatalogoAdmin.Estado)
-                {
-                    EstadoNegocio negocioEstado = new EstadoNegocio();
-                    negocioEstado.eliminar((Estado)item);
-                    CargarEstados();
-                }
-                else if (tipo == TipoCatalogoAdmin.Puesto)
-                {
-                    PuestoNegocio negocioPuesto = new PuestoNegocio();
-                    negocioPuesto.eliminar((Puesto)item);
-                    CargarPuestos();
+                    case TipoCatalogoAdmin.Area:
+                        AreaNegocio negocioArea = new AreaNegocio();
+                        negocioArea.eliminar((Area)item);
+                        CargarAreas();
+                        break;
+
+                    case TipoCatalogoAdmin.Estado:
+                        EstadoNegocio negocioEstado = new EstadoNegocio();
+                        negocioEstado.eliminar((Estado)item);
+                        CargarEstados();
+                        break;
+
+                    case TipoCatalogoAdmin.Puesto:
+                        PuestoNegocio negocioPuesto = new PuestoNegocio();
+                        negocioPuesto.eliminar((Puesto)item);
+                        CargarPuestos();
+                        break;
                 }
 
                 MostrarMensaje("success", "Registro eliminado correctamente.");
@@ -368,22 +376,19 @@ namespace TP_Final_Programacion_III
         {
             TipoCatalogoAdmin tipo = ObtenerTipoActual();
 
-            if (tipo == TipoCatalogoAdmin.Area)
+            switch (tipo)
             {
-                List<Area> lista = (List<Area>)Session["listaAreasAdmin"];
-                return lista.Find(x => x.Id == id);
-            }
+                case TipoCatalogoAdmin.Area:
+                    List<Area> lista = (List<Area>)Session["listaAreasAdmin"];
+                    return lista.Find(x => x.Id == id);
 
-            if (tipo == TipoCatalogoAdmin.Estado)
-            {
-                List<Estado> lista = (List<Estado>)Session["listaEstadosAdmin"];
-                return lista.Find(x => x.Id == id);
-            }
+                case TipoCatalogoAdmin.Estado:
+                    List<Estado> listaEstado = (List<Estado>)Session["listaEstadosAdmin"];
+                    return listaEstado.Find(x => x.Id == id);
 
-            if (tipo == TipoCatalogoAdmin.Puesto)
-            {
-                List<Puesto> lista = (List<Puesto>)Session["listaPuestosAdmin"];
-                return lista.Find(x => x.Id == id);
+                case TipoCatalogoAdmin.Puesto:
+                    List<Puesto> listaPuestos = (List<Puesto>)Session["listaPuestosAdmin"];
+                    return listaPuestos.Find(x => x.Id == id);
             }
 
             return null;
@@ -399,23 +404,25 @@ namespace TP_Final_Programacion_III
 
             pnlEstadoExtra.Visible = tipo == TipoCatalogoAdmin.Estado;
 
-            if (tipo == TipoCatalogoAdmin.Area)
+            switch (tipo)
             {
-                txtFiltro.Attributes["placeholder"] = "Filtrar por Área";
-                litCrearTexto.Text = "Crear Área";
-                txtNombre.MaxLength = 30;
-            }
-            else if (tipo == TipoCatalogoAdmin.Estado)
-            {
-                txtFiltro.Attributes["placeholder"] = "Filtrar por Estado";
-                litCrearTexto.Text = "Crear Estado";
-                txtNombre.MaxLength = 30;
-            }
-            else if (tipo == TipoCatalogoAdmin.Puesto)
-            {
-                txtFiltro.Attributes["placeholder"] = "Filtrar por Puesto";
-                litCrearTexto.Text = "Crear Puesto";
-                txtNombre.MaxLength = 50;
+                case TipoCatalogoAdmin.Area:
+                    txtFiltro.Attributes["placeholder"] = "Filtrar por Área";
+                    litCrearTexto.Text = "Crear Área";
+                    txtNombre.MaxLength = 30;
+                    break;
+
+                case TipoCatalogoAdmin.Estado:
+                    txtFiltro.Attributes["placeholder"] = "Filtrar por Estado";
+                    litCrearTexto.Text = "Crear Estado";
+                    txtNombre.MaxLength = 30;
+                    break;
+
+                case TipoCatalogoAdmin.Puesto:
+                    txtFiltro.Attributes["placeholder"] = "Filtrar por Puesto";
+                    litCrearTexto.Text = "Crear Puesto";
+                    txtNombre.MaxLength = 50;
+                    break;
             }
         }
 
@@ -506,16 +513,16 @@ namespace TP_Final_Programacion_III
         {
             TipoCatalogoAdmin clase = ObtenerTipoActual();
 
-            if (clase == TipoCatalogoAdmin.Area)
-                return "Área";
+            switch (clase)
+            {
+                case TipoCatalogoAdmin.Area: return "Area";
 
-            if (clase == TipoCatalogoAdmin.Estado)
-                return "Estado";
+                case TipoCatalogoAdmin.Estado: return "Estado";
 
-            if (clase == TipoCatalogoAdmin.Puesto)
-                return "Puesto";
+                case TipoCatalogoAdmin.Puesto: return "Puesto";
 
-            return "Registro";
+                default: return "Registro";
+            }
         }
 
         private void LimpiarErroresModal()
@@ -527,27 +534,6 @@ namespace TP_Final_Programacion_III
             lblErrorEliminar.Visible = false;
             lblErrorEliminar.Text = "";
             txtConfirmarEliminar.CssClass = "form-control";
-        }
-
-        private bool ValidarSesion()
-        {
-            Usuario usuario = Session["usuario"] as Usuario;
-
-            if (usuario == null)
-            {
-                Session.Add("error", "Debes iniciar sesión para acceder a esta pantalla.");
-                Response.Redirect("Login.aspx", false);
-                return false;
-            }
-
-            if (usuario.Empresa == null)
-            {
-                Session.Add("error", "El usuario no tiene una empresa asignada.");
-                Response.Redirect("Default.aspx", false);
-                return false;
-            }
-
-            return true;
         }
 
         private void MostrarMensaje(string tipo, string mensaje)

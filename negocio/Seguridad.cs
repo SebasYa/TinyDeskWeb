@@ -21,5 +21,29 @@ namespace negocio
                 return false;
             }
         }
+        public static bool EsAdmin(object user)
+        {
+            Usuario usuario = user != null ? (Usuario)user : null;
+            if (usuario != null && usuario.Id != 0 && usuario.EsAdmin)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public static bool PuedeEscribir(object user)
+        {
+            Usuario usuario = user != null ? (Usuario)user : null;
+            if (usuario != null && usuario.Id != 0 && (usuario.PermisoEscritura || usuario.EsAdmin))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
