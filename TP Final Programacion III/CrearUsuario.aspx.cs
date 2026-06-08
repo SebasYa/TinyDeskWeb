@@ -44,7 +44,7 @@ namespace TP_Final_Programacion_III
                     ddlPuesto.DataBind();
                     ddlPuesto.Items.Insert(0, new ListItem("Seleccione un puesto", ""));
 
-                    ddlSeniority.DataSource = puestoNegocio.listar(idEmpresa);
+                    ddlSeniority.DataSource = seniorityNegocio.listar();
                     ddlSeniority.DataValueField = "Id";
                     ddlSeniority.DataTextField = "Nombre";
                     ddlSeniority.DataBind();
