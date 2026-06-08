@@ -13,6 +13,10 @@ namespace TP_Final_Programacion_III
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!Seguridad.EsAdmin(Session["usuario"]))
+            {
+                Response.Redirect("Default.aspx");
+            }
             if (!IsPostBack)
             {
                 try
@@ -21,10 +25,12 @@ namespace TP_Final_Programacion_III
                     txtNombre.Text = "";
                     txtApellido.Text = "";
                     chkPermisoEscritura.Checked = false;
+                    chkEsAdmin.Checked = false;
                     int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
 
                     AreaNegocio areaNegocio = new AreaNegocio();
                     PuestoNegocio puestoNegocio = new PuestoNegocio();
+                    SeniorityNegocio seniorityNegocio = new SeniorityNegocio();
 
                     ddlArea.DataSource = areaNegocio.listar(idEmpresa);
                     ddlArea.DataValueField = "Id";
@@ -38,7 +44,12 @@ namespace TP_Final_Programacion_III
                     ddlPuesto.DataBind();
                     ddlPuesto.Items.Insert(0, new ListItem("Seleccione un puesto", ""));
 
-                    //Configuracion si estamos modificando
+                    ddlSeniority.DataSource = puestoNegocio.listar(idEmpresa);
+                    ddlSeniority.DataValueField = "Id";
+                    ddlSeniority.DataTextField = "Nombre";
+                    ddlSeniority.DataBind();
+                    ddlSeniority.Items.Insert(0, new ListItem("Seleccione un seniority", ""));
+
                     if (Request.QueryString["id"] != null)
                     {
                         lblTituloFormularioUsuario.Text = "Modificar Usuario";
@@ -59,6 +70,12 @@ namespace TP_Final_Programacion_III
                             ddlPuesto.SelectedValue = usuarioEditar.Puesto.Id.ToString();
 
                             chkPermisoEscritura.Checked = usuarioEditar.PermisoEscritura;
+                            chkEsAdmin.Checked = usuarioEditar.EsAdmin;
+
+                            if(usuarioEditar.Seniority != null)
+                            {
+                                ddlSeniority.SelectedValue = usuarioEditar.Seniority.Id.ToString();
+                            }
 
                         }
                     }
@@ -94,6 +111,7 @@ namespace TP_Final_Programacion_III
                 nuevoUsuario.Nombre = txtNombre.Text;
                 nuevoUsuario.Apellido = txtApellido.Text;
                 nuevoUsuario.PermisoEscritura = chkPermisoEscritura.Checked;
+                nuevoUsuario.EsAdmin = chkEsAdmin.Checked;
 
                 nuevoUsuario.Area = new Area();
                 nuevoUsuario.Area.Id = int.Parse(ddlArea.SelectedValue);
@@ -103,6 +121,17 @@ namespace TP_Final_Programacion_III
 
                 nuevoUsuario.Empresa = new Empresa();
                 nuevoUsuario.Empresa.Id = userLogueado.Empresa.Id;
+
+                if (!string.IsNullOrEmpty(ddlSeniority.SelectedValue))
+                {
+                    nuevoUsuario.Seniority = new Seniority();
+                    nuevoUsuario.Seniority.Id = int.Parse(ddlSeniority.SelectedValue);
+                }
+                else
+                {
+                    nuevoUsuario.Seniority = null;
+                }
+
 
                 if (esEdicion)
                 {

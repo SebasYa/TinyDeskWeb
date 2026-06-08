@@ -150,7 +150,7 @@ namespace negocio
             {
                 datos.setearConsulta(@"SELECT U.Id, U.NombreUsuario, U.Email, U.Nombre, U.Apellido, 
                                               U.Activo, U.PermisoEscritura, U.EsAdmin, U.EmailVerificado,
-                                              U.IdSeniority, S.Nombre AS NombreSeniority
+                                              U.IdSeniority, S.Nombre AS NombreSeniority,
                                               U.IdPuesto, P.Nombre AS NombrePuesto,
                                               U.IdArea, A.Nombre AS NombreArea, U.IdEmpresa, E.Nombre as NombreEmpresa
                                        FROM USUARIO U
@@ -229,7 +229,7 @@ namespace negocio
                                                     IdPuesto = @IdPuesto, 
                                                     IdArea = @IdArea,
                                                     EsAdmin = @EsAdmin,
-                                                    IdSeniority = @IsSeniority
+                                                    IdSeniority = @IdSeniority
                                        WHERE Id = @Id");
 
                 datos.setearParametro("@NombreUsuario", usuario.NombreUsuario);
@@ -264,25 +264,29 @@ namespace negocio
             {
                 if (idArea == 0)
                 {
-                    datos.setearConsulta(@"SELECT U.Id, U.NombreUsuario, U.Email, U.Nombre, U.Apellido, 
-                                              U.Activo, U.PermisoEscritura,
+                    datos.setearConsulta(@"SELECT U.Id, U.NombreUsuario, U.Email, U.Nombre, U.Apellido, U.EsAdmin, 
+                                              U.Activo, U.PermisoEscritura, U.EmailVerificado,
                                               U.IdPuesto, P.Nombre AS NombrePuesto,
-                                              U.IdArea, A.Nombre AS NombreArea, U.IdEmpresa
+                                              U.IdArea, A.Nombre AS NombreArea, U.IdEmpresa,
+                                              U.IdSeniority, S.Nombre AS NombreSeniority
                                        FROM USUARIO U
                                        INNER JOIN PUESTO P ON U.IdPuesto = P.Id
                                        INNER JOIN AREA A ON U.IdArea = A.Id
+                                       LEFT JOIN SENIORITY S ON U.IdSeniority = S.Id
                                        WHERE U.IdEmpresa = @IdEmpresa"
                     );
                 }
                 else
                 {
-                    datos.setearConsulta(@"SELECT U.Id, U.NombreUsuario, U.Email, U.Nombre, U.Apellido, 
-                                              U.Activo, U.PermisoEscritura,
+                    datos.setearConsulta(@"SELECT U.Id, U.NombreUsuario, U.Email, U.Nombre, U.Apellido, U.EsAdmin,
+                                              U.Activo, U.PermisoEscritura, U.EmailVerificado,
                                               U.IdPuesto, P.Nombre AS NombrePuesto,
                                               U.IdArea, A.Nombre AS NombreArea, U.IdEmpresa
+                                              U.IdSeniority, S.Nombre AS NombreSeniority
                                        FROM USUARIO U
                                        INNER JOIN PUESTO P ON U.IdPuesto = P.Id
                                        INNER JOIN AREA A ON U.IdArea = A.Id
+                                       LEFT JOIN SENIORITY S ON U.IdSeniority = S.Id
                                        WHERE U.IdEmpresa = @IdEmpresa AND U.IdArea = @IdArea"
                     );
                     datos.setearParametro("@IdArea", idArea);
@@ -300,6 +304,8 @@ namespace negocio
                     usuario.Apellido = (string)datos.Lector["Apellido"];
                     usuario.Activo = (bool)datos.Lector["Activo"];
                     usuario.PermisoEscritura = (bool)datos.Lector["PermisoEscritura"];
+                    usuario.EsAdmin = (bool)datos.Lector["EsAdmin"];
+                    usuario.EmailVerificado = (bool)datos.Lector["EmailVerificado"];
 
                     usuario.Puesto = new Puesto();
                     usuario.Puesto.Id = (int)datos.Lector["IdPuesto"];
@@ -311,6 +317,13 @@ namespace negocio
 
                     usuario.Empresa = new Empresa();
                     usuario.Empresa.Id = (int)datos.Lector["IdEmpresa"];
+
+                    if (datos.Lector["IdSeniority"] != DBNull.Value)
+                    {
+                        usuario.Seniority = new Seniority();
+                        usuario.Seniority.Id = (int)datos.Lector["IdSeniority"];
+                        usuario.Seniority.Nombre = (string)datos.Lector["NombreSeniority"];
+                    }
 
                     lista.Add(usuario);
                 }
@@ -356,7 +369,7 @@ namespace negocio
             try
             {
                 datos.setearConsulta(@" INSERT INTO USUARIO (NombreUsuario, PasswordHash, Email, Nombre, Apellido, Activo, 
-                                                             PermisoEscritura, EmailVerificado, IdPuesto, IdArea, IdEmpresa
+                                                             PermisoEscritura, EmailVerificado, IdPuesto, IdArea, IdEmpresa,
                                                              EsAdmin, IdSeniority)
                                         VALUES (@NombreUsuario, @PasswordHash, @Email, @Nombre, @Apellido, 0, @PermisoEscritura, 1, 
                                                 @IdPuesto, @IdArea, @IdEmpresa, @EsAdmin, @IdSeniority);
@@ -372,8 +385,9 @@ namespace negocio
                 datos.setearParametro("@IdPuesto", nuevoUsuario.Puesto.Id);
                 datos.setearParametro("@IdArea", nuevoUsuario.Area.Id);
                 datos.setearParametro("@IdEmpresa", nuevoUsuario.Empresa.Id);
+                datos.setearParametro("EsAdmin", nuevoUsuario.EsAdmin);
                 datos.setearParametro("@IdSeniority", nuevoUsuario.Seniority != null ? (object)nuevoUsuario.Seniority.Id : DBNull.Value);
-                datos.setearParametro("@Id", nuevoUsuario.Id);
+
                 return datos.ejecutarScalar();
             }
             catch (Exception ex)

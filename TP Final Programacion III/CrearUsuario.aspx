@@ -40,7 +40,7 @@
                             </div>
                         </div>
                         <!-- Sección 2: Asignación Laboral -->
-                        <div class="mb-4">
+                        <!--  <div class="mb-4">
                             <h5 class="text-primary border-bottom pb-2 mb-3">
                                 <i class="bi bi-briefcase-fill me-2"></i>2. Asignación Laboral
                             </h5>
@@ -63,6 +63,50 @@
                                     <div class="form-check form-switch ps-5 fs-6">
                                         <input class="form-check-input" type="checkbox" id="chkPermisoEscritura" runat="server" clientidmode="Static" />
                                         <label class="form-check-label fw-semibold ps-2" for="chkPermisoEscritura">Asignar Permiso de Administrador</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>  -->
+                        <div class="mb-4">
+                            <h5 class="text-primary border-bottom pb-2 mb-3">
+                                <i class="bi bi-briefcase-fill me-2"></i>2. Asignación Laboral
+                            </h5>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label for="ddlArea" class="form-label fw-semibold">Área</label>
+                                    <asp:DropDownList ID="ddlArea" runat="server" CssClass="form-select">
+                                        <asp:ListItem Text="Seleccione un área..." Value="" />
+                                    </asp:DropDownList>
+                                    <asp:RequiredFieldValidator ID="rfvArea" runat="server" ControlToValidate="ddlArea" InitialValue="" ErrorMessage="Debe seleccionar un área." CssClass="text-danger text-validation-error" Display="Dynamic" />
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="ddlPuesto" class="form-label fw-semibold">Puesto Laboral</label>
+                                    <asp:DropDownList ID="ddlPuesto" runat="server" CssClass="form-select">
+                                        <asp:ListItem Text="Seleccione un puesto..." Value="" />
+                                    </asp:DropDownList>
+                                    <asp:RequiredFieldValidator ID="rfvPuesto" runat="server" ControlToValidate="ddlPuesto" InitialValue="" ErrorMessage="Debe seleccionar un puesto." CssClass="text-danger text-validation-error" Display="Dynamic" />
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="ddlSeniority" class="form-label fw-semibold">Seniority</label>
+                                    <asp:DropDownList ID="ddlSeniority" runat="server" CssClass="form-select">
+                                        <asp:ListItem Text="Seleccione un seniority..." Value="" />
+                                    </asp:DropDownList>
+                                    <asp:RequiredFieldValidator ID="rfvSeniority" runat="server" ControlToValidate="ddlSeniority" InitialValue="" ErrorMessage="Debe seleccionar un seniority." CssClass="text-danger text-validation-error" Display="Dynamic" />
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <div class="form-check form-switch ps-5 fs-6">
+                                        <input class="form-check-input" type="checkbox" id="chkPermisoEscritura" runat="server" clientidmode="Static" />
+                                        <label class="form-check-label fw-semibold ps-2" for="chkPermisoEscritura">Permitir crear y gestionar tickets</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mt-2">
+                                    <div class="form-check form-switch ps-5 fs-6">
+                                        <input class="form-check-input" type="checkbox" id="chkEsAdmin" runat="server" clientidmode="Static" />
+                                        <label class="form-check-label fw-semibold ps-2" for="chkEsAdmin">Permiso administrador</label>
                                     </div>
                                 </div>
                             </div>

@@ -51,6 +51,7 @@
     <Compile Include="ProyectoNegocio.cs" />
     <Compile Include="PuestoNegocio.cs" />
     <Compile Include="Seguridad.cs" />
+    <Compile Include="SeniorityNegocio.cs" />
     <Compile Include="SprintNegocio.cs" />
     <Compile Include="TicketNegocio.cs" />
     <Compile Include="TipoCatalogoAdmin.cs" />
