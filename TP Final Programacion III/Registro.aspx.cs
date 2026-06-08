@@ -17,6 +17,7 @@ namespace TP_Final_Programacion_III
             {
                 txtPassword.Text = "";
                 txtConfirmarPassword.Text = "";
+                litMensaje.Text = "";
             }
         }
 
@@ -86,7 +87,8 @@ namespace TP_Final_Programacion_III
             }
             catch (Exception ex)
             {
-                throw ex;
+                Session.Add("error", ex.ToString());
+                MostrarError("Ocurrio un error inesperado.");
             }
         }
 

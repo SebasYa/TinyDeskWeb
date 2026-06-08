@@ -15,6 +15,33 @@ namespace TP_Final_Programacion_III
     {
 
         /// <summary>
+        /// Control liAdminTitulo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl liAdminTitulo;
+
+        /// <summary>
+        /// Control liNavCatalogos.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl liNavCatalogos;
+
+        /// <summary>
+        /// Control liNavUsuarios.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl liNavUsuarios;
+
+        /// <summary>
         /// Control lblUserWelcome.
         /// </summary>
         /// <remarks>

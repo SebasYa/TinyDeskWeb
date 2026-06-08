@@ -13,6 +13,12 @@ namespace TP_Final_Programacion_III
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!Seguridad.EsAdmin(Session["usuario"]))
+            {
+                Response.Redirect("Default.aspx", false);
+                return;
+            }
+
             litMensaje.Text = "";
 
             if (!IsPostBack)

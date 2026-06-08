@@ -63,17 +63,18 @@
                                 <a class="nav-link text-light" runat="server" href="~/Ticket.aspx">
                                     <i class="bi bi-ticket-detailed mx-2"></i>Tickets</a>
                             </li>
-                            <li class="nav-item mt-3 mb-1">
+                            <li id="liAdminTitulo" runat="server" class="nav-item mt-3 mb-1">
                                 <span class="text-uppercase text-secondary small fw-semibold px-3" style="font-size: .72rem;">Administración</span>
                             </li>
-                            <li class="nav-item mb-2 sideBar">
+                            <li id="liNavCatalogos" runat="server" class="nav-item mb-2 sideBar">
                                 <a class="nav-link text-light" runat="server" href="~/Administracion.aspx">
                                     <i class="bi bi-sliders mx-2"></i>Catálogos
                                 </a>
                             </li>
-                            <li class="nav-item mb-2 sideBar">
+                            <li id="liNavUsuarios" runat="server" class="nav-item mb-2 sideBar">
                                 <a class="nav-link text-light" runat="server" href="~/Usuarios.aspx">
-                                    <i class="bi bi-person-circle mx-2"></i>Usuarios</a>
+                                    <i class="bi bi-person-circle mx-2"></i>Usuarios
+                                </a>
                             </li>
                         </ul>
                     </div>

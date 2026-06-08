@@ -16,6 +16,7 @@ namespace TP_Final_Programacion_III
             if (!Seguridad.EsAdmin(Session["usuario"]))
             {
                 Response.Redirect("Default.aspx");
+                return;
             }
             if (!IsPostBack)
             {
@@ -84,13 +85,16 @@ namespace TP_Final_Programacion_III
                 catch (Exception ex)
                 {
                     Session.Add("error", ex.ToString());
-                    Response.Redirect("Default.aspx", false);
+                    MostrarErrorFormulario("Ocurrio un error al cargar el formulario.");
+                    //Response.Redirect("Default.aspx", false);
                 }
             }
         }
 
         protected void btnCrearUsuario_Click(object sender, EventArgs e)
         {
+            LimpiarErroresFormulario();
+
             bool esEdicion = Request.QueryString["id"] != null;
             if (string.IsNullOrWhiteSpace(txtNombreUsuario.Text) || string.IsNullOrWhiteSpace(txtNombre.Text) ||
             string.IsNullOrWhiteSpace(txtApellido.Text) || string.IsNullOrWhiteSpace(ddlArea.SelectedValue) ||
@@ -137,6 +141,7 @@ namespace TP_Final_Programacion_III
 
                 if (esEdicion)
                 {
+                    nuevoUsuario.Id = int.Parse(Request.QueryString["id"]);
                     string duplicado = negocio.ObtenerDuplicadoUsuario(nuevoUsuario.NombreUsuario.Trim(),
                                                                        nuevoUsuario.Email.Trim(),
                                                                        nuevoUsuario.Id
@@ -188,7 +193,8 @@ namespace TP_Final_Programacion_III
             catch (Exception ex)
             {
                 Session.Add("error", ex.ToString());
-                Response.Redirect("Default.aspx", false);
+                //Response.Redirect("Default.aspx", false);
+                MostrarErrorFormulario("Ocurrio un error al guardar el usuario.");
             }
         }
         private void LimpiarErroresFormulario()

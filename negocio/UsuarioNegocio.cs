@@ -281,7 +281,7 @@ namespace negocio
                     datos.setearConsulta(@"SELECT U.Id, U.NombreUsuario, U.Email, U.Nombre, U.Apellido, U.EsAdmin,
                                               U.Activo, U.PermisoEscritura, U.EmailVerificado,
                                               U.IdPuesto, P.Nombre AS NombrePuesto,
-                                              U.IdArea, A.Nombre AS NombreArea, U.IdEmpresa
+                                              U.IdArea, A.Nombre AS NombreArea, U.IdEmpresa,
                                               U.IdSeniority, S.Nombre AS NombreSeniority
                                        FROM USUARIO U
                                        INNER JOIN PUESTO P ON U.IdPuesto = P.Id
@@ -385,7 +385,7 @@ namespace negocio
                 datos.setearParametro("@IdPuesto", nuevoUsuario.Puesto.Id);
                 datos.setearParametro("@IdArea", nuevoUsuario.Area.Id);
                 datos.setearParametro("@IdEmpresa", nuevoUsuario.Empresa.Id);
-                datos.setearParametro("EsAdmin", nuevoUsuario.EsAdmin);
+                datos.setearParametro("@EsAdmin", nuevoUsuario.EsAdmin);
                 datos.setearParametro("@IdSeniority", nuevoUsuario.Seniority != null ? (object)nuevoUsuario.Seniority.Id : DBNull.Value);
 
                 return datos.ejecutarScalar();

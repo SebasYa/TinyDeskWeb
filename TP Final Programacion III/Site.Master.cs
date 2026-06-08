@@ -27,6 +27,10 @@ namespace TP_Final_Programacion_III
             {
                 Response.Redirect("Login.aspx", false);
             }
+            bool esAdmin = Seguridad.EsAdmin(Session["usuario"]);
+                liAdminTitulo.Visible = esAdmin;
+                liNavCatalogos.Visible = esAdmin;
+                liNavUsuarios.Visible = esAdmin;
 
             if (!IsPostBack)
             {
