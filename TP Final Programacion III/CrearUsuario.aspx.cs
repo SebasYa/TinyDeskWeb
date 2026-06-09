@@ -209,11 +209,11 @@ namespace TP_Final_Programacion_III
             if (usuario.EmailVerificado) return;
 
             UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
-            string estado = tokenNegocio.ObtenerEstadoInvitacion(usuario.Id, usuario.EmailVerificado);
-            if (estado == "Vencida")
+            string estado = tokenNegocio.ObtenerEstadoToken(usuario.Id, "CrearPassword");
+            if (estado == "Vencida" || estado == "NoExiste" || estado == "Usado")
             {
                 pnlInvitacionVencida.Visible = true;
-                lblInvitacionVencida.Text = "La invitación venció y el usuario aun no activo la cuenta.";
+                lblInvitacionVencida.Text = "La invitación venció o el usuario aun no activo la cuenta.";
             }
         }
         private void MostrarErrorDuplicado(string tipoDuplicado)

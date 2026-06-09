@@ -20,21 +20,46 @@ namespace TP_Final_Programacion_III
 
             if (string.IsNullOrWhiteSpace(token))
             {
-                MostrarError("El link para crear la contraseña es inválido.");
+                MostrarError("El link para cambiar la contraseña es inválido.");
                 return;
             }
 
-            UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
-            UsuarioToken usuarioToken = tokenNegocio.BuscarTokenValido(token, "CrearPassword");
-
-            if (usuarioToken == null)
+            try
             {
-                MostrarError("El link para crear la contraseña expiró o ya fue utilizado.");
-                return;
-            }
+                UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
 
-            lblMensaje.Text = "Hola " + usuarioToken.Usuario.Nombre + ", ingresá tu nueva contraseña.";
-            lblMensaje.CssClass = "d-block mb-3 text-center text-muted";
+                bool esResetPassword = false;
+                UsuarioToken usuarioToken = tokenNegocio.BuscarTokenValido(token, "CrearPassword");
+
+                if (usuarioToken == null)
+                {
+                    usuarioToken = tokenNegocio.BuscarTokenValido(token, "ResetPassword");
+                    esResetPassword = usuarioToken != null;
+                }
+
+                if (usuarioToken == null)
+                {
+                    MostrarError("El link para cambiar la contraseña expiró o ya fue utilizado.");
+                    return;
+                }
+
+                if (esResetPassword)
+                {
+                    btnCrearPassword.Text = "Cambiar contraseña";
+                    lblMensaje.Text = "Hola " + usuarioToken.Usuario.Nombre + ", ingresá tu nueva contraseña.";
+                }
+                else
+                {
+                    btnCrearPassword.Text = "Crear contraseña";
+                    lblMensaje.Text = "Hola " + usuarioToken.Usuario.Nombre + ", creá tu contraseña para activar tu usuario.";
+                }
+
+                lblMensaje.CssClass = "d-block mb-3 text-center text-muted";
+            }
+            catch (Exception)
+            {
+                MostrarError("Ocurrió un error al validar el link. Intente nuevamente más tarde.");
+            }
         }
 
         protected void btnCrearPassword_Click(object sender, EventArgs e)
@@ -43,7 +68,7 @@ namespace TP_Final_Programacion_III
 
             if (string.IsNullOrWhiteSpace(token))
             {
-                MostrarError("El link para crear la contraseña es inválido.");
+                MostrarError("El link para cambiar la contraseña es inválido.");
                 return;
             }
 
@@ -63,24 +88,44 @@ namespace TP_Final_Programacion_III
             try
             {
                 UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
+
+                bool esResetPassword = false;
                 UsuarioToken usuarioToken = tokenNegocio.BuscarTokenValido(token, "CrearPassword");
 
                 if (usuarioToken == null)
                 {
-                    MostrarError("El link para crear la contraseña expiró o ya fue utilizado.");
+                    usuarioToken = tokenNegocio.BuscarTokenValido(token, "ResetPassword");
+                    esResetPassword = usuarioToken != null;
+                }
+
+                if (usuarioToken == null)
+                {
+                    MostrarError("El link para cambiar la contraseña expiró o ya fue utilizado.");
                     return;
                 }
 
                 UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
-                usuarioNegocio.CrearPassInvitado(usuarioToken.Usuario, txtPassword.Text);
+
+                if (esResetPassword)
+                {
+                    if (!usuarioNegocio.CambiarPasswordUsuarioActivo(usuarioToken.Usuario, txtPassword.Text))
+                    {
+                        MostrarError("No se puede cambiar la contraseña de este usuario.");
+                        return;
+                    }
+                }
+                else
+                {
+                    usuarioNegocio.CrearPassInvitado(usuarioToken.Usuario, txtPassword.Text);
+                }
 
                 tokenNegocio.MarcarComoUsado(usuarioToken);
 
-                MostrarExito("Tu contraseña fue creada correctamente.");
+                MostrarExito("Tu contraseña fue actualizada correctamente.");
             }
             catch (Exception)
             {
-                MostrarError("Ocurrió un error al crear la contraseña. Intente nuevamente más tarde.");
+                MostrarError("Ocurrió un error al cambiar la contraseña. Intente nuevamente más tarde.");
             }
         }
 

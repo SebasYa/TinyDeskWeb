@@ -532,5 +532,28 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
+        public bool CambiarPasswordUsuarioActivo(Usuario usuario, string pass)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.setearConsulta(@"UPDATE USUARIO
+                                       SET PasswordHash = @PasswordHash
+                                       WHERE Id = @Id
+                                         AND Activo = 1
+                                         AND EmailVerificado = 1;
+                                       SELECT @@ROWCOUNT;");
+
+                datos.setearParametro("@PasswordHash", pass);
+                datos.setearParametro("@Id", usuario.Id);
+
+                return datos.ejecutarScalar() > 0;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
     }
 }

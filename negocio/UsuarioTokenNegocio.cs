@@ -138,24 +138,20 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
-
-        public string ObtenerEstadoInvitacion(int idUsuario, bool emailVerificado)
+        public string ObtenerEstadoToken(int idUsuario, string tipo)
         {
-            if (emailVerificado)
-                return "Ok";
-
             AccesoDatos datos = new AccesoDatos();
 
             try
             {
                 datos.setearConsulta(@"SELECT TOP 1 FechaExpiracion, Usado
-                                       FROM USUARIO_TOKEN
-                                       WHERE IdUsuario = @IdUsuario
-                                         AND Tipo = 'CrearPassword'
-                                       ORDER BY FechaCreacion DESC, Id DESC"
-                                    );
+                               FROM USUARIO_TOKEN
+                               WHERE IdUsuario = @IdUsuario
+                                 AND Tipo = @Tipo
+                               ORDER BY FechaCreacion DESC, Id DESC");
 
                 datos.setearParametro("@IdUsuario", idUsuario);
+                datos.setearParametro("@Tipo", tipo);
                 datos.ejecutarLectura();
 
                 if (datos.Lector.Read())
@@ -163,15 +159,16 @@ namespace negocio
                     bool usado = (bool)datos.Lector["Usado"];
                     DateTime fechaExpiracion = (DateTime)datos.Lector["FechaExpiracion"];
 
-                    if (!usado && fechaExpiracion > DateTime.Now)
+                    if (usado)
+                        return "Usado";
+
+                    if (fechaExpiracion > DateTime.Now)
                         return "Pendiente";
+
+                    return "Vencido";
                 }
 
-                return "Vencida";
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                return "NoExiste";
             }
             finally
             {

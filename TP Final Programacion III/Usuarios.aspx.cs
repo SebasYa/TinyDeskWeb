@@ -40,9 +40,14 @@ namespace TP_Final_Programacion_III
             {
                 int idUsuario = Convert.ToInt32(idObj);
                 bool emailVerificado = Convert.ToBoolean(emailVerificadoObj);
-
+                if (emailVerificado)
+                {
+                    return "<span class='text-success' title='Invitación aceptada'>" +
+                           "<i class='bi bi-check-circle-fill'></i>" +
+                           "</span>";
+                }
                 UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
-                string estado = tokenNegocio.ObtenerEstadoInvitacion(idUsuario, emailVerificado);
+                string estado = tokenNegocio.ObtenerEstadoToken(idUsuario, "CrearPassword");
 
                 if (estado == "Ok")
                 {
