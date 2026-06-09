@@ -229,8 +229,8 @@ namespace TP_Final_Programacion_III
             if (usuario.EmailVerificado) return;
 
             UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
-            string estado = tokenNegocio.ObtenerEstadoToken(usuario.Id, "CrearPassword");
-            if (estado == "Vencido" || estado == "NoExiste" || estado == "Usado")
+            EstadoTokenUsuario estado = tokenNegocio.ObtenerEstadoToken(usuario.Id, TipoTokenUsuario.CrearPassword);
+            if (estado == EstadoTokenUsuario.Vencido || estado == EstadoTokenUsuario.NoExiste || estado == EstadoTokenUsuario.Usado)
             {
                 pnlInvitacionVencida.Visible = true;
                 lblInvitacionVencida.Text = "La invitación venció o el usuario aun no activo la cuenta.";

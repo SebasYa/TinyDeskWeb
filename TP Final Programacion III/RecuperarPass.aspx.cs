@@ -43,29 +43,29 @@ namespace TP_Final_Programacion_III
 
                 if (!usuario.EmailVerificado)
                 {
-                    string estadoValidacion = tokenNegocio.ObtenerEstadoToken(usuario.Id, "ValidarEmail");
+                    EstadoTokenUsuario estadoValidacion = tokenNegocio.ObtenerEstadoToken(usuario.Id, TipoTokenUsuario.ValidarEmail);
 
-                    if (estadoValidacion == "Pendiente")
+                    if (estadoValidacion == EstadoTokenUsuario.Pendiente)
                     {
                         MostrarAviso("Tu cuenta todavía no está validada. Ya tenés un correo de validación vigente.");
                         return;
                     }
 
-                    if (estadoValidacion == "Vencido")
+                    if (estadoValidacion == EstadoTokenUsuario.Vencido)
                     {
                         MostrarAviso("Tu link de validación venció. Entrá desde ese link vencido para pedir un nuevo correo.");
                         return;
                     }
 
-                    string estadoInvitacion = tokenNegocio.ObtenerEstadoToken(usuario.Id, "CrearPassword");
+                    EstadoTokenUsuario estadoInvitacion = tokenNegocio.ObtenerEstadoToken(usuario.Id, TipoTokenUsuario.CrearPassword);
 
-                    if (estadoInvitacion == "Pendiente")
+                    if (estadoInvitacion == EstadoTokenUsuario.Pendiente)
                     {
                         MostrarAviso("Tu usuario todavía no está activado. Ya tenés una invitación vigente para crear tu contraseña.");
                         return;
                     }
 
-                    if (estadoInvitacion == "Vencido" || estadoInvitacion == "Usado" || estadoInvitacion == "NoExiste")
+                    if (estadoInvitacion == EstadoTokenUsuario.Vencido || estadoInvitacion == EstadoTokenUsuario.Usado || estadoInvitacion == EstadoTokenUsuario.NoExiste)
                     {
                         MostrarAviso("Tu usuario todavía no está activado y la invitación no está vigente. Pedile a un administrador que te reenvíe la invitación.");
                         return;

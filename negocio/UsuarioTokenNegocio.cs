@@ -138,7 +138,7 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
-        public string ObtenerEstadoToken(int idUsuario, string tipo)
+        public EstadoTokenUsuario ObtenerEstadoToken(int idUsuario, string tipo)
         {
             AccesoDatos datos = new AccesoDatos();
 
@@ -160,15 +160,15 @@ namespace negocio
                     DateTime fechaExpiracion = (DateTime)datos.Lector["FechaExpiracion"];
 
                     if (usado)
-                        return "Usado";
+                        return EstadoTokenUsuario.Usado;
 
                     if (fechaExpiracion > DateTime.Now)
-                        return "Pendiente";
+                        return EstadoTokenUsuario.Pendiente;
 
-                    return "Vencido";
+                    return EstadoTokenUsuario.Vencido;
                 }
 
-                return "NoExiste";
+                return EstadoTokenUsuario.NoExiste;
             }
             finally
             {

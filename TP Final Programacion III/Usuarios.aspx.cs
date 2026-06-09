@@ -47,9 +47,9 @@ namespace TP_Final_Programacion_III
                            "</span>";
                 }
                 UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
-                string estado = tokenNegocio.ObtenerEstadoToken(idUsuario, "CrearPassword");
+                EstadoTokenUsuario estado = tokenNegocio.ObtenerEstadoToken(idUsuario, TipoTokenUsuario.CrearPassword);
 
-                if (estado == "Pendiente")
+                if (estado == EstadoTokenUsuario.Pendiente)
                 {
                     return "<span class='text-warning' title='Invitación pendiente. El usuario todavía no creó su contraseña.'>" +
                            "<i class='bi bi-hourglass-split'></i>" +

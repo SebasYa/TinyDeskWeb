@@ -55,6 +55,7 @@
     <Compile Include="SprintNegocio.cs" />
     <Compile Include="TicketNegocio.cs" />
     <Compile Include="TipoCatalogoAdmin.cs" />
+    <Compile Include="TipoTokenUsuario.cs" />
     <Compile Include="TokenHelper.cs" />
     <Compile Include="UsuarioNegocio.cs" />
     <Compile Include="UsuarioTokenNegocio.cs" />

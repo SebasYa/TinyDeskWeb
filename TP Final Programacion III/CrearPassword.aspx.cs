@@ -29,11 +29,11 @@ namespace TP_Final_Programacion_III
                 UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
 
                 bool esResetPassword = false;
-                UsuarioToken usuarioToken = tokenNegocio.BuscarTokenValido(token, "CrearPassword");
+                UsuarioToken usuarioToken = tokenNegocio.BuscarTokenValido(token, TipoTokenUsuario.CrearPassword);
 
                 if (usuarioToken == null)
                 {
-                    usuarioToken = tokenNegocio.BuscarTokenValido(token, "ResetPassword");
+                    usuarioToken = tokenNegocio.BuscarTokenValido(token, TipoTokenUsuario.ResetPassword);
                     esResetPassword = usuarioToken != null;
                 }
 
@@ -90,11 +90,11 @@ namespace TP_Final_Programacion_III
                 UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
 
                 bool esResetPassword = false;
-                UsuarioToken usuarioToken = tokenNegocio.BuscarTokenValido(token, "CrearPassword");
+                UsuarioToken usuarioToken = tokenNegocio.BuscarTokenValido(token, TipoTokenUsuario.CrearPassword);
 
                 if (usuarioToken == null)
                 {
-                    usuarioToken = tokenNegocio.BuscarTokenValido(token, "ResetPassword");
+                    usuarioToken = tokenNegocio.BuscarTokenValido(token, TipoTokenUsuario.ResetPassword);
                     esResetPassword = usuarioToken != null;
                 }
 

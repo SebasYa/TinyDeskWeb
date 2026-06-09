@@ -27,11 +27,11 @@ namespace TP_Final_Programacion_III
             try
             {
                 UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
-                UsuarioToken usuarioToken = tokenNegocio.BuscarTokenValido(token, "ValidarEmail");
+                UsuarioToken usuarioToken = tokenNegocio.BuscarTokenValido(token, TipoTokenUsuario.ValidarEmail);
 
                 if (usuarioToken == null)
                 {
-                    UsuarioToken tokenVencido = tokenNegocio.BuscarToken(token, "ValidarEmail");
+                    UsuarioToken tokenVencido = tokenNegocio.BuscarToken(token, TipoTokenUsuario.ValidarEmail);
                     if (tokenVencido != null && !tokenVencido.Usado && tokenVencido.FechaExpiracion <= DateTime.Now && !tokenVencido.Usuario.EmailVerificado)
                     {
                         MostrarReenvio(token);
@@ -82,7 +82,7 @@ namespace TP_Final_Programacion_III
             try
             {
                 UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
-                UsuarioToken tokenVencido = tokenNegocio.BuscarToken(hfTokenReenvio.Value, "ValidarEmail");
+                UsuarioToken tokenVencido = tokenNegocio.BuscarToken(hfTokenReenvio.Value, TipoTokenUsuario.ValidarEmail);
 
                 if (tokenVencido == null || tokenVencido.Usado || tokenVencido.Usuario.EmailVerificado)
                 {
@@ -92,9 +92,9 @@ namespace TP_Final_Programacion_III
 
                 Usuario usuario = tokenVencido.Usuario;
 
-                tokenNegocio.InvalidarTokensPendientes(usuario.Id, "ValidarEmail");
+                tokenNegocio.InvalidarTokensPendientes(usuario.Id, TipoTokenUsuario.ValidarEmail);
 
-                UsuarioToken nuevoToken = tokenNegocio.CrearToken(usuario, "ValidarEmail", 24);
+                UsuarioToken nuevoToken = tokenNegocio.CrearToken(usuario, TipoTokenUsuario.ValidarEmail, 24);
 
                 string linkValidacion = Request.Url.GetLeftPart(UriPartial.Authority)
                     + ResolveUrl("~/ValidarEmail.aspx")

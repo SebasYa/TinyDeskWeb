@@ -140,9 +140,9 @@ namespace TP_Final_Programacion_III
                 }
 
                 UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
-                tokenNegocio.InvalidarTokensPendientes(usuario.Id, "ValidarEmail");
+                tokenNegocio.InvalidarTokensPendientes(usuario.Id, TipoTokenUsuario.ValidarEmail);
 
-                UsuarioToken nuevoToken = tokenNegocio.CrearToken(usuario, "ValidarEmail", 24);
+                UsuarioToken nuevoToken = tokenNegocio.CrearToken(usuario, TipoTokenUsuario.ValidarEmail, 24);
 
                 string linkValidacion = Request.Url.GetLeftPart(UriPartial.Authority)
                     + ResolveUrl("~/ValidarEmail.aspx")
