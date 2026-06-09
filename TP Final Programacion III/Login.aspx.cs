@@ -48,7 +48,7 @@ namespace TP_Final_Programacion_III
                     }
                     else
                     {
-                        Response.Redirect("Default.aspx", false);
+                        Response.Redirect("UsuarioDefault.aspx", false);
                     }
                 }
                 else if (negocio.MailPendienteVerificacion(usuario))

@@ -186,6 +186,7 @@
     <Content Include="Site.Master" />
     <Content Include="Sprints.aspx" />
     <Content Include="Ticket.aspx" />
+    <Content Include="UsuarioDefault.aspx" />
     <Content Include="Usuarios.aspx" />
     <Content Include="ValidarEmail.aspx" />
     <Content Include="ViewSwitcher.ascx" />
@@ -270,6 +271,20 @@
     <Compile Include="Registro.aspx.designer.cs">
       <DependentUpon>Registro.aspx</DependentUpon>
     </Compile>
+    <Compile Include="UsuarioDefault.aspx.cs">
+      <DependentUpon>UsuarioDefault.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UsuarioDefault.aspx.designer.cs">
+      <DependentUpon>UsuarioDefault.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UsuarioSite.Master.cs">
+      <DependentUpon>UsuarioSite.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UsuarioSite.Master.designer.cs">
+      <DependentUpon>UsuarioSite.Master</DependentUpon>
+    </Compile>
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -327,6 +342,7 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.7.0.slim.min.map" />
     <Content Include="Scripts\jquery-3.7.0.min.map" />
+    <Content Include="UsuarioSite.Master" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
