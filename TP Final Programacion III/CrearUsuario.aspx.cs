@@ -287,7 +287,7 @@ namespace TP_Final_Programacion_III
                 }
 
                 UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
-                tokenNegocio.InvalidarTokensPendientes(usuario.Id, "CrearPassword");
+                tokenNegocio.InvalidarTokensPendientes(usuario.Id, TipoTokenUsuario.CrearPassword);
 
                 if (EnviarMailInvitacion(usuario))
                 {
@@ -308,7 +308,7 @@ namespace TP_Final_Programacion_III
         private bool EnviarMailInvitacion(Usuario usuario)
         {
             UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
-            UsuarioToken usuarioToken = tokenNegocio.CrearToken(usuario, "CrearPassword", 24);
+            UsuarioToken usuarioToken = tokenNegocio.CrearToken(usuario, TipoTokenUsuario.CrearPassword, 24);
 
             string linkCrearPass = Request.Url.GetLeftPart(UriPartial.Authority)
                 + ResolveUrl("~/CrearPassword.aspx")

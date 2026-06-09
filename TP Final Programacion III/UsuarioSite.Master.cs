@@ -30,6 +30,7 @@ namespace TP_Final_Programacion_III
             if (Seguridad.EsAdmin(Session["usuario"]) || Seguridad.PuedeEscribir(Session["usuario"]))
             {
                 Response.Redirect("Default.aspx", false);
+                return;
             }
             if (!IsPostBack)
             {

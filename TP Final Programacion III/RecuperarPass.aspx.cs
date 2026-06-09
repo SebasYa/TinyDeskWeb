@@ -81,9 +81,9 @@ namespace TP_Final_Programacion_III
                     return;
                 }
 
-                tokenNegocio.InvalidarTokensPendientes(usuario.Id, "ResetPassword");
+                tokenNegocio.InvalidarTokensPendientes(usuario.Id, TipoTokenUsuario.ResetPassword);
 
-                UsuarioToken token = tokenNegocio.CrearToken(usuario, "ResetPassword", 24);
+                UsuarioToken token = tokenNegocio.CrearToken(usuario, TipoTokenUsuario.ResetPassword, 24);
 
                 string link = Request.Url.GetLeftPart(UriPartial.Authority)
                     + ResolveUrl("~/CrearPassword.aspx")

@@ -235,15 +235,5 @@ namespace TP_Final_Programacion_III
                 Session.Add("error", ex.ToString());
             }
         }
-        private void CargarAlertaTicketsUsuariosDesactivados(int cantidad)
-        {
-            pnlTicketsUsuariosDesactivados.Visible = cantidad > 0;
-            pnlSinAlertas.Visible = cantidad == 0;
-
-            if (cantidad == 1)
-                lblTicketsUsuariosDesactivados.Text = "Hay 1 ticket asignado a un usuario desactivado.";
-            else
-                lblTicketsUsuariosDesactivados.Text = "Hay " + cantidad + " tickets asignados a usuarios desactivados.";
-        }
     }
 }
