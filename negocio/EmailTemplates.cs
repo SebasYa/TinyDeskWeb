@@ -35,5 +35,12 @@ namespace negocio
                    "<p><b>Area:</b> " + area + "</p>" +
                    "<p><a href='" + linkTicket + "'>Ver ticket</a></p>";
         }
+        public static string RecuperarPassword(string nombre, string link)
+        {
+            return "<h2>Hola " + nombre + "</h2>" +
+                   "<p>Recibimos una solicitud para cambiar tu contraseña.</p>" +
+                   "<p><a href='" + link + "'>Cambiar contraseña</a></p>" +
+                   "<p>Si no solicitaste este cambio, podés ignorar este mensaje.</p>";
+        }
     }
 }

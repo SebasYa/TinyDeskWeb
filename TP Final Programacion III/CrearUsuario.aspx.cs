@@ -90,7 +90,6 @@ namespace TP_Final_Programacion_III
                 }
             }
         }
-
         protected void btnCrearUsuario_Click(object sender, EventArgs e)
         {
             LimpiarErroresFormulario();
@@ -182,17 +181,6 @@ namespace TP_Final_Programacion_III
                     {
                         MostrarErrorFormulario("No se pudo reenviar el mail de invitación.");
                     }
-                    UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
-                    UsuarioToken usuarioToken = tokenNegocio.CrearToken(nuevoUsuario, "CrearPassword", 24);
-
-                    string linkCrearPass = Request.Url.GetLeftPart(UriPartial.Authority) + ResolveUrl("~/CrearPassword.aspx") + "?token=" + Server.UrlEncode(usuarioToken.Token);
-                    string cuerpo = EmailTemplates.CrearPasswordEmpleado(nuevoUsuario.Nombre, linkCrearPass);
-
-                    EmailService email = new EmailService();
-
-                    email.armarCorreo(nuevoUsuario.Email, "Crea tu contraseña en TinyDesk", cuerpo);
-                    if (email.enviarEmail()) Response.Redirect("Usuarios.aspx", false);
-                    else MostrarErrorFormulario("No se pudo enviar el correo.");
                 }
             }
             catch (Exception ex)
@@ -212,8 +200,8 @@ namespace TP_Final_Programacion_III
         private void MostrarErrorFormulario(string mensaje)
         {
             litMensajeFormulario.Text = $@"<div class='alert alert-danger mb-3' role='alert'>
-                                      {mensaje}
-                                   </div>";
+                                            {mensaje}
+                                        </div>";
         }
         private void CargarEstadoInvitacion(Usuario usuario)
         {

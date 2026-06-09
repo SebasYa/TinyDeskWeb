@@ -11,22 +11,17 @@
     <title>Iniciar sesión - TinyDesk</title>
 
     <link href="Content/bootstrap.min.css" rel="stylesheet" />
-    <link href="Content/bootstrap.min.css" rel="stylesheet" />
     <style>
-        /* Borde rojo y sombra focus para campos con error */
         .form-control.is-invalid {
             border-color: #dc3545 !important;
             padding-right: calc(1.5em + 0.75rem);
-            background-repeat: no-repeat;
-            background-position: right calc(0.375em + 0.1875rem) center;
-            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
         }
 
             .form-control.is-invalid:focus {
                 border-color: #dc3545 !important;
                 box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25) !important;
             }
-        /* Ajuste de tamaño para el mensaje de error */
+
         .text-validation-error {
             font-size: 0.875em;
             margin-top: 0.25rem;
@@ -48,26 +43,54 @@
                             <p class="text-muted text-center mb-4">Ingrese las credenciales para continuar</p>
 
                             <div class="mb-3">
-                                <label for="txtDni" class="form-label">Usuario</label>
+                                <label for="txtNombreUsuario" class="form-label">Usuario</label>
                                 <asp:TextBox ID="txtNombreUsuario" runat="server" CssClass="form-control"></asp:TextBox>
-                                <asp:RequiredFieldValidator ID="rfvUsuario" runat="server" ControlToValidate="txtNombreUsuario" ErrorMessage="Ingrese un usuario válido." CssClass="text-danger text-validation-error" Display="Dynamic" />
-                                <asp:Label ID="lblErrorUsuario" runat="server" CssClass="alert alert-danger text-center d-block py-2 mb-3" Visible="false" Style="font-size: 0.9em;"></asp:Label>
+                                <asp:RequiredFieldValidator ID="rfvUsuario" runat="server"
+                                    ControlToValidate="txtNombreUsuario"
+                                    ErrorMessage="Ingrese un usuario válido."
+                                    CssClass="text-danger text-validation-error"
+                                    Display="Dynamic" />
+                                <asp:Label ID="lblErrorUsuario" runat="server"
+                                    CssClass="alert alert-danger text-center d-block py-2 mb-3"
+                                    Visible="false"
+                                    Style="font-size: 0.9em;"></asp:Label>
                             </div>
 
                             <div class="mb-3">
                                 <label for="txtPassword" class="form-label">Contraseña</label>
                                 <asp:TextBox ID="txtPassword" runat="server" CssClass="form-control" TextMode="Password"></asp:TextBox>
-                                <asp:RequiredFieldValidator ID="rfvPassword" runat="server" ControlToValidate="txtPassword" ErrorMessage="Ingrese una contraseña válida." CssClass="text-danger text-validation-error" Display="Dynamic" />
-                                <asp:Label ID="lblErrorPass" runat="server" CssClass="alert alert-danger text-center d-block py-2 mb-3" Visible="false" Style="font-size: 0.9em;"></asp:Label>
-
+                                <asp:RequiredFieldValidator ID="rfvPassword" runat="server"
+                                    ControlToValidate="txtPassword"
+                                    ErrorMessage="Ingrese una contraseña válida."
+                                    CssClass="text-danger text-validation-error"
+                                    Display="Dynamic" />
+                                <asp:Label ID="lblErrorPass" runat="server"
+                                    CssClass="alert alert-danger text-center d-block py-2 mb-3"
+                                    Visible="false"
+                                    Style="font-size: 0.9em;"></asp:Label>
                             </div>
 
-                            <asp:Button ID="btnMockLogin" runat="server" Text="Ingresar sin contraseña (Mock)" CssClass="btn btn-outline-secondary w-100 mb-3" OnClick="btnLoginFantasmin_Click" CausesValidation="false" />
-                            <asp:Button ID="btnLogin" runat="server" Text="Iniciar Sesión" CssClass="btn btn-primary w-100" OnClick="btnLogin_Click" OnClientClick="clearErrors();" />
+                            <asp:Button ID="btnMockLogin" runat="server"
+                                Text="Ingresar sin contraseña (Mock)"
+                                CssClass="btn btn-outline-secondary w-100 mb-3"
+                                OnClick="btnLoginFantasmin_Click"
+                                CausesValidation="false" />
+
+                            <asp:Button ID="btnLogin" runat="server"
+                                Text="Iniciar Sesión"
+                                CssClass="btn btn-primary w-100"
+                                OnClick="btnLogin_Click"
+                                OnClientClick="clearErrors();" />
+
+                            <div class="text-center mt-2">
+                                <a href="RecuperarPass.aspx" class="text-decoration-none">¿Te olvidaste la contraseña?</a>
+                            </div>
+
                             <div class="text-center mt-3">
                                 <span class="text-muted">¿No tenés cuenta?</span>
                                 <a href="Registro.aspx" class="text-decoration-none">Crear usuario</a>
                             </div>
+
                         </div>
                     </div>
 
@@ -76,13 +99,12 @@
         </div>
 
     </form>
+
     <script type="text/javascript">
         function clearErrors() {
-            // Elimina los carteles de incorrecto de la pantalla
             document.getElementById("lblErrorUsuario")?.remove();
             document.getElementById("lblErrorPass")?.remove();
 
-            // Quita los bordes rojos anteriores
             document.getElementById("txtNombreUsuario")?.classList.remove("is-invalid");
             document.getElementById("txtPassword")?.classList.remove("is-invalid");
         }

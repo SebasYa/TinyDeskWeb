@@ -126,6 +126,7 @@
     <Content Include="Global.asax" />
     <Content Include="Login.aspx" />
     <Content Include="Proyectos.aspx" />
+    <Content Include="RecuperarPass.aspx" />
     <Content Include="Registro.aspx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -254,6 +255,13 @@
     </Compile>
     <Compile Include="Proyectos.aspx.designer.cs">
       <DependentUpon>Proyectos.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RecuperarPass.aspx.cs">
+      <DependentUpon>RecuperarPass.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RecuperarPass.aspx.designer.cs">
+      <DependentUpon>RecuperarPass.aspx</DependentUpon>
     </Compile>
     <Compile Include="Registro.aspx.cs">
       <DependentUpon>Registro.aspx</DependentUpon>
