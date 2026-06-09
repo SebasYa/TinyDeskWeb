@@ -36,7 +36,7 @@ namespace negocio
         public static bool PuedeEscribir(object user)
         {
             Usuario usuario = user != null ? (Usuario)user : null;
-            if (usuario != null && usuario.Id != 0 && (usuario.PermisoEscritura || usuario.EsAdmin))
+            if (usuario != null && usuario.Id != 0 && (usuario.PermisoEscritura))
             {
                 return true;
             }

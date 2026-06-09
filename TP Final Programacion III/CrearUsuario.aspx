@@ -97,6 +97,23 @@
                                 </div>
                             </div>
                         </div>
+                        <asp:Panel ID="pnlInvitacionVencida" runat="server" Visible="false" CssClass="alert alert-danger mt-3">
+                            <div class="d-flex align-items-start gap-2">
+                                <i class="bi bi-exclamation-circle-fill fs-5"></i>
+
+                                <div class="flex-grow-1">
+                                    <asp:Label ID="lblInvitacionVencida" runat="server"></asp:Label>
+
+                                    <div class="mt-2">
+                                        <asp:Button ID="btnReenviarInvitacion" runat="server"
+                                            Text="Reenviar invitación"
+                                            CssClass="btn btn-outline-danger btn-sm"
+                                            CausesValidation="false"
+                                            OnClick="btnReenviarInvitacion_Click" />
+                                    </div>
+                                </div>
+                            </div>
+                        </asp:Panel>
                         <!-- Botón de Guardado -->
                         <div class="mt-4 pt-2">
                             <asp:Button ID="btnCrearUsuario" runat="server" Text="Crear usuario" CssClass="btn btn-primary w-100 py-2 fw-semibold fs-5 shadow-sm" OnClick="btnCrearUsuario_Click" />

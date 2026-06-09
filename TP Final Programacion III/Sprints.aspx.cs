@@ -288,7 +288,7 @@ namespace TP_Final_Programacion_III
             }
             catch (Exception ex)
             {
-
+                throw ex;
             }
         }
 

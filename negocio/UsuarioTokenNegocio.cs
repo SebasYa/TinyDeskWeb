@@ -138,5 +138,68 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
+
+        public string ObtenerEstadoInvitacion(int idUsuario, bool emailVerificado)
+        {
+            if (emailVerificado)
+                return "Ok";
+
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.setearConsulta(@"SELECT TOP 1 FechaExpiracion, Usado
+                                       FROM USUARIO_TOKEN
+                                       WHERE IdUsuario = @IdUsuario
+                                         AND Tipo = 'CrearPassword'
+                                       ORDER BY FechaCreacion DESC, Id DESC"
+                                    );
+
+                datos.setearParametro("@IdUsuario", idUsuario);
+                datos.ejecutarLectura();
+
+                if (datos.Lector.Read())
+                {
+                    bool usado = (bool)datos.Lector["Usado"];
+                    DateTime fechaExpiracion = (DateTime)datos.Lector["FechaExpiracion"];
+
+                    if (!usado && fechaExpiracion > DateTime.Now)
+                        return "Pendiente";
+                }
+
+                return "Vencida";
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+        public void InvalidarTokensPendientes(int idUsuario, string tipo)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.setearConsulta(@"UPDATE USUARIO_TOKEN
+                                       SET Usado = 1,
+                                           FechaUso = GETDATE()
+                                       WHERE IdUsuario = @IdUsuario
+                                         AND Tipo = @Tipo
+                                         AND Usado = 0"
+                );
+
+                datos.setearParametro("@IdUsuario", idUsuario);
+                datos.setearParametro("@Tipo", tipo);
+                datos.ejecutarAccion();
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
     }
 }

@@ -15,22 +15,21 @@ namespace negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.setearConsulta(@"
-                    SELECT U.Id, U.PasswordHash, U.NombreUsuario, 
-                           U.Nombre, U.Apellido, U.Email, U.PermisoEscritura, U.EsAdmin,
-                           U.IdEmpresa, E.Nombre AS NombreEmpresa, 
-                           U.IdPuesto, P.Nombre AS NombrePuesto, 
-                           U.IdArea, A.Nombre AS NombreArea,
-                           U.IdSeniority, S.Nombre AS NombreSeniority
-                    FROM USUARIO U
-                    INNER JOIN EMPRESA E ON U.IdEmpresa = E.Id
-                    INNER JOIN PUESTO P ON U.IdPuesto = P.Id
-                    INNER JOIN AREA A ON U.IdArea = A.Id
-                    LEFT JOIN SENIORITY S ON U.IdSeniority = S.Id
-                    WHERE U.NombreUsuario = @NombreUsuario 
-                      AND U.PasswordHash = @PasswordHash 
-                      AND U.EmailVerificado = 1 
-                      AND U.Activo = 1
+                datos.setearConsulta(@"SELECT U.Id, U.PasswordHash, U.NombreUsuario, 
+                                              U.Nombre, U.Apellido, U.Email, U.PermisoEscritura, U.EsAdmin,
+                                              U.IdEmpresa, E.Nombre AS NombreEmpresa, 
+                                              U.IdPuesto, P.Nombre AS NombrePuesto, 
+                                              U.IdArea, A.Nombre AS NombreArea,
+                                              U.IdSeniority, S.Nombre AS NombreSeniority
+                                       FROM USUARIO U
+                                       INNER JOIN EMPRESA E ON U.IdEmpresa = E.Id
+                                       INNER JOIN PUESTO P ON U.IdPuesto = P.Id
+                                       INNER JOIN AREA A ON U.IdArea = A.Id
+                                       LEFT JOIN SENIORITY S ON U.IdSeniority = S.Id
+                                       WHERE U.NombreUsuario = @NombreUsuario 
+                                         AND U.PasswordHash = @PasswordHash 
+                                         AND U.EmailVerificado = 1 
+                                         AND U.Activo = 1
         ");
                 datos.setearParametro("@NombreUsuario", usuario.NombreUsuario);
                 datos.setearParametro("@PasswordHash", usuario.PasswordHash);
@@ -371,7 +370,7 @@ namespace negocio
                 datos.setearConsulta(@" INSERT INTO USUARIO (NombreUsuario, PasswordHash, Email, Nombre, Apellido, Activo, 
                                                              PermisoEscritura, EmailVerificado, IdPuesto, IdArea, IdEmpresa,
                                                              EsAdmin, IdSeniority)
-                                        VALUES (@NombreUsuario, @PasswordHash, @Email, @Nombre, @Apellido, 0, @PermisoEscritura, 1, 
+                                        VALUES (@NombreUsuario, @PasswordHash, @Email, @Nombre, @Apellido, 0, @PermisoEscritura, 0, 
                                                 @IdPuesto, @IdArea, @IdEmpresa, @EsAdmin, @IdSeniority);
                                         SELECT CAST(SCOPE_IDENTITY() AS INT);
                 ");

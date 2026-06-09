@@ -23,6 +23,7 @@ namespace TP_Final_Programacion_III
 
         protected void btnCrearUsuario_Click(object sender, EventArgs e)
         {
+            if (!Page.IsValid) return;
             LimpiarErroresFormulario();
             if (string.IsNullOrWhiteSpace(txtNombreUsuario.Text) ||
                 string.IsNullOrWhiteSpace(txtNombre.Text) ||
@@ -83,7 +84,7 @@ namespace TP_Final_Programacion_III
                 EmailService emailService = new EmailService();
                 emailService.armarCorreo(usuario.Email, "Valida tu cuenta en TinyDesk", cuerpo);
                 if (emailService.enviarEmail()) Response.Redirect("Login.aspx", false);
-                MostrarError("No se pudo enviar el correo de validación.");
+                else MostrarError("No se pudo enviar el correo de validación.");
             }
             catch (Exception ex)
             {

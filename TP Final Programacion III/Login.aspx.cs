@@ -35,7 +35,7 @@ namespace TP_Final_Programacion_III
                     Session.Add("usuario", usuario);
                     txtNombreUsuario.Text = "";
                     txtPassword.Text = "";
-                    if (usuario.PermisoEscritura == true)
+                    if (Seguridad.EsAdmin(Session["usuario"]) || Seguridad.PuedeEscribir(Session["usuario"]))
                     {
                         Response.Redirect("Default.aspx", false);
                     }

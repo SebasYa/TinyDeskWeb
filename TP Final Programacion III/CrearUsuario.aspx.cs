@@ -78,7 +78,7 @@ namespace TP_Final_Programacion_III
                             {
                                 ddlSeniority.SelectedValue = usuarioEditar.Seniority.Id.ToString();
                             }
-
+                            CargarEstadoInvitacion(usuarioEditar);
                         }
                     }
                 }
@@ -142,10 +142,7 @@ namespace TP_Final_Programacion_III
                 if (esEdicion)
                 {
                     nuevoUsuario.Id = int.Parse(Request.QueryString["id"]);
-                    string duplicado = negocio.ObtenerDuplicadoUsuario(nuevoUsuario.NombreUsuario.Trim(),
-                                                                       nuevoUsuario.Email.Trim(),
-                                                                       nuevoUsuario.Id
-                                                                       );
+                    string duplicado = negocio.ObtenerDuplicadoUsuario(nuevoUsuario.NombreUsuario.Trim(), nuevoUsuario.Email.Trim(), nuevoUsuario.Id);
 
                     if (duplicado != null)
                     {
@@ -177,6 +174,14 @@ namespace TP_Final_Programacion_III
                         return;
                     }
                     nuevoUsuario.Id = idUsuario;
+                    if (EnviarMailInvitacion(nuevoUsuario))
+                    {
+                        Response.Redirect("Usuarios.aspx", false);
+                    }
+                    else
+                    {
+                        MostrarErrorFormulario("No se pudo reenviar el mail de invitación.");
+                    }
                     UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
                     UsuarioToken usuarioToken = tokenNegocio.CrearToken(nuevoUsuario, "CrearPassword", 24);
 
@@ -210,7 +215,19 @@ namespace TP_Final_Programacion_III
                                       {mensaje}
                                    </div>";
         }
+        private void CargarEstadoInvitacion(Usuario usuario)
+        {
+            pnlInvitacionVencida.Visible = false;
+            if (usuario.EmailVerificado) return;
 
+            UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
+            string estado = tokenNegocio.ObtenerEstadoInvitacion(usuario.Id, usuario.EmailVerificado);
+            if (estado == "Vencida")
+            {
+                pnlInvitacionVencida.Visible = true;
+                lblInvitacionVencida.Text = "La invitación venció y el usuario aun no activo la cuenta.";
+            }
+        }
         private void MostrarErrorDuplicado(string tipoDuplicado)
         {
             LimpiarErroresFormulario();
@@ -239,6 +256,62 @@ namespace TP_Final_Programacion_III
                     MostrarErrorFormulario("Ya existe un usuario con ese nombre de usuario o correo electrónico.");
                     break;
             }
+        }
+        protected void btnReenviarInvitacion_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Request.QueryString["id"] == null)
+                {
+                    MostrarErrorFormulario("No se pudo identificar el usuario.");
+                    return;
+                }
+
+                int idUsuario = int.Parse(Request.QueryString["id"]);
+
+                UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
+                Usuario usuario = usuarioNegocio.BuscarPorId(idUsuario);
+
+                if (usuario == null || usuario.EmailVerificado)
+                {
+                    MostrarErrorFormulario("No se puede reenviar la invitación para este usuario.");
+                    return;
+                }
+
+                UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
+                tokenNegocio.InvalidarTokensPendientes(usuario.Id, "CrearPassword");
+
+                if (EnviarMailInvitacion(usuario))
+                {
+                    pnlInvitacionVencida.Visible = false;
+                    litMensajeFormulario.Text = "<div class='alert alert-success mb-3'>Se reenvió la invitación correctamente.</div>";
+                }
+                else
+                {
+                    MostrarErrorFormulario("No se pudo reenviar la invitación.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                MostrarErrorFormulario("Ocurrió un error al reenviar la invitación.");
+            }
+        }
+        private bool EnviarMailInvitacion(Usuario usuario)
+        {
+            UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
+            UsuarioToken usuarioToken = tokenNegocio.CrearToken(usuario, "CrearPassword", 24);
+
+            string linkCrearPass = Request.Url.GetLeftPart(UriPartial.Authority)
+                + ResolveUrl("~/CrearPassword.aspx")
+                + "?token=" + Server.UrlEncode(usuarioToken.Token);
+
+            string cuerpo = EmailTemplates.CrearPasswordEmpleado(usuario.Nombre, linkCrearPass);
+
+            EmailService email = new EmailService();
+            email.armarCorreo(usuario.Email, "Crea tu contraseña en TinyDesk", cuerpo);
+
+            return email.enviarEmail();
         }
     }
 }
