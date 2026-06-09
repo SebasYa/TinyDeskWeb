@@ -33,25 +33,71 @@ namespace TP_Final_Programacion_III
                 UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
                 Usuario usuario = usuarioNegocio.BuscarPorNombreUsuario(txtNombreUsuario.Text.Trim());
 
-                if (usuario != null && usuario.Activo && usuario.EmailVerificado)
+                if (usuario == null)
                 {
-                    UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
-                    tokenNegocio.InvalidarTokensPendientes(usuario.Id, "ResetPassword");
-
-                    UsuarioToken token = tokenNegocio.CrearToken(usuario, "ResetPassword", 24);
-
-                    string link = Request.Url.GetLeftPart(UriPartial.Authority)
-                        + ResolveUrl("~/CrearPassword.aspx")
-                        + "?token=" + Server.UrlEncode(token.Token);
-
-                    string cuerpo = EmailTemplates.RecuperarPassword(usuario.Nombre, link);
-
-                    EmailService email = new EmailService();
-                    email.armarCorreo(usuario.Email, "Recuperar contraseña TinyDesk", cuerpo);
-                    email.enviarEmail();
+                    MostrarExito("Se envio un correo para cambiar la contraseña correctamente.");
+                    return;
                 }
 
-                MostrarExito("Si el usuario existe y está activo, se enviará un correo para cambiar la contraseña.");
+                UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
+
+                if (!usuario.EmailVerificado)
+                {
+                    string estadoValidacion = tokenNegocio.ObtenerEstadoToken(usuario.Id, "ValidarEmail");
+
+                    if (estadoValidacion == "Pendiente")
+                    {
+                        MostrarAviso("Tu cuenta todavía no está validada. Ya tenés un correo de validación vigente.");
+                        return;
+                    }
+
+                    if (estadoValidacion == "Vencido")
+                    {
+                        MostrarAviso("Tu link de validación venció. Entrá desde ese link vencido para pedir un nuevo correo.");
+                        return;
+                    }
+
+                    string estadoInvitacion = tokenNegocio.ObtenerEstadoToken(usuario.Id, "CrearPassword");
+
+                    if (estadoInvitacion == "Pendiente")
+                    {
+                        MostrarAviso("Tu usuario todavía no está activado. Ya tenés una invitación vigente para crear tu contraseña.");
+                        return;
+                    }
+
+                    if (estadoInvitacion == "Vencido" || estadoInvitacion == "Usado" || estadoInvitacion == "NoExiste")
+                    {
+                        MostrarAviso("Tu usuario todavía no está activado y la invitación no está vigente. Pedile a un administrador que te reenvíe la invitación.");
+                        return;
+                    }
+
+                    MostrarAviso("Tu usuario todavía no está activado.");
+                    return;
+                }
+
+                if (!usuario.Activo)
+                {
+                    MostrarError("Este usuario está dado de baja. No se puede recuperar la contraseña.");
+                    return;
+                }
+
+                tokenNegocio.InvalidarTokensPendientes(usuario.Id, "ResetPassword");
+
+                UsuarioToken token = tokenNegocio.CrearToken(usuario, "ResetPassword", 24);
+
+                string link = Request.Url.GetLeftPart(UriPartial.Authority)
+                    + ResolveUrl("~/CrearPassword.aspx")
+                    + "?token=" + Server.UrlEncode(token.Token);
+
+                string cuerpo = EmailTemplates.RecuperarPassword(usuario.Nombre, link);
+
+                EmailService email = new EmailService();
+                email.armarCorreo(usuario.Email, "Recuperar contraseña TinyDesk", cuerpo);
+
+                if (email.enviarEmail())
+                    MostrarExito("Se envió un correo para cambiar la contraseña.");
+                else
+                    MostrarError("No se pudo enviar el correo de recuperación.");
             }
             catch (Exception ex)
             {
@@ -66,7 +112,12 @@ namespace TP_Final_Programacion_III
                                     {mensaje}
                                  </div>";
         }
-
+        private void MostrarAviso(string mensaje)
+        {
+            litMensaje.Text = $@"<div class='alert alert-danger mb-3' role='alert'>
+                                    {mensaje}
+                                 </div>";
+        }
         private void MostrarError(string mensaje)
         {
             litMensaje.Text = $@"<div class='alert alert-danger mb-3' role='alert'>

@@ -49,13 +49,6 @@ namespace TP_Final_Programacion_III
                 UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
                 string estado = tokenNegocio.ObtenerEstadoToken(idUsuario, "CrearPassword");
 
-                if (estado == "Ok")
-                {
-                    return "<span class='text-success' title='Invitación aceptada'>" +
-                           "<i class='bi bi-check-circle-fill'></i>" +
-                           "</span>";
-                }
-
                 if (estado == "Pendiente")
                 {
                     return "<span class='text-warning' title='Invitación pendiente. El usuario todavía no creó su contraseña.'>" +
