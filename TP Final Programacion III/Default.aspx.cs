@@ -52,10 +52,18 @@ namespace TP_Final_Programacion_III
                     ddlProyecto.DataBind();
                     ddlProyecto.Items.Insert(0, new ListItem("Seleccione un puesto...", ""));
 
+                    lblTicketsAbiertos.Text = ticketNegocio.ContarAbiertos(idEmpresa).ToString();
+
+                    int ticketsUsuariosDesactivados = ticketNegocio.ContarAsignadosUsuariosDesactivados(idEmpresa);
+                    pnlTicketsUsuariosDesactivados.Visible = ticketsUsuariosDesactivados > 0;
+                    pnlSinAlertas.Visible = ticketsUsuariosDesactivados == 0;
+
+                    if (ticketsUsuariosDesactivados == 1) lblTicketsUsuariosDesactivados.Text = "Hay 1 ticket asignado a un usuario desactivado.";
+                    else lblTicketsUsuariosDesactivados.Text = "Hay " + ticketsUsuariosDesactivados + " tickets asignados a usuarios desactivados.";
+
                 }
                 catch (Exception ex)
                 {
-
                     throw ex;
                 }
             }
@@ -226,6 +234,16 @@ namespace TP_Final_Programacion_III
                 </div>";
                 Session.Add("error", ex.ToString());
             }
+        }
+        private void CargarAlertaTicketsUsuariosDesactivados(int cantidad)
+        {
+            pnlTicketsUsuariosDesactivados.Visible = cantidad > 0;
+            pnlSinAlertas.Visible = cantidad == 0;
+
+            if (cantidad == 1)
+                lblTicketsUsuariosDesactivados.Text = "Hay 1 ticket asignado a un usuario desactivado.";
+            else
+                lblTicketsUsuariosDesactivados.Text = "Hay " + cantidad + " tickets asignados a usuarios desactivados.";
         }
     }
 }

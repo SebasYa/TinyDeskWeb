@@ -27,64 +27,64 @@
         </div>
     </section>
 
-       <!-- INICIO - CREAR TICKET MODAL -->
-        
-        <div class="modal fade" id="ticketModal" tabindex="-1" aria-labelledby="ticketModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-light">
-                <h5 class="modal-title fw-bold" id="ticketModalLabel">Nuevo Ticket</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <asp:Panel ID="Panel1" CssClass="row g-3" runat="server">
-                    
-            <div class="col-md-12">
-                <label for="txtDescripcionProyecto" class="form-label fw-semibold">Descripción</label>
-                <asp:TextBox ID="txtDescripcionTicket" runat="server" CssClass="form-control w-100 mw-100" TextMode="MultiLine" Rows="3" placeholder="Ingresá una descripción breve..."></asp:TextBox>
-            </div>
-            <div class="col-md-6">
-                <label for="txtFechaInicio" class="form-label fw-semibold">Fecha Inicio</label>
-                <asp:TextBox ID="txtFechaInicioTicket" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
-            </div>
-            
-            <div class="col-md-6">
-                <label for="txtFechaEstimadaFin" class="form-label fw-semibold">Fecha Estimada Fin</label>
-                <asp:TextBox ID="txtFechaEstimadaTicket" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
-            </div>
+    <!-- INICIO - CREAR TICKET MODAL -->
 
-            <div class="col-md-4">
-                <label for="ddlProyecto" class="form-label fw-semibold">Proyecto</label>
-                <asp:DropDownList ID="dllSprintTicket" runat="server" CssClass="form-select">
-                <asp:ListItem Text="Seleccione Proyecto..." Value="" />
-                </asp:DropDownList>
-            </div>
-            
-             <div class="col-md-4">
-                <label for="ddlEstado" class="form-label fw-semibold">Estado</label>
-                <asp:DropDownList ID="dllEstadoTicket" runat="server" CssClass="form-select">
-                <asp:ListItem Text="Seleccione Estado..." Value="" />
-                </asp:DropDownList>
-             </div>
+    <div class="modal fade" id="ticketModal" tabindex="-1" aria-labelledby="ticketModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title fw-bold" id="ticketModalLabel">Nuevo Ticket</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <asp:Panel ID="Panel1" CssClass="row g-3" runat="server">
 
-             <div class="col-md-4">
-                <label for="ddlArea" class="form-label fw-semibold">Área</label>
-                <asp:DropDownList ID="dllPrioridadticket" runat="server" CssClass="form-select">
-                <asp:ListItem Text="Seleccione Área..." Value="" />
-                </asp:DropDownList>
-             </div>
+                        <div class="col-md-12">
+                            <label for="txtDescripcionProyecto" class="form-label fw-semibold">Descripción</label>
+                            <asp:TextBox ID="txtDescripcionTicket" runat="server" CssClass="form-control w-100 mw-100" TextMode="MultiLine" Rows="3" placeholder="Ingresá una descripción breve..."></asp:TextBox>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="txtFechaInicio" class="form-label fw-semibold">Fecha Inicio</label>
+                            <asp:TextBox ID="txtFechaInicioTicket" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                        </div>
 
-                </asp:Panel>
-            </div>
-            <div class="modal-footer bg-light">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <asp:Button ID="Button1" runat="server" CssClass="btn btn-primary" Text="Guardar Ticket" OnClick="btnGuardarTicket_Click" />
+                        <div class="col-md-6">
+                            <label for="txtFechaEstimadaFin" class="form-label fw-semibold">Fecha Estimada Fin</label>
+                            <asp:TextBox ID="txtFechaEstimadaTicket" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="ddlProyecto" class="form-label fw-semibold">Proyecto</label>
+                            <asp:DropDownList ID="dllSprintTicket" runat="server" CssClass="form-select">
+                                <asp:ListItem Text="Seleccione Proyecto..." Value="" />
+                            </asp:DropDownList>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="ddlEstado" class="form-label fw-semibold">Estado</label>
+                            <asp:DropDownList ID="dllEstadoTicket" runat="server" CssClass="form-select">
+                                <asp:ListItem Text="Seleccione Estado..." Value="" />
+                            </asp:DropDownList>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="ddlArea" class="form-label fw-semibold">Área</label>
+                            <asp:DropDownList ID="dllPrioridadticket" runat="server" CssClass="form-select">
+                                <asp:ListItem Text="Seleccione Área..." Value="" />
+                            </asp:DropDownList>
+                        </div>
+
+                    </asp:Panel>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <asp:Button ID="Button1" runat="server" CssClass="btn btn-primary" Text="Guardar Ticket" OnClick="btnGuardarTicket_Click" />
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-       <!-- FIN - CREAR TICKET MODAL -->
+    <!-- FIN - CREAR TICKET MODAL -->
 
     <!-- INICIO - CREAR SPRINT MODAL -->
     <div class="modal fade" id="sprintModal" tabindex="-1" aria-labelledby="sprintModalLabel" aria-hidden="true">
@@ -174,7 +174,7 @@
                             <asp:DropDownList ID="ddlEstadoProyecto" runat="server" CssClass="form-select">
                                 <asp:ListItem Text="Seleccione Estado..." Value="" />
                             </asp:DropDownList>
-                             <asp:RequiredFieldValidator ID="rfvEstadoProyecto" runat="server" ControlToValidate="ddlEstadoProyecto" InitialValue="" ErrorMessage="Debe seleccionar un estado." CssClass="text-danger text-validation-error" Display="Dynamic" ValidationGroup="vgProyecto" />
+                            <asp:RequiredFieldValidator ID="rfvEstadoProyecto" runat="server" ControlToValidate="ddlEstadoProyecto" InitialValue="" ErrorMessage="Debe seleccionar un estado." CssClass="text-danger text-validation-error" Display="Dynamic" ValidationGroup="vgProyecto" />
                         </div>
                     </asp:Panel>
                 </div>
@@ -226,12 +226,31 @@
         </div>
     </section>
 
-    <section>
+    <section class="mt-4">
         <h2>Alertas</h2>
 
-        <div>
-            No hay alerta por ahora...
-        </div>
+        <asp:Panel ID="pnlTicketsUsuariosDesactivados" runat="server"
+            Visible="false"
+            CssClass="alert alert-warning shadow-sm d-flex justify-content-between align-items-center"
+            Style="cursor: pointer;"
+            onclick="window.location.href='TicketsUsuariosDesactivados.aspx';">
+
+            <div>
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <strong>Revisión requerida:</strong>
+                <asp:Label ID="lblTicketsUsuariosDesactivados" runat="server"></asp:Label>
+                <span>Revisá estas asignaciones para evitar demoras operativas.</span>
+            </div>
+
+            <i class="bi bi-chevron-right"></i>
+        </asp:Panel>
+
+        <asp:Panel ID="pnlSinAlertas" runat="server"
+            Visible="false"
+            CssClass="alert alert-success shadow-sm">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            No hay alertas pendientes.
+        </asp:Panel>
     </section>
 
     <style>

@@ -27,7 +27,10 @@ namespace TP_Final_Programacion_III
                 Response.Redirect("Login.aspx", false);
                 return;
             }
-
+            if (Seguridad.EsAdmin(Session["usuario"]) || Seguridad.PuedeEscribir(Session["usuario"]))
+            {
+                Response.Redirect("Default.aspx", false);
+            }
             if (!IsPostBack)
             {
                 Usuario usuario = (Usuario)Session["usuario"];
