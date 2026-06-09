@@ -47,22 +47,20 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
-
         public void actualizar(Proyecto proyecto)
         {
             AccesoDatos datos = new AccesoDatos();
             try
             {
                 datos.setearConsulta(@"UPDATE PROYECTO 
-                                       SET Nombre = @Nombre, Descripcion = @Descripcion, FechaInicio = @FechaInicio, 
+                                       SET Nombre = @Nombre, Descripcion = @Descripcion, 
                                             FechaFin = @FechaFin, FechaEstimadaFin = @FechaEstimadaFin, 
                                             Activo = @Activo, IdEstado = @IdEstado
-                                       WHERE Id = @Id"
+                                       WHERE Id = @Id AND IdEmpresa = @IdEmpresa"
                 );
 
                 datos.setearParametro("@Nombre", proyecto.Nombre);
                 datos.setearParametro("@Descripcion", proyecto.Descripcion);
-                datos.setearParametro("@FechaInicio", proyecto.FechaInicio);
                 if (proyecto.FechaFin.HasValue)
                 {
                     datos.setearParametro("@FechaFin", proyecto.FechaFin.Value);
@@ -75,6 +73,7 @@ namespace negocio
                 datos.setearParametro("@Activo", proyecto.Activo);
                 datos.setearParametro("@IdEstado", proyecto.Estado.Id);
                 datos.setearParametro("@Id", proyecto.Id);
+                datos.setearParametro("@IdEmpresa", proyecto.Empresa.Id);
 
                 datos.ejecutarAccion();
             }
@@ -137,54 +136,6 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
-
-        public Proyecto BuscarPorId(int idProyecto)
-        {
-            AccesoDatos datos = new AccesoDatos();
-            try
-            {
-                datos.setearConsulta(@"SELECT P.Id, P.Nombre, P.Descripcion, P.FechaInicio, P.FechaFin, P.FechaEstimadaFin, 
-                                              P.Activo, P.IdEmpresa, E.Id AS IdEstado, E.Nombre AS NombreEstado, E.EsFinal, E.EsSistema
-                                       FROM PROYECTO P
-                                       INNER JOIN ESTADO E ON E.Id = P.IdEstado
-                                       WHERE P.Id = @IdProyecto");
-                datos.setearParametro("@IdProyecto", idProyecto);
-                datos.ejecutarLectura();
-
-                if (datos.Lector.Read())
-                {
-                    Proyecto proyecto = new Proyecto();
-                    proyecto.Id = (int)datos.Lector["Id"];
-                    proyecto.Nombre = (string)datos.Lector["Nombre"];
-                    proyecto.Descripcion = (string)datos.Lector["Descripcion"];
-                    proyecto.FechaInicio = (DateTime)datos.Lector["FechaInicio"];
-                    proyecto.FechaEstimadaFin = (DateTime)datos.Lector["FechaEstimadaFin"];
-                    if (datos.Lector["FechaFin"] != DBNull.Value)
-                    {
-                        proyecto.FechaFin = (DateTime)datos.Lector["FechaFin"];
-                    }
-                    proyecto.Activo = (bool)datos.Lector["Activo"];
-                    proyecto.Estado = new Estado();
-                    proyecto.Estado.Id = (int)datos.Lector["IdEstado"];
-                    proyecto.Estado.Nombre = (string)datos.Lector["NombreEstado"];
-                    proyecto.Estado.EsFinal = (bool)datos.Lector["EsFinal"];
-                    proyecto.Estado.EsSistema = (bool)datos.Lector["EsSistema"];
-
-                    return proyecto;
-                }
-                return null;
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-            finally
-            {
-                datos.cerrarConexion();
-            }
-        }
-
         public void BajaLogica(int id)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -224,6 +175,59 @@ namespace negocio
             catch (Exception ex)
             {
 
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+        public Proyecto BuscarPorId(int idProyecto, int idEmpresa)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta(@"SELECT P.Id, P.Nombre, P.Descripcion, P.FechaInicio, P.FechaFin, P.FechaEstimadaFin, 
+                                      P.Activo, P.IdEmpresa, E.Id AS IdEstado, E.Nombre AS NombreEstado, E.EsFinal, E.EsSistema
+                               FROM PROYECTO P
+                               INNER JOIN ESTADO E ON E.Id = P.IdEstado
+                               WHERE P.Id = @IdProyecto
+                                 AND P.IdEmpresa = @IdEmpresa");
+
+                datos.setearParametro("@IdProyecto", idProyecto);
+                datos.setearParametro("@IdEmpresa", idEmpresa);
+                datos.ejecutarLectura();
+
+                if (datos.Lector.Read())
+                {
+                    Proyecto proyecto = new Proyecto();
+                    proyecto.Id = (int)datos.Lector["Id"];
+                    proyecto.Nombre = (string)datos.Lector["Nombre"];
+                    proyecto.Descripcion = (string)datos.Lector["Descripcion"];
+                    proyecto.FechaInicio = (DateTime)datos.Lector["FechaInicio"];
+                    proyecto.FechaEstimadaFin = (DateTime)datos.Lector["FechaEstimadaFin"];
+
+                    if (datos.Lector["FechaFin"] != DBNull.Value)
+                        proyecto.FechaFin = (DateTime)datos.Lector["FechaFin"];
+
+                    proyecto.Activo = (bool)datos.Lector["Activo"];
+
+                    proyecto.Empresa = new Empresa();
+                    proyecto.Empresa.Id = (int)datos.Lector["IdEmpresa"];
+
+                    proyecto.Estado = new Estado();
+                    proyecto.Estado.Id = (int)datos.Lector["IdEstado"];
+                    proyecto.Estado.Nombre = (string)datos.Lector["NombreEstado"];
+                    proyecto.Estado.EsFinal = (bool)datos.Lector["EsFinal"];
+                    proyecto.Estado.EsSistema = (bool)datos.Lector["EsSistema"];
+
+                    return proyecto;
+                }
+
+                return null;
+            }
+            catch(Exception ex)
+            {
                 throw ex;
             }
             finally

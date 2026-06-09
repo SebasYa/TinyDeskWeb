@@ -240,5 +240,65 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
+        public List<Sprint> listarPorProyecto(int idProyecto, int idEmpresa)
+        {
+            List<Sprint> lista = new List<Sprint>();
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.setearConsulta(@"SELECT S.Id, S.NumeroSprint, S.FechaInicio, S.FechaEstimadaFin, S.FechaFin, S.Activo, 
+                                              P.Nombre AS NombreProyecto, P.Id AS IdProyecto,
+                                              E.Id AS IdEstado, E.Nombre AS NombreEstado, E.EsFinal, E.EsSistema,
+                                              A.Nombre AS NombreArea, A.Id AS IdArea
+                                       FROM SPRINT S
+                                       INNER JOIN ESTADO E ON E.Id = S.IdEstado
+                                       INNER JOIN PROYECTO P ON P.Id = S.IdProyecto
+                                       INNER JOIN AREA A ON A.Id = S.IdArea
+                                       WHERE P.Id = @IdProyecto
+                                         AND P.IdEmpresa = @IdEmpresa
+        ");
+
+                datos.setearParametro("@IdProyecto", idProyecto);
+                datos.setearParametro("@IdEmpresa", idEmpresa);
+                datos.ejecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    Sprint sprint = new Sprint();
+                    sprint.Id = (int)datos.Lector["Id"];
+                    sprint.NumeroSprint = (int)datos.Lector["NumeroSprint"];
+                    sprint.FechaInicio = (DateTime)datos.Lector["FechaInicio"];
+                    sprint.FechaEstimadaFin = (DateTime)datos.Lector["FechaEstimadaFin"];
+
+                    if (datos.Lector["FechaFin"] != DBNull.Value)
+                        sprint.FechaFin = (DateTime)datos.Lector["FechaFin"];
+
+                    sprint.Activo = (bool)datos.Lector["Activo"];
+
+                    sprint.Proyecto = new Proyecto();
+                    sprint.Proyecto.Id = (int)datos.Lector["IdProyecto"];
+                    sprint.Proyecto.Nombre = (string)datos.Lector["NombreProyecto"];
+
+                    sprint.Estado = new Estado();
+                    sprint.Estado.Id = (int)datos.Lector["IdEstado"];
+                    sprint.Estado.Nombre = (string)datos.Lector["NombreEstado"];
+                    sprint.Estado.EsFinal = (bool)datos.Lector["EsFinal"];
+                    sprint.Estado.EsSistema = (bool)datos.Lector["EsSistema"];
+
+                    sprint.Area = new Area();
+                    sprint.Area.Id = (int)datos.Lector["IdArea"];
+                    sprint.Area.Nombre = (string)datos.Lector["NombreArea"];
+
+                    lista.Add(sprint);
+                }
+
+                return lista;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
     }
 }

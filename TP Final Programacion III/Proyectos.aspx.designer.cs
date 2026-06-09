@@ -132,15 +132,6 @@ namespace TP_Final_Programacion_III
         protected global::System.Web.UI.WebControls.Label lblModalProyectoTitulo;
 
         /// <summary>
-        /// Control btnCloseProyecto.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btnCloseProyecto;
-
-        /// <summary>
         /// Control pnlFormProyecto.
         /// </summary>
         /// <remarks>
@@ -229,15 +220,6 @@ namespace TP_Final_Programacion_III
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvEstadoProyecto;
-
-        /// <summary>
-        /// Control btnCancelarProyecto.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnCancelarProyecto;
 
         /// <summary>
         /// Control btnGuardarProyecto.

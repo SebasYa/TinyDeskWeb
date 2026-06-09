@@ -136,7 +136,7 @@
                     <h5 class="modal-title fw-bold" id="proyectoModalLabel">
                         <asp:Label ID="lblModalProyectoTitulo" runat="server" Text="Nuevo Proyecto"></asp:Label>
                     </h5>
-                    <asp:LinkButton ID="btnCloseProyecto" runat="server" CssClass="btn-close" OnClick="btnCancelarProyecto_Click" aria-label="Close"></asp:LinkButton>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
                 <div class="modal-body">
@@ -175,7 +175,7 @@
                 </div>
 
                 <div class="modal-footer bg-light">
-                    <asp:Button ID="btnCancelarProyecto" runat="server" CssClass="btn btn-secondary" Text="Cancelar" OnClick="btnCancelarProyecto_Click" UseSubmitBehavior="false" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <asp:Button ID="btnGuardarProyecto" runat="server" CssClass="btn btn-primary" Text="Guardar Proyecto" OnClick="btnGuardarProyecto_Click" ValidationGroup="vgProyecto" />
                 </div>
             </div>
