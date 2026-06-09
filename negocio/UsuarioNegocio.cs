@@ -224,7 +224,8 @@ namespace negocio
                                                     Email = @Email,
                                                     Nombre = @Nombre, 
                                                     Apellido = @Apellido, 
-                                                    PermisoEscritura = @PermisoEscritura, 
+                                                    Activo = @Activo,
+                                                    PermisoEscritura = @PermisoEscritura,
                                                     IdPuesto = @IdPuesto, 
                                                     IdArea = @IdArea,
                                                     EsAdmin = @EsAdmin,
@@ -235,6 +236,7 @@ namespace negocio
                 datos.setearParametro("@Email", usuario.Email);
                 datos.setearParametro("@Nombre", usuario.Nombre);
                 datos.setearParametro("@Apellido", usuario.Apellido);
+                datos.setearParametro("@Activo", usuario.Activo);
                 datos.setearParametro("@PermisoEscritura", usuario.PermisoEscritura);
                 datos.setearParametro("@IdPuesto", usuario.Puesto.Id);
                 datos.setearParametro("@IdArea", usuario.Area.Id);

@@ -82,6 +82,16 @@
                                 OnClick="btnLogin_Click"
                                 OnClientClick="clearErrors();" />
 
+                            <asp:Panel ID="pnlReenvioValidacion" runat="server" Visible="false" CssClass="alert alert-warning mt-3">
+                                <asp:Label ID="lblReenvioValidacion" runat="server"></asp:Label>
+
+                                <asp:Button ID="btnReenviarValidacion" runat="server"
+                                    Text="Reenviar correo de validación"
+                                    CssClass="btn btn-outline-warning w-100 mt-2"
+                                    CausesValidation="false"
+                                    OnClick="btnReenviarValidacion_Click" />
+                            </asp:Panel>
+
                             <div class="text-center mt-2">
                                 <a href="RecuperarPass.aspx" class="text-decoration-none">¿Te olvidaste la contraseña?</a>
                             </div>

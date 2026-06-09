@@ -78,6 +78,15 @@ namespace TP_Final_Programacion_III
                             {
                                 ddlSeniority.SelectedValue = usuarioEditar.Seniority.Id.ToString();
                             }
+                            if (usuarioEditar.EmailVerificado)
+                            {
+                                pnlActivoUsuario.Visible = true;
+                                chkActivo.Checked = usuarioEditar.Activo;
+                            }
+                            else
+                            {
+                                pnlActivoUsuario.Visible = false;
+                            }
                             CargarEstadoInvitacion(usuarioEditar);
                         }
                     }
@@ -147,6 +156,17 @@ namespace TP_Final_Programacion_III
                     {
                         MostrarErrorDuplicado(duplicado);
                         return;
+                    }
+                    nuevoUsuario.Activo = false;
+                    Usuario usuarioActual = negocio.BuscarPorId(nuevoUsuario.Id);
+                    if (usuarioActual != null && usuarioActual.EmailVerificado)
+                    {
+                        nuevoUsuario.Activo = chkActivo.Checked;
+                        if(nuevoUsuario.Id == userLogueado.Id && !nuevoUsuario.Activo)
+                        {
+                            MostrarErrorFormulario("No podés desactivar tu propio usaurio");
+                            return;
+                        }
                     }
                     if (negocio.Modificar(nuevoUsuario))
                     {

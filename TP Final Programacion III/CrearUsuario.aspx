@@ -97,6 +97,12 @@
                                 </div>
                             </div>
                         </div>
+                        <asp:Panel ID="pnlActivoUsuario" runat="server" Visible="false" CssClass="col-12 mt-2">
+                            <div class="form-check form-switch ps-5 fs-6">
+                                <input class="form-check-input" type="checkbox" id="chkActivo" runat="server" clientidmode="Static" />
+                                <label class="form-check-label fw-semibold ps-2" for="chkActivo">Usuario activo</label>
+                            </div>
+                        </asp:Panel>
                         <asp:Panel ID="pnlInvitacionVencida" runat="server" Visible="false" CssClass="alert alert-danger mt-3">
                             <div class="d-flex align-items-start gap-2">
                                 <i class="bi bi-exclamation-circle-fill fs-5"></i>
