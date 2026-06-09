@@ -31,6 +31,12 @@ namespace TP_Final_Programacion_III
 
                 if (usuarioToken == null)
                 {
+                    UsuarioToken tokenVencido = tokenNegocio.BuscarToken(token, "ValidarEmail");
+                    if (tokenVencido != null && !tokenVencido.Usado && tokenVencido.FechaExpiracion <= DateTime.Now && !tokenVencido.Usuario.EmailVerificado)
+                    {
+                        MostrarReenvio(token);
+                        return;
+                    }
                     MostrarError("El link de validación expiró o ya fue utilizado.");
                     return;
                 }
@@ -52,6 +58,7 @@ namespace TP_Final_Programacion_III
         {
             lblMensaje.Text = mensaje;
             lblMensaje.CssClass = "d-block mb-3 text-success";
+            pnlReenvio.Visible = false;
             pnlCargando.Visible = true;
 
             litRedireccion.Text = @"
@@ -66,6 +73,58 @@ namespace TP_Final_Programacion_III
         {
             lblMensaje.Text = mensaje;
             lblMensaje.CssClass = "d-block mb-3 text-danger";
+            pnlCargando.Visible = false;
+            pnlReenvio.Visible = false;
+            litRedireccion.Text = "";
+        }
+        protected void btnReenviarValidacion_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
+                UsuarioToken tokenVencido = tokenNegocio.BuscarToken(hfTokenReenvio.Value, "ValidarEmail");
+
+                if (tokenVencido == null || tokenVencido.Usado || tokenVencido.Usuario.EmailVerificado)
+                {
+                    MostrarError("No se puede reenviar la validación para este link.");
+                    return;
+                }
+
+                Usuario usuario = tokenVencido.Usuario;
+
+                tokenNegocio.InvalidarTokensPendientes(usuario.Id, "ValidarEmail");
+
+                UsuarioToken nuevoToken = tokenNegocio.CrearToken(usuario, "ValidarEmail", 24);
+
+                string linkValidacion = Request.Url.GetLeftPart(UriPartial.Authority)
+                    + ResolveUrl("~/ValidarEmail.aspx")
+                    + "?token=" + Server.UrlEncode(nuevoToken.Token);
+
+                string cuerpo = EmailTemplates.ValidarCuenta(usuario.Nombre, linkValidacion);
+
+                EmailService email = new EmailService();
+                email.armarCorreo(usuario.Email, "Valida tu cuenta en TinyDesk", cuerpo);
+
+                if (email.enviarEmail())
+                    MostrarExito("Se envió un nuevo correo de validación.");
+                else
+                    MostrarError("No se pudo enviar el nuevo correo de validación.");
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                MostrarError("Ocurrió un error al reenviar el correo de validación.");
+            }
+        }
+
+        private void MostrarReenvio(string token)
+        {
+            lblMensaje.Text = "El link de validación venció. Podés pedir un nuevo correo para activar tu cuenta.";
+            lblMensaje.CssClass = "d-block mb-3 text-danger";
+
+            hfTokenReenvio.Value = token;
+
+            pnlReenvio.Visible = true;
             pnlCargando.Visible = false;
             litRedireccion.Text = "";
         }

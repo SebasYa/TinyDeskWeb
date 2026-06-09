@@ -201,5 +201,74 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
+        public UsuarioToken BuscarToken(string token, string tipo)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.setearConsulta(@"SELECT 
+                                           UT.Id,
+                                           UT.Token,
+                                           UT.Tipo,
+                                           UT.FechaCreacion,
+                                           UT.FechaExpiracion,
+                                           UT.FechaUso,
+                                           UT.Usado,
+                                           U.Id AS IdUsuario,
+                                           U.NombreUsuario,
+                                           U.Email,
+                                           U.Nombre,
+                                           U.Apellido,
+                                           U.Activo,
+                                           U.EmailVerificado
+                                       FROM USUARIO_TOKEN UT
+                                       INNER JOIN USUARIO U ON UT.IdUsuario = U.Id
+                                       WHERE UT.Token = @Token
+                                         AND UT.Tipo = @Tipo
+        ");
+
+                datos.setearParametro("@Token", token);
+                datos.setearParametro("@Tipo", tipo);
+
+                datos.ejecutarLectura();
+
+                if (datos.Lector.Read())
+                {
+                    Usuario usuario = new Usuario();
+                    usuario.Id = (int)datos.Lector["IdUsuario"];
+                    usuario.NombreUsuario = (string)datos.Lector["NombreUsuario"];
+                    usuario.Email = (string)datos.Lector["Email"];
+                    usuario.Nombre = (string)datos.Lector["Nombre"];
+                    usuario.Apellido = (string)datos.Lector["Apellido"];
+                    usuario.Activo = (bool)datos.Lector["Activo"];
+                    usuario.EmailVerificado = (bool)datos.Lector["EmailVerificado"];
+
+                    UsuarioToken usuarioToken = new UsuarioToken();
+                    usuarioToken.Id = (int)datos.Lector["Id"];
+                    usuarioToken.Usuario = usuario;
+                    usuarioToken.Token = (string)datos.Lector["Token"];
+                    usuarioToken.Tipo = (string)datos.Lector["Tipo"];
+                    usuarioToken.FechaCreacion = (DateTime)datos.Lector["FechaCreacion"];
+                    usuarioToken.FechaExpiracion = (DateTime)datos.Lector["FechaExpiracion"];
+                    usuarioToken.Usado = (bool)datos.Lector["Usado"];
+
+                    if (datos.Lector["FechaUso"] != DBNull.Value)
+                        usuarioToken.FechaUso = (DateTime)datos.Lector["FechaUso"];
+
+                    return usuarioToken;
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
     }
 }

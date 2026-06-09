@@ -17,7 +17,15 @@
                             <h2 class="mb-3">Validación de cuenta</h2>
 
                             <asp:Label ID="lblMensaje" runat="server" CssClass="d-block mb-3"></asp:Label>
+                            <asp:Panel ID="pnlReenvio" runat="server" Visible="false" CssClass="mt-3">
+                                <asp:HiddenField ID="hfTokenReenvio" runat="server" />
 
+                                <asp:Button ID="btnReenviarValidacion" runat="server"
+                                    Text="Reenviar correo de validación"
+                                    CssClass="btn btn-outline-primary w-100"
+                                    CausesValidation="false"
+                                    OnClick="btnReenviarValidacion_Click" />
+                            </asp:Panel>
                             <asp:Panel ID="pnlCargando" runat="server" Visible="false">
                                 <div class="spinner-border text-primary mb-3" role="status">
                                     <span class="visually-hidden">Cargando...</span>
