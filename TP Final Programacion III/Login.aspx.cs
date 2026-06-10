@@ -89,8 +89,14 @@ namespace TP_Final_Programacion_III
             }
             catch (Exception ex)
             {
-
-                throw ex;
+                Session.Add("error", ex.ToString());
+                Session.Remove("usuario");
+                txtPassword.Text = "";
+                lblErrorUsuario.Text = "Ocurrio un error al iniciar sesion. Intentelo nuevamente";
+                lblErrorUsuario.Visible = true;
+                lblErrorPass.Text = "";
+                lblErrorPass.Visible = false;
+                pnlReenvioValidacion.Visible = false;
             }
         }
         protected void btnLoginFantasmin_Click(object sender, EventArgs e)

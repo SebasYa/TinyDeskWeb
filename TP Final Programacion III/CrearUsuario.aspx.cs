@@ -95,7 +95,6 @@ namespace TP_Final_Programacion_III
                 {
                     Session.Add("error", ex.ToString());
                     MostrarErrorFormulario("Ocurrio un error al cargar el formulario.");
-                    //Response.Redirect("Default.aspx", false);
                 }
             }
         }
@@ -206,7 +205,6 @@ namespace TP_Final_Programacion_III
             catch (Exception ex)
             {
                 Session.Add("error", ex.ToString());
-                //Response.Redirect("Default.aspx", false);
                 MostrarErrorFormulario("Ocurrio un error al guardar el usuario.");
             }
         }

@@ -64,7 +64,11 @@ namespace TP_Final_Programacion_III
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    Session.Add("error", ex.ToString());
+                    litMensaje.Text = @"<div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                                            <strong>Hubo un error</strong> Ocurrio un error al cargar el Dashboard.
+                                            <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                                        </div>";
                 }
             }
         }

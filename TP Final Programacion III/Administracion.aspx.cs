@@ -23,137 +23,208 @@ namespace TP_Final_Programacion_III
 
             if (!IsPostBack)
             {
-                SetearTipoActual(TipoCatalogoAdmin.Area);
-                CargarAreas();
+                try
+                {
+                    SetearTipoActual(TipoCatalogoAdmin.Area);
+                    CargarAreas();
+
+                }
+                catch (Exception ex)
+                {
+                    Session.Add("error", ex.ToString());
+                    MostrarMensaje("danger", "Error Inesperado.");
+                }
             }
         }
 
         protected void btnArea_Click(object sender, EventArgs e)
         {
-            SetearTipoActual(TipoCatalogoAdmin.Area);
-            txtFiltro.Text = "";
-            dgvCatalogo.PageIndex = 0;
-            CargarAreas();
+            try
+            {
+                SetearTipoActual(TipoCatalogoAdmin.Area);
+                txtFiltro.Text = "";
+                dgvCatalogo.PageIndex = 0;
+                CargarAreas();
+            }
+            catch(Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                MostrarMensaje("danger", "Ocurrio un error al cargar las areas.");
+            }
         }
 
         protected void btnEstado_Click(object sender, EventArgs e)
         {
-            SetearTipoActual(TipoCatalogoAdmin.Estado);
-            txtFiltro.Text = "";
-            dgvCatalogo.PageIndex = 0;
-            CargarEstados();
+            try
+            {
+                SetearTipoActual(TipoCatalogoAdmin.Estado);
+                txtFiltro.Text = "";
+                dgvCatalogo.PageIndex = 0;
+                CargarEstados();
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                MostrarMensaje("danger", "Ocurrio un error al cargar los estados.");
+            }
+            
         }
 
         protected void btnPuesto_Click(object sender, EventArgs e)
         {
-            SetearTipoActual(TipoCatalogoAdmin.Puesto);
-            txtFiltro.Text = "";
-            dgvCatalogo.PageIndex = 0;
-            CargarPuestos();
+            try
+            {
+                SetearTipoActual(TipoCatalogoAdmin.Puesto);
+                txtFiltro.Text = "";
+                dgvCatalogo.PageIndex = 0;
+                CargarPuestos();
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                MostrarMensaje("danger", "Ocurrio un error al cargar los puestos.");
+            }
         }
 
         protected void btnNuevo_Click(object sender, EventArgs e)
         {
-            LimpiarErroresModal();
+            try
+            {
+                LimpiarErroresModal();
 
-            hdnRegistroId.Value = "";
-            txtNombre.Text = "";
-            chkEsFinal.Checked = false;
+                hdnRegistroId.Value = "";
+                txtNombre.Text = "";
+                chkEsFinal.Checked = false;
 
-            ConfigurarPantalla();
-            lblModalTitulo.Text = "Crear " + GetNombreClases();
-            btnGuardar.Text = "Guardar";
+                ConfigurarPantalla();
+                lblModalTitulo.Text = "Crear " + GetNombreClases();
+                btnGuardar.Text = "Guardar";
 
-            AbrirModal("adminModal");
+                AbrirModal("adminModal");
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                MostrarMensaje("danger", "Ocurrio un error al preparar el formulario.");
+            }
+            
         }
 
         protected void txtFiltro_TextChanged(object sender, EventArgs e)
         {
-            dgvCatalogo.PageIndex = 0;
-
-            TipoCatalogoAdmin tipo = ObtenerTipoActual();
-
-            switch (tipo)
+            try
             {
-                case TipoCatalogoAdmin.Area:
-                    FiltrarAreas();
-                    break;
-                case TipoCatalogoAdmin.Estado:
-                    FiltrarEstados();
-                    break;
-                case TipoCatalogoAdmin.Puesto:
-                    FiltrarPuestos();
-                    break;
+                dgvCatalogo.PageIndex = 0;
+
+                TipoCatalogoAdmin tipo = ObtenerTipoActual();
+
+                switch (tipo)
+                {
+                    case TipoCatalogoAdmin.Area:
+                        FiltrarAreas();
+                        break;
+                    case TipoCatalogoAdmin.Estado:
+                        FiltrarEstados();
+                        break;
+                    case TipoCatalogoAdmin.Puesto:
+                        FiltrarPuestos();
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                MostrarMensaje("danger", "Ocurrio un problemas al filtrar.");
             }
         }
 
         protected void dgvCatalogo_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
-            dgvCatalogo.PageIndex = e.NewPageIndex;
-
-            TipoCatalogoAdmin tipo = ObtenerTipoActual();
-
-            switch (tipo)
+            try
             {
-                case TipoCatalogoAdmin.Area: FiltrarAreas();
-                    break;
-                case TipoCatalogoAdmin.Estado: FiltrarEstados();
-                    break;
-                case TipoCatalogoAdmin.Puesto: FiltrarPuestos();
-                    break;
+                dgvCatalogo.PageIndex = e.NewPageIndex;
+
+                TipoCatalogoAdmin tipo = ObtenerTipoActual();
+
+                switch (tipo)
+                {
+                    case TipoCatalogoAdmin.Area:
+                        FiltrarAreas();
+                        break;
+                    case TipoCatalogoAdmin.Estado:
+                        FiltrarEstados();
+                        break;
+                    case TipoCatalogoAdmin.Puesto:
+                        FiltrarPuestos();
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                MostrarMensaje("danger", "Ocurrio un error al cambiar de pagina.");
             }
         }
 
         protected void dgvCatalogo_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            if (e.CommandName != "EditarRegistro" && e.CommandName != "EliminarRegistro")
-                return;
-
-            LimpiarErroresModal();
-
-            int id = int.Parse(e.CommandArgument.ToString());
-            object item = ObtenerItemActual(id);
-
-            if (item == null)
+            try
             {
-                MostrarMensaje("danger", "No se encontró el registro.");
-                return;
-            }
+                if (e.CommandName != "EditarRegistro" && e.CommandName != "EliminarRegistro")
+                    return;
 
-            if (!PuedeEditarEliminar(item))
+                LimpiarErroresModal();
+
+                int id = int.Parse(e.CommandArgument.ToString());
+                object item = ObtenerItemActual(id);
+
+                if (item == null)
+                {
+                    MostrarMensaje("danger", "No se encontró el registro.");
+                    return;
+                }
+
+                if (!PuedeEditarEliminar(item))
+                {
+                    MostrarMensaje("warning", "Este registro es parte del sistema y no se puede modificar ni eliminar.");
+                    return;
+                }
+
+                if (e.CommandName == "EditarRegistro")
+                {
+                    hdnRegistroId.Value = id.ToString();
+                    txtNombre.Text = ObtenerNombreItem(item);
+
+                    if (item is Estado)
+                        chkEsFinal.Checked = ((Estado)item).EsFinal;
+                    else
+                        chkEsFinal.Checked = false;
+
+                    ConfigurarPantalla();
+                    lblModalTitulo.Text = "Editar " + GetNombreClases();
+                    btnGuardar.Text = "Guardar cambios";
+
+                    AbrirModal("adminModal");
+                }
+                else if (e.CommandName == "EliminarRegistro")
+                {
+                    string nombre = ObtenerNombreItem(item);
+
+                    hdnEliminarId.Value = id.ToString();
+                    hdnEliminarNombre.Value = nombre;
+                    lblEliminarNombre.Text = nombre;
+                    litNombreConfirmacion.Text = Server.HtmlEncode(nombre.ToUpper());
+                    txtConfirmarEliminar.Text = "";
+
+                    AbrirModal("eliminarModal");
+                }
+            }
+            catch (Exception ex)
             {
-                MostrarMensaje("warning", "Este registro es parte del sistema y no se puede modificar ni eliminar.");
-                return;
+                Session.Add("error", ex.ToString());
+                MostrarMensaje("danger", "Ocurrio un error inesperado.");
             }
-
-            if (e.CommandName == "EditarRegistro")
-            {
-                hdnRegistroId.Value = id.ToString();
-                txtNombre.Text = ObtenerNombreItem(item);
-
-                if (item is Estado)
-                    chkEsFinal.Checked = ((Estado)item).EsFinal;
-                else
-                    chkEsFinal.Checked = false;
-
-                ConfigurarPantalla();
-                lblModalTitulo.Text = "Editar " + GetNombreClases();
-                btnGuardar.Text = "Guardar cambios";
-
-                AbrirModal("adminModal");
-            }
-            else if (e.CommandName == "EliminarRegistro")
-            {
-                string nombre = ObtenerNombreItem(item);
-
-                hdnEliminarId.Value = id.ToString();
-                hdnEliminarNombre.Value = nombre;
-                lblEliminarNombre.Text = nombre;
-                litNombreConfirmacion.Text = Server.HtmlEncode(nombre.ToUpper());
-                txtConfirmarEliminar.Text = "";
-
-                AbrirModal("eliminarModal");
-            }
+            
         }
 
         protected void btnGuardar_Click(object sender, EventArgs e)

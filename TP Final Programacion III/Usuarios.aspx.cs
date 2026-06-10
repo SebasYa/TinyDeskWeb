@@ -69,17 +69,32 @@ namespace TP_Final_Programacion_III
         }
         protected void dgvUsuarios_PageIndexChanging(object obj, GridViewPageEventArgs e)
         {
-            dgvUsuarios.PageIndex = e.NewPageIndex;
-            int userLogueado = ((Usuario)Session["usuario"]).Empresa.Id;
-            UsuarioNegocio negocio = new UsuarioNegocio();
-            dgvUsuarios.DataSource = negocio.listar(userLogueado);
-            dgvUsuarios.DataBind();
+            try
+            {
+                dgvUsuarios.PageIndex = e.NewPageIndex;
+                int userLogueado = ((Usuario)Session["usuario"]).Empresa.Id;
+                UsuarioNegocio negocio = new UsuarioNegocio();
+                dgvUsuarios.DataSource = negocio.listar(userLogueado);
+                dgvUsuarios.DataBind();
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                Response.Redirect("Defualt.aspx", false);
+            }
         }
-
         protected void dgvUsuarios_SelectedIndexChanged(object obj, EventArgs e)
         {
-            string id = dgvUsuarios.SelectedDataKey.Value.ToString();
-            Response.Redirect("CrearUsuario.aspx?id=" + id, false);
+            try
+            {
+                string id = dgvUsuarios.SelectedDataKey.Value.ToString();
+                Response.Redirect("CrearUsuario.aspx?id=" + id, false);
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                Response.Redirect("Usuarios.aspx", false);
+            }
         }
     }
 }

@@ -12,18 +12,28 @@ namespace TP_Final_Programacion_III
         {
             if (!IsPostBack)
             {
-                int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
-
-                CargarEstadosProyecto(idEmpresa);
-
-                if (Request.QueryString["id"] != null)
+                try
                 {
-                    int idProyecto = int.Parse(Request.QueryString["id"]);
-                    CargarDetalleProyecto(idProyecto, idEmpresa);
+                     int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
+
+                     CargarEstadosProyecto(idEmpresa);
+
+                     if (Request.QueryString["id"] != null)
+                     {
+                         int idProyecto = int.Parse(Request.QueryString["id"]);
+                         CargarDetalleProyecto(idProyecto, idEmpresa);
+                     }
+                     else
+                     {
+                         CargarListadoProyectos(idEmpresa);
+                     }
+
                 }
-                else
+                catch(Exception ex)
                 {
-                    CargarListadoProyectos(idEmpresa);
+                    Session.Add("error", ex.ToString());
+                    MostrarErrorProyecto("Ocurrio un error al cargar el formulario.");
+                    //Response.Redirect("Proyectos.aspx", false);
                 }
             }
         }
@@ -51,14 +61,6 @@ namespace TP_Final_Programacion_III
 
             ProyectoNegocio proyectoNegocio = new ProyectoNegocio();
             Proyecto proyecto = proyectoNegocio.BuscarPorId(idProyecto, idEmpresa);
-
-            if (proyecto == null)
-            {
-                MostrarErrorProyecto("No se encontró el proyecto solicitado.");
-                pnlDetalleProyecto.Visible = false;
-                CargarListadoProyectos(idEmpresa);
-                return;
-            }
 
             lblDetalleNombre.Text = proyecto.Nombre;
             lblDetalleEstado.Text = proyecto.Estado.Nombre;
@@ -204,16 +206,6 @@ namespace TP_Final_Programacion_III
                 MostrarErrorProyecto("Ocurrió un error al guardar el proyecto.");
             }
         }
-
-        protected void btnCancelarProyecto_Click(object sender, EventArgs e)
-        {
-            txtNombreProyecto.Text = "";
-            txtDescripcionProyecto.Text = "";
-            txtFechaInicioProyecto.Text = "";
-            txtFechaEstimadaFinProyecto.Text = "";
-            ddlEstadoProyecto.SelectedIndex = 0;
-        }
-
         protected void repProyectos_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)

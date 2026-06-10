@@ -26,6 +26,7 @@ namespace TP_Final_Programacion_III
             if (!Seguridad.sessionActiva(Session["usuario"]))
             {
                 Response.Redirect("Login.aspx", false);
+                return;
             }
             bool esAdmin = Seguridad.EsAdmin(Session["usuario"]);
                 liAdminTitulo.Visible = esAdmin;
