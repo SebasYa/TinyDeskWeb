@@ -55,14 +55,17 @@ CREATE TABLE USUARIO (
     Nombre VARCHAR(30) NOT NULL,
     Apellido VARCHAR(30) NOT NULL,
     Activo BIT NOT NULL DEFAULT 0,
+    EsAdmin BIT NOT NULL,
     PermisoEscritura BIT NOT NULL DEFAULT 0, -- Permiso directo
     EmailVerificado BIT NOT NULL DEFAULT 0,
-    IdPuesto INT NOT NULL,                   -- Clave foránea al puesto ocupado (ej: Owner, Developer Senior)
+    IdPuesto INT NOT NULL,                  -- Clave foránea al puesto ocupado (ej: Owner, Developer )
+    IdSeniority INT NULL,                        -- Clave foránea del seniority ocupado (ej: Junior, Senior, SS)
     IdArea INT NOT NULL,                         -- NO Nullable (el Owner necesita área Direccion)
-    IdEmpresa INT NOT NULL,                  -- Clave foránea de la empresa del usuario
+    IdEmpresa INT NOT NULL,                 -- Clave foránea de la empresa del usuario
     FOREIGN KEY (IdPuesto) REFERENCES PUESTO(Id),
     FOREIGN KEY (IdArea) REFERENCES AREA(Id),
-    FOREIGN KEY (IdEmpresa) REFERENCES EMPRESA(Id)
+    FOREIGN KEY (IdEmpresa) REFERENCES EMPRESA(Id),
+    FOREIGN KEY (IdSeniority) REFERENCES SENIORITY(Id)
 )
 GO
 -- CREACIÓN TABLA PROYECTO

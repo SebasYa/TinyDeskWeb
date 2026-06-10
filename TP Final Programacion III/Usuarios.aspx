@@ -27,6 +27,12 @@
                     </ItemTemplate>
                 </asp:TemplateField>
 
+                <asp:TemplateField HeaderText="Seniority">
+                    <ItemTemplate>
+                        <%# Eval("Seniority.Nombre") %>
+                    </ItemTemplate>
+                </asp:TemplateField>
+
                 <asp:TemplateField HeaderText="Activo">
                     <ItemTemplate>
                         <span class='<%# (bool)Eval("Activo") ? "text-success" : "text-danger" %>'
