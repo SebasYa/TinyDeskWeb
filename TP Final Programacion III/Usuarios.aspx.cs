@@ -22,9 +22,11 @@ namespace TP_Final_Programacion_III
             {
                 try
                 {
-                    int userLogueado = ((Usuario)Session["usuario"]).Empresa.Id;
+                    int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
                     UsuarioNegocio negocio = new UsuarioNegocio();
-                    dgvUsuarios.DataSource = negocio.listar(userLogueado);
+                    List<Usuario> lista = negocio.listar(idEmpresa);
+                    Session["listaUsuarios"] = lista;
+                    dgvUsuarios.DataSource = lista;
                     dgvUsuarios.DataBind();
                 }
                 catch (Exception ex)
@@ -72,15 +74,13 @@ namespace TP_Final_Programacion_III
             try
             {
                 dgvUsuarios.PageIndex = e.NewPageIndex;
-                int userLogueado = ((Usuario)Session["usuario"]).Empresa.Id;
-                UsuarioNegocio negocio = new UsuarioNegocio();
-                dgvUsuarios.DataSource = negocio.listar(userLogueado);
+                dgvUsuarios.DataSource = Session["listaUsuarios"];
                 dgvUsuarios.DataBind();
             }
             catch (Exception ex)
             {
                 Session.Add("error", ex.ToString());
-                Response.Redirect("Defualt.aspx", false);
+                Response.Redirect("Usuarios.aspx", false);
             }
         }
         protected void dgvUsuarios_SelectedIndexChanged(object obj, EventArgs e)

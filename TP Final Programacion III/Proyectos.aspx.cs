@@ -88,8 +88,9 @@ namespace TP_Final_Programacion_III
         private void CargarEstadosProyecto(int idEmpresa)
         {
             EstadoNegocio estadoNegocio = new EstadoNegocio();
-
-            ddlEstadoProyecto.DataSource = estadoNegocio.listar(idEmpresa);
+            List<Estado> estados = estadoNegocio.listar(idEmpresa);
+            Session["listaEstadosProyecto"] = estados;
+            ddlEstadoProyecto.DataSource = estados;
             ddlEstadoProyecto.DataValueField = "Id";
             ddlEstadoProyecto.DataTextField = "Nombre";
             ddlEstadoProyecto.DataBind();
@@ -108,9 +109,9 @@ namespace TP_Final_Programacion_III
             }
             bool esEdicion = Request.QueryString["id"] != null;
             DateTime fechaInicio;
+            int idProyecto = esEdicion ? int.Parse(Request.QueryString["id"]) : 0;
             if (esEdicion)
             {
-                int idProyecto = int.Parse(Request.QueryString["id"]);
                 int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
 
                 ProyectoNegocio negocioFecha = new ProyectoNegocio();
@@ -143,7 +144,7 @@ namespace TP_Final_Programacion_III
                 return;
             }
 
-            if (fechaInicio.Date < DateTime.Today && Request.QueryString["id"] == null)
+            if (fechaInicio.Date < DateTime.Today && !esEdicion)
             {
                 MostrarErrorProyecto("La fecha inicial no puede ser anterior a la fecha de hoy.");
                 return;
@@ -163,7 +164,11 @@ namespace TP_Final_Programacion_III
                 proyecto.Estado = new Estado();
                 proyecto.Estado.Id = int.Parse(ddlEstadoProyecto.SelectedValue);
 
-                if (ddlEstadoProyecto.SelectedItem.Text == "Finalizado")
+                List<Estado> estados = (List<Estado>)Session["listaEstadosProyecto"];
+                Estado estadoSeleccionado = estados.Find(x => x.Id == proyecto.Estado.Id);
+
+
+                if (estadoSeleccionado != null && estadoSeleccionado.EsFinal)
                 {
                     proyecto.Activo = false;
                     proyecto.FechaFin = DateTime.Today;
@@ -177,9 +182,9 @@ namespace TP_Final_Programacion_III
                 proyecto.Empresa = new Empresa();
                 proyecto.Empresa.Id = userLogueado.Empresa.Id;
 
-                if (Request.QueryString["id"] != null)
+                if (esEdicion)
                 {
-                    proyecto.Id = int.Parse(Request.QueryString["id"]);
+                    proyecto.Id = idProyecto;
                     proyectoNegocio.actualizar(proyecto);
 
                     MostrarExitoProyecto("El Proyecto se modificó perfectamente.");

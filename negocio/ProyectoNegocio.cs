@@ -18,7 +18,8 @@ namespace negocio
                                               (Nombre, Descripcion, FechaInicio, FechaFin, 
                                                FechaEstimadaFin, Activo, IdEstado, IdEmpresa)
                                        VALUES (@Nombre, @Descripcion, @FechaInicio, @FechaFin,
-                                               @FechaEstimadaFin, @Activo, @IdEstado, @IdEmpresa)"
+                                               @FechaEstimadaFin, @Activo, @IdEstado, @IdEmpresa
+                                       SELECT SCOPE_IDENTITY())"
                 );
                 datos.setearParametro("@Nombre", proyecto.Nombre);
                 datos.setearParametro("@Descripcion", proyecto.Descripcion);

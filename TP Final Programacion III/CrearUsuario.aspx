@@ -6,13 +6,21 @@
             <div class="col-12 col-md-10 col-lg-8">
                 <div class="card border-0 shadow">
                     <!-- Cabecera del Formulario -->
-                    <div class="card-header bg-primary text-white py-3 text-center rounded-top">
-                        <h3 class="mb-1 fw-bold">
-                            <asp:Label ID="lblTituloFormularioUsuario" runat="server" Text="Crear Usuario"></asp:Label>
-                        </h3>
-                        <p class="text-white-50 mb-0">
-                            <asp:Label ID="txtSubtitulo" runat="server" Visible="true" Text="Completá los datos para registrar un nuevo integrante del equipo"></asp:Label>
-                        </p>
+                    <div class="card-header bg-primary text-white py-3 rounded-top d-flex align-items-center">
+                        <div style="width: 80px;"></div>
+                        <div class="text-center flex-grow-1">
+                            <h3 class="mb-1 fw-bold">
+                                <asp:Label ID="lblTituloFormularioUsuario" runat="server" Text="Crear Usuario"></asp:Label>
+                            </h3>
+                            <p class="text-white-50 mb-0">
+                                <asp:Label ID="txtSubtitulo" runat="server" Visible="true" Text="Completá los datos para registrar un nuevo integrante del equipo"></asp:Label>
+                            </p>
+                        </div>
+                        <div style="width: 80px;" class="text-end">
+                            <a href="Usuarios.aspx" class="btn btn-outline-light btn-sm">
+                                <i class="bi bi-arrow-left me-1"></i>Volver
+                            </a>
+                        </div>
                     </div>
                     <div class="card-body p-4">
                         <asp:Literal ID="litMensajeFormulario" runat="server"></asp:Literal>
