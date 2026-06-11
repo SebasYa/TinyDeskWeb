@@ -53,7 +53,7 @@ namespace TP_Final_Programacion_III
                 }
                 else if (negocio.MailPendienteVerificacion(usuario))
                 {
-                    Usuario usuarioPendiente = negocio.BuscarPorNombreUsuario(usuario.NombreUsuario.Trim());
+                    Usuario usuarioPendiente = negocio.BuscarPorNombreUsuarioOEmail(usuario.NombreUsuario.Trim());
                     Session.Remove("usuario");
                     txtPassword.Text = "";
 

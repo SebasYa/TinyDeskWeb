@@ -24,14 +24,14 @@ namespace TP_Final_Programacion_III
         {
             if (string.IsNullOrWhiteSpace(txtNombreUsuario.Text))
             {
-                MostrarError("Ingresá tu usuario.");
+                MostrarError("Ingresá tu usuario o email.");
                 return;
             }
 
             try
             {
                 UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
-                Usuario usuario = usuarioNegocio.BuscarPorNombreUsuario(txtNombreUsuario.Text.Trim());
+                Usuario usuario = usuarioNegocio.BuscarPorNombreUsuarioOEmail(txtNombreUsuario.Text.Trim());
 
                 if (usuario == null)
                 {

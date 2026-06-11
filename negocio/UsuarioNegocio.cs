@@ -501,7 +501,7 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
-        public Usuario BuscarPorNombreUsuario(string nombreUsuario)
+        public Usuario BuscarPorNombreUsuarioOEmail(string nombreUsuario)
         {
             AccesoDatos datos = new AccesoDatos();
 
@@ -509,7 +509,8 @@ namespace negocio
             {
                 datos.setearConsulta(@"SELECT Id, NombreUsuario, Email, Nombre, Apellido, Activo, EmailVerificado
                                        FROM USUARIO
-                                       WHERE NombreUsuario = @NombreUsuario");
+                                       WHERE NombreUsuario = @NombreUsuario
+                                       OR Email = @NombreUsuario");
 
                 datos.setearParametro("@NombreUsuario", nombreUsuario);
                 datos.ejecutarLectura();

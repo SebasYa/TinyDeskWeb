@@ -15,16 +15,16 @@
                     <div class="card shadow-sm">
                         <div class="card-body p-4">
                             <h2 class="mb-1 text-center">Recuperar contraseña</h2>
-                            <p class="text-muted text-center mb-4">Ingresá tu usuario para recibir un link de cambio de contraseña.</p>
+                            <p class="text-muted text-center mb-4">Ingresá tu usuario o email para recibir un link de cambio de contraseña en tu casilla de correo electronico.</p>
 
                             <asp:Literal ID="litMensaje" runat="server"></asp:Literal>
 
                             <div class="mb-3">
-                                <label for="txtNombreUsuario" class="form-label">Usuario</label>
+                                <label for="txtNombreUsuario" class="form-label">Usuario/Email</label>
                                 <asp:TextBox ID="txtNombreUsuario" runat="server" CssClass="form-control"></asp:TextBox>
                                 <asp:RequiredFieldValidator ID="rfvUsuario" runat="server"
                                     ControlToValidate="txtNombreUsuario"
-                                    ErrorMessage="Ingrese un usuario válido."
+                                    ErrorMessage="Ingrese un usuario/email válido."
                                     CssClass="text-danger text-validation-error"
                                     Display="Dynamic" />
                             </div>
