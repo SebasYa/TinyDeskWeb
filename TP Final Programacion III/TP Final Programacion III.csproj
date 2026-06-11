@@ -126,6 +126,7 @@
     <Content Include="Global.asax" />
     <Content Include="Login.aspx" />
     <Content Include="Proyectos.aspx" />
+    <Content Include="ProyectosUsuario.aspx" />
     <Content Include="RecuperarPass.aspx" />
     <Content Include="Registro.aspx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
@@ -185,7 +186,9 @@
     <Content Include="Scripts\WebForms\WebUIValidation.js" />
     <Content Include="Site.Master" />
     <Content Include="Sprints.aspx" />
+    <Content Include="SprintsUsuario.aspx" />
     <Content Include="Ticket.aspx" />
+    <Content Include="TicketsUsuario.aspx" />
     <Content Include="UsuarioDefault.aspx" />
     <Content Include="Usuarios.aspx" />
     <Content Include="ValidarEmail.aspx" />
@@ -257,6 +260,13 @@
     <Compile Include="Proyectos.aspx.designer.cs">
       <DependentUpon>Proyectos.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ProyectosUsuario.aspx.cs">
+      <DependentUpon>ProyectosUsuario.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ProyectosUsuario.aspx.designer.cs">
+      <DependentUpon>ProyectosUsuario.aspx</DependentUpon>
+    </Compile>
     <Compile Include="RecuperarPass.aspx.cs">
       <DependentUpon>RecuperarPass.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -270,6 +280,20 @@
     </Compile>
     <Compile Include="Registro.aspx.designer.cs">
       <DependentUpon>Registro.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SprintsUsuario.aspx.cs">
+      <DependentUpon>SprintsUsuario.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SprintsUsuario.aspx.designer.cs">
+      <DependentUpon>SprintsUsuario.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TicketsUsuario.aspx.cs">
+      <DependentUpon>TicketsUsuario.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TicketsUsuario.aspx.designer.cs">
+      <DependentUpon>TicketsUsuario.aspx</DependentUpon>
     </Compile>
     <Compile Include="UsuarioDefault.aspx.cs">
       <DependentUpon>UsuarioDefault.aspx</DependentUpon>

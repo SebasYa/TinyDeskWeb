@@ -48,7 +48,7 @@
 
                         <ul class="nav flex-column">
                             <li class="nav-item mb-2 sideBar">
-                                <a class="nav-link text-light" runat="server" href="~/DefaultUsuario.aspx">
+                                <a class="nav-link text-light" runat="server" href="~/UsuarioDefault.aspx">
                                     <i class="bi bi-speedometer mx-2"></i>Dashboard
                                 </a>
                             </li>
