@@ -54,8 +54,7 @@
 
                                 <div class="col-md-4">
                                     <label for="txtFechaInicioTicket" class="form-label fw-semibold">Fecha Inicio</label>
-                                    <asp:TextBox ID="txtFechaInicioTicket" runat="server" CssClass="form-control"
-                                        TextMode="Date" ReadOnly="true"></asp:TextBox>
+                                    <asp:TextBox ID="txtFechaInicioTicket" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
                                 </div>
 
                                 <div class="col-md-4">
@@ -95,7 +94,7 @@
                                 </div>
 
                                 <div class="col-md-4">
-                                    <label for="ddlAreaTicket" class="form-label fw-semibold">Área</label>
+                                    <label for="ddlAreaTicket" class="form-label fw-semibold">Area</label>
                                     <asp:DropDownList ID="ddlAreaTicket" runat="server" CssClass="form-select"
                                         AutoPostBack="true" OnSelectedIndexChanged="ddlFiltroUsuarioTicket_SelectedIndexChanged">
                                     </asp:DropDownList>

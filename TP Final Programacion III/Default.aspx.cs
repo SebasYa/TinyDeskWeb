@@ -195,10 +195,29 @@ namespace TP_Final_Programacion_III
 
                 TicketNegocio ticketNegocio = new TicketNegocio();
                 Ticket nuevoTicket = new Ticket();
+                
+                DateTime fechaInicio = Convert.ToDateTime(txtFechaInicioTicket.Text);
+                DateTime fechaEstimadaFin = Convert.ToDateTime(txtFechaEstimadaTicket.Text);
+                if (fechaInicio.Date < DateTime.Today)
+                {
+                    litMensaje.Text = @"<div class='alert alert-warning alert-dismissible fade show' role='alert'>
+                                            La fecha de inicio no puede ser anterior al día de hoy.
+                                            <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                                        </div>";
+                    return;
+                }
+                if (fechaEstimadaFin.Date < fechaInicio.Date)
+                {
+                    litMensaje.Text = @" <div class='alert alert-warning alert-dismissible fade show' role='alert'>
+                                             La fecha estimada de fin no puede ser anterior a la fecha de inicio.
+                                             <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                                         </div>";
+                    return;
+                }
 
                 nuevoTicket.Descripcion = txtDescripcionTicket.Text;
-                nuevoTicket.FechaInicio = Convert.ToDateTime(txtFechaInicioTicket.Text);
-                nuevoTicket.FechaEstimadaFin = Convert.ToDateTime(txtFechaEstimadaTicket.Text);
+                nuevoTicket.FechaInicio = fechaInicio;
+                nuevoTicket.FechaEstimadaFin = fechaEstimadaFin;
                 nuevoTicket.Activo = true;
 
                 nuevoTicket.Prioridad = new Prioridad();
