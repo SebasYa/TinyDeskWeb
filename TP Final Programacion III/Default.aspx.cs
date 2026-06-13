@@ -239,5 +239,14 @@ namespace TP_Final_Programacion_III
                 Session.Add("error", ex.ToString());
             }
         }
+
+        protected void btnCerrarSprint_Click(object sender, EventArgs e)
+        {
+            txtFechaInicio.Text = "";
+            txtFechaEstimadaFin.Text = "";
+            ddlArea.SelectedIndex = 0;
+            ddlEstado.SelectedIndex = 0;
+            ddlProyecto.SelectedIndex = 0;
+        }
     }
 }

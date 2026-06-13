@@ -38,7 +38,31 @@ namespace TP_Final_Programacion_III
                 Usuario usuario = new Usuario();
                 usuario = (Usuario)Session["usuario"];
                 lblUserWelcome.Text = $"{usuario.Nombre}";
+                btnUserNav.Text = firstLetter_usuario(usuario.Nombre);
+                lblName_nav.Text = usuario.Nombre+" "+usuario.Apellido;
+                txtRol.Text = usuario.Area.Nombre;
+                //txtSenority.Text = (usuario.Seniority != null) ? "No asignado" : usuario.Seniority.Nombre;
+
+                pnlUserNav.Visible = false;
             }
+        }
+
+        private string firstLetter_usuario(string usuario) 
+        {
+            string firstLetter = usuario.Substring(0, 1).ToUpper();
+            return firstLetter;
+        }
+
+        protected void btnUserNav_Click(object sender, EventArgs e)
+        {
+            pnlUserNav.Visible = !pnlUserNav.Visible;
+
+        }
+
+        protected void btnLogOut_Click(object sender, EventArgs e)
+        {
+            Session.Abandon();
+            Response.Redirect("Login.aspx", true);
         }
     }
 }

@@ -5,9 +5,7 @@
     <asp:Literal ID="litMensaje" runat="server"></asp:Literal>
     <section>
         <div class="row align-items-center mb-4">
-            <div class="col-12 col-md-auto mb-3 mb-md-0">
-                <h2 class="mb-0">Accesos rápidos</h2>
-            </div>
+
 
             <div class="col-12 col-md-auto">
                 <div class="d-flex flex-wrap gap-2">
@@ -132,7 +130,7 @@
                     </asp:Panel>
                 </div>
                 <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <asp:Button ID="btnCerrarSprint" runat="server" CssClass="btn btn-secondary" Text="Cancelar" OnClick="btnCerrarSprint_Click" UseSubmitBehavior="false" />
                     <asp:Button ID="btnGuardarSprint" runat="server" CssClass="btn btn-primary" Text="Guardar Sprint" OnClick="btnGuardarSprint_Click" />
                 </div>
             </div>
@@ -188,7 +186,6 @@
     <!-- FIN - CREAR PROYECTO MODAL -->
 
     <section class="mt-4">
-        <h2 class="mb-3">HighLights</h2>
         <div class="row g-3">
             <!-- Ficha Proyectos Activos -->
             <div class="col-6 col-md-4 col-lg-3">

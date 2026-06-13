@@ -79,7 +79,7 @@
                         </asp:Panel>
                     </div>
                     <div class="modal-footer bg-light">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                         <asp:Button ID="btnCerrarSprint" runat="server" CssClass="btn btn-secondary" Text="Cancelar" OnClick="btnCerrarSprint_Click" UseSubmitBehavior="false" />
                         <asp:Button ID="btnGuardarSprint" runat="server" CssClass="btn btn-primary" Text="Guardar Sprint" OnClientClick="return validarSprintModal();" OnClick="btnGuardarSprint_Click" />
                     </div>
                 </div>
