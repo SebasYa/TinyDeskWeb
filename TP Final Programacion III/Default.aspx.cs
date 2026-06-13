@@ -24,32 +24,10 @@ namespace TP_Final_Programacion_III
                     lblProyectosActivos.Text = proyectoNegocio.ContarActivos(idEmpresa).ToString();
                     lblSprintsEnCurso.Text = sprintNegocio.ContarEnCurso(idEmpresa).ToString();
                     lblTicketsAbiertos.Text = ticketNegocio.ContarAbiertos(idEmpresa).ToString();
-                    EstadoNegocio estadoNegocio = new EstadoNegocio();
-                    ddlEstadoProyecto.DataSource = estadoNegocio.listar(idEmpresa);
-                    ddlEstadoProyecto.DataValueField = "Id";
-                    ddlEstadoProyecto.DataTextField = "Nombre";
-                    ddlEstadoProyecto.DataBind();
-                    ddlEstadoProyecto.Items.Insert(0, new ListItem("Seleccione Estado..", ""));
 
-                    ddlEstado.DataSource = estadoNegocio.listar(idEmpresa);
-                    ddlEstado.DataValueField = "Id";
-                    ddlEstado.DataTextField = "Nombre";
-                    ddlEstado.DataBind();
-                    ddlEstado.Items.Insert(0, new ListItem("Seleccione Estado..", ""));
-
-                    AreaNegocio areaNegocio = new AreaNegocio();
-                    ddlArea.DataSource = areaNegocio.listar(idEmpresa);
-                    ddlArea.DataValueField = "Id";
-                    ddlArea.DataTextField = "Nombre";
-                    ddlArea.DataBind();
-                    ddlArea.Items.Insert(0, new ListItem("Seleccione un área...", ""));
-
-                    ddlProyecto.DataSource = proyectoNegocio.listar(idEmpresa);
-                    ddlProyecto.DataValueField = "Id";
-                    ddlProyecto.DataTextField = "Nombre";
-                    ddlProyecto.DataBind();
-                    ddlProyecto.Items.Insert(0, new ListItem("Seleccione un puesto...", ""));
-
+                    CargarCombosProyecto(idEmpresa);
+                    CargarCombosSprint(idEmpresa);
+                    CargarCombosTicket(idEmpresa);
                     CargarCombosTicket(idEmpresa);
                     lblTicketsAbiertos.Text = ticketNegocio.ContarAbiertos(idEmpresa).ToString();
 
@@ -509,6 +487,48 @@ namespace TP_Final_Programacion_III
         public void btnCancelarTicket_Click(object sender, EventArgs e)
         {
             LimpiarCamposTicket();
+        }
+        private void CargarCombosSprint(int idEmpresa)
+        {
+            EstadoNegocio estadoNegocio = new EstadoNegocio();
+            AreaNegocio areaNegocio = new AreaNegocio();
+            ProyectoNegocio proyectoNegocio = new ProyectoNegocio();
+
+            CargarLista(
+                ddlEstado,
+                estadoNegocio.listar(idEmpresa),
+                "Id",
+                "Nombre",
+                "Seleccione Estado..."
+            );
+
+            CargarLista(
+                ddlArea,
+                areaNegocio.listar(idEmpresa),
+                "Id",
+                "Nombre",
+                "Seleccione un área..."
+            );
+
+            CargarLista(
+                ddlProyecto,
+                proyectoNegocio.listar(idEmpresa),
+                "Id",
+                "Nombre",
+                "Seleccione Proyecto..."
+            );
+        }
+        private void CargarCombosProyecto(int idEmpresa)
+        {
+            EstadoNegocio estadoNegocio = new EstadoNegocio();
+
+            CargarLista(
+                ddlEstadoProyecto,
+                estadoNegocio.listar(idEmpresa),
+                "Id",
+                "Nombre",
+                "Seleccione Estado..."
+            );
         }
     }
 }
