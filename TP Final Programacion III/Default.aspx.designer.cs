@@ -24,13 +24,31 @@ namespace TP_Final_Programacion_III
         protected global::System.Web.UI.WebControls.Literal litMensaje;
 
         /// <summary>
-        /// Control Panel1.
+        /// Control btnCloseTicket.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel Panel1;
+        protected global::System.Web.UI.WebControls.LinkButton btnCloseTicket;
+
+        /// <summary>
+        /// Control upTicketModal.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel upTicketModal;
+
+        /// <summary>
+        /// Control pnlFormTicket.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlFormTicket;
 
         /// <summary>
         /// Control txtDescripcionTicket.
@@ -60,40 +78,94 @@ namespace TP_Final_Programacion_III
         protected global::System.Web.UI.WebControls.TextBox txtFechaEstimadaTicket;
 
         /// <summary>
-        /// Control dllSprintTicket.
+        /// Control ddlPrioridadTicket.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList dllSprintTicket;
+        protected global::System.Web.UI.WebControls.DropDownList ddlPrioridadTicket;
 
         /// <summary>
-        /// Control dllEstadoTicket.
+        /// Control ddlProyectoTicket.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList dllEstadoTicket;
+        protected global::System.Web.UI.WebControls.DropDownList ddlProyectoTicket;
 
         /// <summary>
-        /// Control dllPrioridadticket.
+        /// Control ddlSprintTicket.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList dllPrioridadticket;
+        protected global::System.Web.UI.WebControls.DropDownList ddlSprintTicket;
 
         /// <summary>
-        /// Control Button1.
+        /// Control ddlAreaTicket.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button1;
+        protected global::System.Web.UI.WebControls.DropDownList ddlAreaTicket;
+
+        /// <summary>
+        /// Control ddlPuestoTicket.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlPuestoTicket;
+
+        /// <summary>
+        /// Control ddlSeniorityTicket.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlSeniorityTicket;
+
+        /// <summary>
+        /// Control ddlUsuarioTicket.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlUsuarioTicket;
+
+        /// <summary>
+        /// Control ddlEstadoTicket.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlEstadoTicket;
+
+        /// <summary>
+        /// Control btnCancelarTicket.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnCancelarTicket;
+
+        /// <summary>
+        /// Control btnGuardarTicket.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnGuardarTicket;
 
         /// <summary>
         /// Control pnlFormSprint.

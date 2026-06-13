@@ -32,51 +32,111 @@
             <div class="modal-content">
                 <div class="modal-header bg-light">
                     <h5 class="modal-title fw-bold" id="ticketModalLabel">Nuevo Ticket</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <asp:LinkButton ID="btnCloseTicket" runat="server" CssClass="btn-close" OnClick="btnCancelarTicket_Click" aria-label="Close"></asp:LinkButton>
                 </div>
                 <div class="modal-body">
-                    <asp:Panel ID="Panel1" CssClass="row g-3" runat="server">
+                    <asp:UpdatePanel ID="upTicketModal" runat="server" UpdateMode="Conditional">
+                        <ContentTemplate>
+                            <asp:Panel ID="pnlFormTicket" CssClass="row g-3" runat="server">
 
-                        <div class="col-md-12">
-                            <label for="txtDescripcionProyecto" class="form-label fw-semibold">Descripción</label>
-                            <asp:TextBox ID="txtDescripcionTicket" runat="server" CssClass="form-control w-100 mw-100" TextMode="MultiLine" Rows="3" placeholder="Ingresá una descripción breve..."></asp:TextBox>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="txtFechaInicio" class="form-label fw-semibold">Fecha Inicio</label>
-                            <asp:TextBox ID="txtFechaInicioTicket" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
-                        </div>
+                                <div class="col-12">
+                                    <div class="border-bottom pb-2 mb-1">
+                                        <h6 class="text-uppercase text-muted fw-bold mb-0" style="font-size: .75rem;">Detalle del ticket</h6>
+                                    </div>
+                                </div>
 
-                        <div class="col-md-6">
-                            <label for="txtFechaEstimadaFin" class="form-label fw-semibold">Fecha Estimada Fin</label>
-                            <asp:TextBox ID="txtFechaEstimadaTicket" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
-                        </div>
+                                <div class="col-md-12">
+                                    <label for="txtDescripcionTicket" class="form-label fw-semibold">Descripción</label>
+                                    <asp:TextBox ID="txtDescripcionTicket" runat="server" CssClass="form-control w-100 mw-100"
+                                        TextMode="MultiLine" Rows="3" MaxLength="150"
+                                        placeholder="Ingresá una descripción breve..."></asp:TextBox>
+                                </div>
 
-                        <div class="col-md-4">
-                            <label for="ddlProyecto" class="form-label fw-semibold">Proyecto</label>
-                            <asp:DropDownList ID="dllSprintTicket" runat="server" CssClass="form-select">
-                                <asp:ListItem Text="Seleccione Proyecto..." Value="" />
-                            </asp:DropDownList>
-                        </div>
+                                <div class="col-md-4">
+                                    <label for="txtFechaInicioTicket" class="form-label fw-semibold">Fecha Inicio</label>
+                                    <asp:TextBox ID="txtFechaInicioTicket" runat="server" CssClass="form-control"
+                                        TextMode="Date" ReadOnly="true"></asp:TextBox>
+                                </div>
 
-                        <div class="col-md-4">
-                            <label for="ddlEstado" class="form-label fw-semibold">Estado</label>
-                            <asp:DropDownList ID="dllEstadoTicket" runat="server" CssClass="form-select">
-                                <asp:ListItem Text="Seleccione Estado..." Value="" />
-                            </asp:DropDownList>
-                        </div>
+                                <div class="col-md-4">
+                                    <label for="txtFechaEstimadaTicket" class="form-label fw-semibold">Fecha Estimada Fin</label>
+                                    <asp:TextBox ID="txtFechaEstimadaTicket" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                                </div>
 
-                        <div class="col-md-4">
-                            <label for="ddlArea" class="form-label fw-semibold">Área</label>
-                            <asp:DropDownList ID="dllPrioridadticket" runat="server" CssClass="form-select">
-                                <asp:ListItem Text="Seleccione Área..." Value="" />
-                            </asp:DropDownList>
-                        </div>
+                                <div class="col-md-4">
+                                    <label for="ddlPrioridadTicket" class="form-label fw-semibold">Prioridad</label>
+                                    <asp:DropDownList ID="ddlPrioridadTicket" runat="server" CssClass="form-select">
+                                    </asp:DropDownList>
+                                </div>
 
-                    </asp:Panel>
+                                <div class="col-12 mt-3">
+                                    <div class="border-bottom pb-2 mb-1">
+                                        <h6 class="text-uppercase text-muted fw-bold mb-0" style="font-size: .75rem;">Proyecto y sprint</h6>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="ddlProyectoTicket" class="form-label fw-semibold">Proyecto</label>
+                                    <asp:DropDownList ID="ddlProyectoTicket" runat="server" CssClass="form-select"
+                                        AutoPostBack="true" OnSelectedIndexChanged="ddlProyectoTicket_SelectedIndexChanged">
+                                    </asp:DropDownList>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="ddlSprintTicket" class="form-label fw-semibold">Sprint</label>
+                                    <asp:DropDownList ID="ddlSprintTicket" runat="server" CssClass="form-select">
+                                    </asp:DropDownList>
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <div class="border-bottom pb-2 mb-1">
+                                        <h6 class="text-uppercase text-muted fw-bold mb-0" style="font-size: .75rem;">Asignación</h6>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="ddlAreaTicket" class="form-label fw-semibold">Área</label>
+                                    <asp:DropDownList ID="ddlAreaTicket" runat="server" CssClass="form-select"
+                                        AutoPostBack="true" OnSelectedIndexChanged="ddlFiltroUsuarioTicket_SelectedIndexChanged">
+                                    </asp:DropDownList>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="ddlPuestoTicket" class="form-label fw-semibold">Puesto</label>
+                                    <asp:DropDownList ID="ddlPuestoTicket" runat="server" CssClass="form-select"
+                                        AutoPostBack="true" OnSelectedIndexChanged="ddlFiltroUsuarioTicket_SelectedIndexChanged">
+                                    </asp:DropDownList>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="ddlSeniorityTicket" class="form-label fw-semibold">Seniority</label>
+                                    <asp:DropDownList ID="ddlSeniorityTicket" runat="server" CssClass="form-select"
+                                        AutoPostBack="true" OnSelectedIndexChanged="ddlFiltroUsuarioTicket_SelectedIndexChanged">
+                                    </asp:DropDownList>
+                                </div>
+
+                                <div class="col-md-8">
+                                    <label for="ddlUsuarioTicket" class="form-label fw-semibold">Usuario</label>
+                                    <asp:DropDownList ID="ddlUsuarioTicket" runat="server" CssClass="form-select"
+                                        AutoPostBack="true" OnSelectedIndexChanged="ddlUsuarioTicket_SelectedIndexChanged">
+                                    </asp:DropDownList>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="ddlEstadoTicket" class="form-label fw-semibold">Estado</label>
+                                    <asp:DropDownList ID="ddlEstadoTicket" runat="server" CssClass="form-select">
+                                    </asp:DropDownList>
+                                </div>
+
+                            </asp:Panel>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
                 </div>
+
                 <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <asp:Button ID="Button1" runat="server" CssClass="btn btn-primary" Text="Guardar Ticket" OnClick="btnGuardarTicket_Click" />
+                    <asp:Button ID="btnCancelarTicket" runat="server" CssClass="btn btn-secondary" Text="Cancelar" OnClick="btnCancelarTicket_Click" UseSubmitBehavior="false" />
+                    <asp:Button ID="btnGuardarTicket" runat="server" CssClass="btn btn-primary"
+                        Text="Guardar Ticket" OnClick="btnGuardarTicket_Click" />
                 </div>
             </div>
         </div>

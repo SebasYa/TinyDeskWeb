@@ -33,6 +33,8 @@ namespace negocio
                    "<p><b>Descripcion:</b> " + ticket.Descripcion + "</p>" +
                    "<p><b>Prioridad:</b> " + ticket.Prioridad.Nombre + "</p>" +
                    "<p><b>Area:</b> " + area + "</p>" +
+                   "<p><b>Fecha de inicio:</b> " + ticket.FechaInicio.ToString("dd/MM/yyyy") + "</p>" +
+                   "<p><b>Fecha estimada de finalizacion:</b> " + ticket.FechaEstimadaFin.ToString("dd/MM/yyyy") + "</p>" +
                    "<p><a href='" + linkTicket + "'>Ver ticket</a></p>";
         }
         public static string RecuperarPassword(string nombre, string link)

@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace TP_Final_Programacion_III
 {
-    public partial class Ticket : System.Web.UI.Page
+    public partial class Tickets : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
