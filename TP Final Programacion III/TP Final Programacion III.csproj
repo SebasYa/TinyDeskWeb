@@ -187,7 +187,7 @@
     <Content Include="Site.Master" />
     <Content Include="Sprints.aspx" />
     <Content Include="SprintsUsuario.aspx" />
-    <Content Include="Ticket.aspx" />
+    <Content Include="Tickets.aspx" />
     <Content Include="TicketsUsuario.aspx" />
     <Content Include="UsuarioDefault.aspx" />
     <Content Include="Usuarios.aspx" />
@@ -245,6 +245,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="LinkHelper.cs" />
     <Compile Include="Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -330,12 +331,12 @@
     <Compile Include="Sprints.aspx.designer.cs">
       <DependentUpon>Sprints.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Ticket.aspx.cs">
-      <DependentUpon>Ticket.aspx</DependentUpon>
+    <Compile Include="Tickets.aspx.cs">
+      <DependentUpon>Tickets.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Ticket.aspx.designer.cs">
-      <DependentUpon>Ticket.aspx</DependentUpon>
+    <Compile Include="Tickets.aspx.designer.cs">
+      <DependentUpon>Tickets.aspx</DependentUpon>
     </Compile>
     <Compile Include="Usuarios.aspx.cs">
       <DependentUpon>Usuarios.aspx</DependentUpon>

@@ -9,7 +9,7 @@ namespace negocio
 {
     public class ProyectoNegocio
     {
-        public int agregar(Proyecto proyecto)
+        public int agregarProyecto(Proyecto proyecto)
         {
             AccesoDatos datos = new AccesoDatos();
             try
@@ -18,7 +18,8 @@ namespace negocio
                                               (Nombre, Descripcion, FechaInicio, FechaFin, 
                                                FechaEstimadaFin, Activo, IdEstado, IdEmpresa)
                                        VALUES (@Nombre, @Descripcion, @FechaInicio, @FechaFin,
-                                               @FechaEstimadaFin, @Activo, @IdEstado, @IdEmpresa)"
+                                               @FechaEstimadaFin, @Activo, @IdEstado, @IdEmpresa);
+                                        SELECT CAST(SCOPE_IDENTITY() AS INT)"
                 );
                 datos.setearParametro("@Nombre", proyecto.Nombre);
                 datos.setearParametro("@Descripcion", proyecto.Descripcion);

@@ -308,10 +308,7 @@ namespace TP_Final_Programacion_III
             UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
             UsuarioToken usuarioToken = tokenNegocio.CrearToken(usuario, TipoTokenUsuario.CrearPassword, 24);
 
-            string linkCrearPass = Request.Url.GetLeftPart(UriPartial.Authority)
-                + ResolveUrl("~/CrearPassword.aspx")
-                + "?token=" + Server.UrlEncode(usuarioToken.Token);
-
+            string linkCrearPass = LinkHelper.GenerarLink(this, "CrearPassword.aspx", "token", Server.UrlEncode(usuarioToken.Token));
             string cuerpo = EmailTemplates.CrearPasswordEmpleado(usuario.Nombre, linkCrearPass);
 
             EmailService email = new EmailService();

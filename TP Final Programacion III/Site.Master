@@ -60,7 +60,7 @@
                                     <i class="bi bi-calendar-week mx-2"></i>Sprints</a>
                             </li>
                             <li class="nav-item mb-2 sideBar">
-                                <a class="nav-link text-light" runat="server" href="~/Ticket.aspx">
+                                <a class="nav-link text-light" runat="server" href="~/Tickets.aspx">
                                     <i class="bi bi-ticket-detailed mx-2"></i>Tickets</a>
                             </li>
                             <li id="liAdminTitulo" runat="server" class="nav-item mt-3 mb-1">

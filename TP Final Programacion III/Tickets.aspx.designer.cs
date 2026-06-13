@@ -11,7 +11,7 @@ namespace TP_Final_Programacion_III
 {
 
 
-    public partial class Ticket
+    public partial class Tickets
     {
     }
 }
