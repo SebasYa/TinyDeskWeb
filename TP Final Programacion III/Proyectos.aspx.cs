@@ -192,7 +192,7 @@ namespace TP_Final_Programacion_III
                 }
                 else
                 {
-                    proyectoNegocio.agregar(proyecto);
+                    proyectoNegocio.agregarProyecto(proyecto);
 
                     MostrarExitoProyecto("El Proyecto se guardó perfectamente.");
 

@@ -150,10 +150,7 @@ namespace TP_Final_Programacion_III
 
                 UsuarioToken nuevoToken = tokenNegocio.CrearToken(usuario, TipoTokenUsuario.ValidarEmail, 24);
 
-                string linkValidacion = Request.Url.GetLeftPart(UriPartial.Authority)
-                    + ResolveUrl("~/ValidarEmail.aspx")
-                    + "?token=" + Server.UrlEncode(nuevoToken.Token);
-
+                string linkValidacion = LinkHelper.GenerarLink(this, "ValidarEmail.aspx", "token", Server.UrlEncode(nuevoToken.Token));
                 string cuerpo = EmailTemplates.ValidarCuenta(usuario.Nombre, linkValidacion);
 
                 EmailService email = new EmailService();

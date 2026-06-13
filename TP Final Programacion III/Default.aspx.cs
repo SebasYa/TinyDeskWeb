@@ -150,7 +150,7 @@ namespace TP_Final_Programacion_III
                 nuevoProyecto.Empresa = new Empresa();
                 nuevoProyecto.Empresa.Id = userLogueado.Empresa.Id;
 
-                proyectoNegocio.agregar(nuevoProyecto);
+                proyectoNegocio.agregarProyecto(nuevoProyecto);
 
                 // Actualizamos el contador de proyectos activos en el Dashboard
                 int idEmpresa = userLogueado.Empresa.Id;
@@ -214,7 +214,7 @@ namespace TP_Final_Programacion_III
                 nuevoTicket.Sprint = new Sprint();
                 nuevoTicket.Sprint.Id = int.Parse(ddlSprintTicket.SelectedValue);
 
-                int idTicket = ticketNegocio.Agregar(nuevoTicket);
+                int idTicket = ticketNegocio.AgregarTicket(nuevoTicket);
                 nuevoTicket.Id = idTicket;
 
                 UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
@@ -223,7 +223,7 @@ namespace TP_Final_Programacion_III
                 // Enviar mail al usuario asignado
                 EmailService emailService = new EmailService();
 
-                string linkTicket = Request.Url.GetLeftPart(UriPartial.Authority) + ResolveUrl("~/Ticket.aspx") + "?id=" + nuevoTicket.Id;
+                string linkTicket = LinkHelper.GenerarLink(this, "Tickets.aspx", "id", nuevoTicket.Id.ToString());
                 string cuerpo = EmailTemplates.TicketAsignado(usuarioAsignado.Nombre, nuevoTicket, usuarioAsignado.Area.Nombre, linkTicket
                 );
 

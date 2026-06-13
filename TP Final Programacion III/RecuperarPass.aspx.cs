@@ -85,10 +85,7 @@ namespace TP_Final_Programacion_III
 
                 UsuarioToken token = tokenNegocio.CrearToken(usuario, TipoTokenUsuario.ResetPassword, 24);
 
-                string link = Request.Url.GetLeftPart(UriPartial.Authority)
-                    + ResolveUrl("~/CrearPassword.aspx")
-                    + "?token=" + Server.UrlEncode(token.Token);
-
+                string link = LinkHelper.GenerarLink(this, "CrearPassword.aspx", "token", Server.UrlEncode(token.Token));
                 string cuerpo = EmailTemplates.RecuperarPassword(usuario.Nombre, link);
 
                 EmailService email = new EmailService();
