@@ -185,43 +185,96 @@
     </div>
     <!-- FIN - CREAR PROYECTO MODAL -->
 
+    <!-- ACA ARRANCAN LAS FICHAS -->
     <section class="mt-4">
-        <div class="row g-3">
-            <!-- Ficha Proyectos Activos -->
-            <div class="col-6 col-md-4 col-lg-3">
-                <div class="card border-primary shadow-sm h-100">
-                    <div class="card-body p-3 text-center">
-                        <h6 class="card-subtitle mb-2 text-muted text-uppercase font-monospace small">Proyectos Activos</h6>
-                        <h2 class="card-title mb-0 display-6 fw-bold text-primary">
-                            <asp:Label ID="lblProyectosActivos" runat="server" Text=""></asp:Label>
-                        </h2>
+    <div class="row g-4">
+        <!--Tickets Abiertos -->
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100 style-card-dashboard" style="border-radius: 12px; border: 1px solid #f0f2f5 !important;">
+                <div class="card-body p-4 d-flex flex-column justify-content-between">
+                    
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="text-muted fw-semibold small text-truncate" style="font-size: 0.85rem;">Tickets Abiertos</span>
                     </div>
-                </div>
-            </div>
-            <!-- Ficha Sprints en Curso -->
-            <div class="col-6 col-md-4 col-lg-3">
-                <div class="card border-success shadow-sm h-100">
-                    <div class="card-body p-3 text-center">
-                        <h6 class="card-subtitle mb-2 text-muted text-uppercase font-monospace small">Sprints en Curso</h6>
-                        <h2 class="card-title mb-0 display-6 fw-bold text-success">
-                            <asp:Label ID="lblSprintsEnCurso" runat="server" Text=""></asp:Label>
-                        </h2>
-                    </div>
-                </div>
-            </div>
-            <!-- Ficha Tickets Abiertos -->
-            <div class="col-6 col-md-4 col-lg-3">
-                <div class="card border-warning shadow-sm h-100">
-                    <div class="card-body p-3 text-center">
-                        <h6 class="card-subtitle mb-2 text-muted text-uppercase font-monospace small">Tickets Abiertos</h6>
-                        <h2 class="card-title mb-0 display-6 fw-bold text-warning">
+                    
+                    <div class="d-flex justify-content-between my-2">
+                        <h2 class="fw-bold text-dark mb-1 display-5" style="letter-spacing: -1px;">
                             <asp:Label ID="lblTicketsAbiertos" runat="server" Text=""></asp:Label>
                         </h2>
+                        <div class="text-primary bg-primary-subtle rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+                            <i class="bi bi-ticket-perforated fs-1"></i>
+                        </div>
                     </div>
+                    
+                    <div class="d-flex align-items-center mt-1">
+                        <span class="badge bg-success-subtle text-success fw-bold me-2" style="font-size: 0.75rem; padding: 4px 8px;">
+                            <i class="bi bi-arrow-up-right"></i> +12%
+                        </span>
+                        <small class="text-muted small">vs último mes</small>
+                    </div>
+
                 </div>
             </div>
         </div>
-    </section>
+        <!--Sprints en Curso -->
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100 style-card-dashboard" style="border-radius: 12px; border: 1px solid #f0f2f5 !important;">
+                <div class="card-body p-4 d-flex flex-column justify-content-between">
+                    
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="text-muted fw-semibold small text-truncate" style="font-size: 0.85rem;">Sprints en Curso</span>
+                        
+                    </div>
+                    
+                    <div class="d-flex justify-content-between my-2">
+                        <h2 class="fw-bold text-dark mb-1 display-5" style="letter-spacing: -1px;">
+                            <asp:Label ID="lblSprintsEnCurso" runat="server" Text=""></asp:Label>
+                        </h2>
+                        <div class="text-warning bg-warning-subtle rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+                            <i class="bi bi-calendar-week fs-1"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center mt-1">
+                        <span class="badge bg-success-subtle text-success fw-bold me-2" style="font-size: 0.75rem; padding: 4px 8px;">
+                            <i class="bi bi-arrow-up-right"></i> +5%
+                        </span>
+                        <small class="text-muted small">vs último mes</small>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!--Proyectos Abiertos -->
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100 style-card-dashboard" style="border-radius: 12px; border: 1px solid #f0f2f5 !important;">
+                <div class="card-body p-4 d-flex flex-column justify-content-between">
+                    
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="text-muted fw-semibold small text-truncate" style="font-size: 0.85rem;">Proyectos</span>
+
+                    </div>
+                    
+                    <div class="d-flex justify-content-between my-2">
+                        <h2 class="fw-bold text-dark mb-1 display-5" style="letter-spacing: -1px;">
+                             <asp:Label ID="lblProyectosActivos" runat="server" Text=""></asp:Label>
+                        </h2>
+                        <div class="text-info bg-info-subtle rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+                            <i class="bi bi-bar-chart-fill fs-1"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center mt-1">
+                        <span class="text-muted small fw-medium text-uppercase tracking-wider" style="font-size: 0.75rem;">Activos</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+    <!-- TERMINA RPUEBA -->
 
     <section class="mt-4">
         <h2>Alertas</h2>

@@ -83,7 +83,6 @@
                     <div class="text-end border-top border-secondary pt-3">
                         <span class="text-muted small me-1" style="font-size: 0.8rem;">Bienvenido,</span>
                         <asp:Label ID="lblUserWelcome" runat="server" CssClass="text-light fw-bold" Style="font-size: 0.9rem;"></asp:Label>
-                        <span class="text-muted small fw-semibold font-monospace" style="letter-spacing: 1px;">TINYDESK v1.0</span>
                     </div>
                     
 

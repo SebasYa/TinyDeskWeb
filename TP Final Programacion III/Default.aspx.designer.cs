@@ -276,13 +276,13 @@ namespace TP_Final_Programacion_III
         protected global::System.Web.UI.WebControls.Button btnGuardarProyecto;
 
         /// <summary>
-        /// Control lblProyectosActivos.
+        /// Control lblTicketsAbiertos.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblProyectosActivos;
+        protected global::System.Web.UI.WebControls.Label lblTicketsAbiertos;
 
         /// <summary>
         /// Control lblSprintsEnCurso.
@@ -294,13 +294,13 @@ namespace TP_Final_Programacion_III
         protected global::System.Web.UI.WebControls.Label lblSprintsEnCurso;
 
         /// <summary>
-        /// Control lblTicketsAbiertos.
+        /// Control lblProyectosActivos.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTicketsAbiertos;
+        protected global::System.Web.UI.WebControls.Label lblProyectosActivos;
 
         /// <summary>
         /// Control pnlTicketsUsuariosDesactivados.
