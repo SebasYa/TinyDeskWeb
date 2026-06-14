@@ -197,9 +197,8 @@ namespace negocio
                     SELECT COUNT(*)
                     FROM SPRINT S
                     INNER JOIN ESTADO E ON S.IdEstado = E.Id
-                    WHERE E.EsFinal = 0
+                    WHERE E.EsFinal = 0 AND S.IdEmpresa = @idEmpresa
                 ");
-                /*despues agregar idEmpresa en la bbdd de sprints y agregar este en la query  AND IdEmpresa = @idEmpresa*/
                 datos.setearParametro("@idEmpresa", idEmpresa);
                 return datos.ejecutarScalar();
             }
