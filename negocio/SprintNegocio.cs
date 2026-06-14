@@ -196,10 +196,10 @@ namespace negocio
                 datos.setearConsulta(@"
                     SELECT COUNT(*)
                     FROM SPRINT S
-                    INNER JOIN ESTADO E ON S.IdEstado = E.Id
-                    WHERE E.EsFinal = 0
+                    INNER JOIN PROYECTO P ON S.IdProyecto = P.Id
+                    INNER JOIN EMPRESA E ON P.IdEmpresa = E.Id
+                    WHERE S.Activo = 1 AND P.IdEmpresa = @IdEmpresa
                 ");
-                /*despues agregar idEmpresa en la bbdd de sprints y agregar este en la query  AND IdEmpresa = @idEmpresa*/
                 datos.setearParametro("@idEmpresa", idEmpresa);
                 return datos.ejecutarScalar();
             }

@@ -11,6 +11,17 @@ namespace TP_Final_Programacion_III
 {
     public partial class TicketsUsuariosDesactivados : System.Web.UI.Page
     {
+        public class VistaPreviaAsignacionIA
+        {
+            public int IdTicket { get; set; }
+            public string Prioridad { get; set; }
+            public string UsuarioActual { get; set; }
+            public string Area { get; set; }
+            public string Puesto { get; set; }
+            public int IdUsuarioSugerido { get; set; }
+            public string Motivo { get; set; }
+            public List<CandidatoAsignacionIA> Candidatos { get; set; }
+        }
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -71,8 +82,8 @@ namespace TP_Final_Programacion_III
             if (lista.Count == 0)
             {
                 litMensajeEstado.Text = @"<div class='alert alert-success shadow-sm'>
-                                    No hay tickets asignados a usuarios desactivados.
-                                    </div>";
+                                             No hay tickets asignados a usuarios desactivados.
+                                          </div>";
             }
             else
             {
@@ -208,6 +219,163 @@ namespace TP_Final_Programacion_III
                 Session.Add("error", ex.ToString());
                 litMensajeAccion.Text = @"<div class='alert alert-danger'>
                                               Ocurrió un error al reasignar el ticket.
+                                          </div>";
+            }
+        }
+        protected void btnReasignarConIA_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Usuario userLogueado = (Usuario)Session["usuario"];
+                int idEmpresa = userLogueado.Empresa.Id;
+
+                List<Ticket> listaTickets = (List<Ticket>)Session["listaTicketsUsuariosDesactivados"];
+
+                if (listaTickets == null || listaTickets.Count == 0)
+                {
+                    litMensajeAccion.Text = @"<div class='alert alert-success'>
+                                                  No hay tickets para reasignar.
+                                              </div>";
+                    return;
+                }
+
+                CandidatoAsignacionIANegocio candidatoNegocio = new CandidatoAsignacionIANegocio();
+                List<VistaPreviaAsignacionIA> vistaPrevia = new List<VistaPreviaAsignacionIA>();
+
+                foreach (Ticket ticket in listaTickets)
+                {
+                    List<CandidatoAsignacionIA> candidatos = candidatoNegocio.ListarCandidatos(
+                        idEmpresa,
+                        ticket.Usuario.Area.Id,
+                        ticket.Usuario.Puesto.Id
+                    );
+
+                    int idUsuarioSugerido = candidatoNegocio.CalcularUsuarioSugerido(ticket.Prioridad.Nombre, candidatos);
+                    CandidatoAsignacionIA usuarioSugerido = candidatos.Find(x => x.Id == idUsuarioSugerido);
+
+                    VistaPreviaAsignacionIA item = new VistaPreviaAsignacionIA();
+                    item.IdTicket = ticket.Id;
+                    item.Prioridad = ticket.Prioridad.Nombre;
+                    item.UsuarioActual = ticket.Usuario.Nombre + " " + ticket.Usuario.Apellido;
+                    item.Area = ticket.Usuario.Area.Nombre;
+                    item.Puesto = ticket.Usuario.Puesto.Nombre;
+                    item.IdUsuarioSugerido = idUsuarioSugerido;
+                    item.Motivo = candidatoNegocio.ObtenerMotivoSugerencia(usuarioSugerido);
+                    item.Candidatos = candidatos;
+
+                    vistaPrevia.Add(item);
+                }
+
+                Session["vistaPreviaAsignacionIA"] = vistaPrevia;
+
+                dgvVistaPreviaIA.DataSource = vistaPrevia;
+                dgvVistaPreviaIA.DataBind();
+
+                string scriptOpen = @"document.addEventListener('DOMContentLoaded', function () {
+                      var modalElement = document.getElementById('modalReasignarConIA');
+                      var myModal = new bootstrap.Modal(modalElement);
+                      myModal.show();
+                });";
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "OpenModalReasignarConIA", scriptOpen, true);
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                litMensajeAccion.Text = @"<div class='alert alert-danger'>
+                                              Ocurrió un error al preparar la reasignación con IA.
+                                          </div>";
+            }
+        }
+        protected void dgvVistaPreviaIA_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType != DataControlRowType.DataRow)
+                return;
+
+            VistaPreviaAsignacionIA item = (VistaPreviaAsignacionIA)e.Row.DataItem;
+
+            DropDownList ddlUsuarioIA = (DropDownList)e.Row.FindControl("ddlUsuarioIA");
+            Label lblMotivoIA = (Label)e.Row.FindControl("lblMotivoIA");
+
+            ddlUsuarioIA.DataSource = item.Candidatos.Select(x => new
+            {
+                Id = x.Id,
+                Nombre = x.Nombre + " " + x.Apellido
+            }).ToList();
+
+            ddlUsuarioIA.DataValueField = "Id";
+            ddlUsuarioIA.DataTextField = "Nombre";
+            ddlUsuarioIA.DataBind();
+
+            ddlUsuarioIA.Items.Insert(0, new ListItem("Sin usuario asignado", ""));
+
+            if (item.IdUsuarioSugerido > 0 && ddlUsuarioIA.Items.FindByValue(item.IdUsuarioSugerido.ToString()) != null)
+                ddlUsuarioIA.SelectedValue = item.IdUsuarioSugerido.ToString();
+
+            ddlUsuarioIA.Enabled = item.Candidatos.Count > 0;
+            lblMotivoIA.Text = item.Motivo;
+        }
+        protected void btnConfirmarReasignacionIA_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                TicketNegocio ticketNegocio = new TicketNegocio();
+                EmailService emailService = new EmailService();
+
+                List<Ticket> listaTickets = (List<Ticket>)Session["listaTicketsUsuariosDesactivados"];
+
+                int total = dgvVistaPreviaIA.Rows.Count;
+                int reasignados = 0;
+                int noReasignados = 0;
+                int mailsNoEnviados = 0;
+
+                foreach (GridViewRow row in dgvVistaPreviaIA.Rows)
+                {
+                    DropDownList ddlUsuarioIA = (DropDownList)row.FindControl("ddlUsuarioIA");
+
+                    int idTicket = int.Parse(dgvVistaPreviaIA.DataKeys[row.RowIndex].Value.ToString());
+
+                    if (string.IsNullOrWhiteSpace(ddlUsuarioIA.SelectedValue))
+                    {
+                        noReasignados++;
+                        continue;
+                    }
+
+                    int idUsuario = int.Parse(ddlUsuarioIA.SelectedValue);
+
+                    ticketNegocio.ReasignarUsuario(idTicket, idUsuario);
+
+                    Ticket ticket = listaTickets.Find(x => x.Id == idTicket);
+                    string linkTicket = LinkHelper.GenerarLink(this, "Tickets.aspx", "id", idTicket.ToString());
+
+                    bool mailEnviado = emailService.EnviarMailTicketAsignado(idUsuario, ticket, linkTicket);
+
+                    if (!mailEnviado)
+                        mailsNoEnviados++;
+
+                    reasignados++;
+                }
+
+                string mensajeMail = mailsNoEnviados > 0
+                    ? " " + mailsNoEnviados + " reasignación/es no pudieron notificarse por mail."
+                    : "";
+
+                litMensajeAccion.Text = @"<div id='mensajeReasignacionIA' class='alert alert-success alert-dismissible fade show' role='alert'>
+                                              Se reasignaron " + reasignados + " de " + total + @" tickets.
+                                              Quedaron " + noReasignados + @" para revisar manualmente." + mensajeMail + @"
+                                              <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                                          </div>";
+
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "OcultarMensajeReasignacionIA",
+                    "setTimeout(function(){ var mensaje = document.getElementById('mensajeReasignacionIA'); if (mensaje) { mensaje.style.display = 'none'; } }, 5000);",
+                    true);
+
+                CargarTickets();
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                litMensajeAccion.Text = @"<div class='alert alert-danger'>
+                                              Ocurrió un error al confirmar las reasignaciones con IA.
                                           </div>";
             }
         }

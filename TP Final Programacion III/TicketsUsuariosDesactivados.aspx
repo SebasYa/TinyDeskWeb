@@ -1,9 +1,21 @@
-﻿<%@ Page Title="Tickets con usuarios desactivados" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="TicketsUsuariosDesactivados.aspx.cs" Inherits="TP_Final_Programacion_III.TicketsUsuariosDesactivados" %>
+﻿<%@ Page Title="Reasignar tickets" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="TicketsUsuariosDesactivados.aspx.cs" Inherits="TP_Final_Programacion_III.TicketsUsuariosDesactivados" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container mt-4">
         <asp:Literal ID="litMensajeAccion" runat="server"></asp:Literal>
         <asp:Literal ID="litMensajeEstado" runat="server"></asp:Literal>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h4 class="mb-0">Tickets asignados a usuarios desactivados</h4>
+                <small class="text-muted">La IA sugiere usuarios, pero podés revisar antes de confirmar.</small>
+            </div>
+
+            <asp:Button ID="btnReasignarConIA" runat="server"
+                CssClass="btn btn-success"
+                Text="Reasignar con IA"
+                OnClick="btnReasignarConIA_Click" />
+        </div>
 
         <asp:GridView ID="dgvTickets" runat="server"
             CssClass="table table-hover align-middle bg-white border-0 shadow-sm rounded mb-0"
@@ -101,7 +113,7 @@
 
                         <div class="mt-3">
                             <label for="ddlNuevoUsuario" class="form-label fw-semibold">Nuevo usuario asignado</label>
-                            <asp:DropDownList ID="ddlNuevoUsuario" runat="server" CssClass="form-select" style="min-width: 100%;">
+                            <asp:DropDownList ID="ddlNuevoUsuario" runat="server" CssClass="form-select" Style="min-width: 100%;">
                             </asp:DropDownList>
                         </div>
                     </div>
@@ -113,6 +125,63 @@
                             CssClass="btn btn-primary"
                             Text="Guardar reasignación"
                             OnClick="btnConfirmarReasignacion_Click" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalReasignarConIA" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header bg-light">
+                        <h5 class="modal-title fw-bold">Reasignación con IA</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <asp:GridView ID="dgvVistaPreviaIA" runat="server"
+                            CssClass="table table-hover align-middle"
+                            AutoGenerateColumns="false"
+                            GridLines="None"
+                            DataKeyNames="IdTicket"
+                            OnRowDataBound="dgvVistaPreviaIA_RowDataBound">
+
+                            <Columns>
+                                <asp:BoundField DataField="IdTicket" HeaderText="Ticket" />
+
+                                <asp:TemplateField HeaderText="Prioridad">
+                                    <ItemTemplate>
+                                        <span class='<%# GetClassPrioridad(Eval("Prioridad")) %>'>
+                                            <%# Eval("Prioridad") %>
+                                        </span>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="Usuario actual">
+                                    <ItemTemplate>
+                                        <div class="fw-semibold"><%# Eval("UsuarioActual") %></div>
+                                        <small class="text-muted"><%# Eval("Area") %> | <%# Eval("Puesto") %></small>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="Usuario sugerido">
+                                    <ItemTemplate>
+                                        <asp:DropDownList ID="ddlUsuarioIA" runat="server" CssClass="form-select">
+                                        </asp:DropDownList>
+                                        <asp:Label ID="lblMotivoIA" runat="server" CssClass="small text-muted d-block mt-1"></asp:Label>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                            </Columns>
+                        </asp:GridView>
+                    </div>
+
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+
+                        <asp:Button ID="btnConfirmarReasignacionIA" runat="server"
+                            CssClass="btn btn-primary"
+                            Text="Confirmar reasignaciones"
+                            OnClick="btnConfirmarReasignacionIA_Click" />
                     </div>
                 </div>
             </div>
