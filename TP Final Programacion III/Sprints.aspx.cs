@@ -21,13 +21,13 @@ namespace TP_Final_Programacion_III
             {
                 try
                 {
+
                     Usuario userLogueado = (Usuario)Session["usuario"];
                     int idEmpresa = userLogueado.Empresa.Id;
                     AreaNegocio areaNegocio = new AreaNegocio();
                     EstadoNegocio estadoNegocio = new EstadoNegocio();
                     ProyectoNegocio proyectoNegocio = new ProyectoNegocio();
                     SprintNegocio sprintNegocio = new SprintNegocio();
-
 
                     if (Session["usuario"] == null)
                     {
@@ -85,6 +85,26 @@ namespace TP_Final_Programacion_III
                     Session.Add("listaSprints", sprintNegocio.listar(userLogueado.Empresa.Id));
                     dgvSprints.DataSource = Session["listaSprints"];
                     dgvSprints.DataBind();
+
+                    if (Request.QueryString["id"] != null)
+                    {
+                        int idSprint = int.Parse(Request.QueryString["id"]);
+
+                        // Ocultas el listado y los filtros principales
+                        pnlListadoSprints.Visible = false;
+
+                        // Muestras el panel de detalle que creaste
+                        pnlDetalleSprint.Visible = true;
+
+                        // Ejecutas la carga de los datos específicos del Sprint y sus Tickets
+                        CargarDetalleDelSprint(idSprint);
+                    }
+                    else
+                    {
+                        // Si no hay ID en la URL, te aseguras de que el comportamiento sea el normal
+                        pnlListadoSprints.Visible = true;
+                        pnlDetalleSprint.Visible = false;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -470,7 +490,38 @@ namespace TP_Final_Programacion_III
             ddlEstado.SelectedIndex = 0;
             ddlProyecto.SelectedIndex = 0;
         }
+
+        protected void dgvSprints_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "VerDetalle")
+            {
+                // Recuperamos el ID que enviamos en el CommandArgument
+                string idSprint = e.CommandArgument.ToString();
+
+                // Redirigimos a la misma página pasando el ID por parámetro en la URL
+                Response.Redirect($"Sprints.aspx?id={idSprint}");
+            }
+        }
+
+        private void CargarDetalleDelSprint(int idSprint)
+        {
+            // 1. Buscar el sprint (puedes usar el que ya está en Session o ir a buscarlo a la BD)
+            List<Sprint> listaSprints = (List<Sprint>)Session["listaSprints"];
+            Sprint sprint = listaSprints?.Find(x => x.Id == idSprint);
+
+            if (sprint != null)
+            {
+                // 2. Mapear los datos del sprint a los controles de tu panel de detalles
+                //lblDetalleTituloSprint.Text = $"Detalle de Sprint {sprint.NumeroSprint}";
+
+                // 3. Cargar los tickets asignados a este sprint en un GridView interno del panel
+                //TicketNegocio ticketNegocio = new TicketNegocio();
+                //dgvTicketsDelSprint.DataSource = ticketNegocio.listarPorSprint(idSprint);
+                //dgvTicketsDelSprint.DataBind();
+            }
+        }
     }
+
 
 
 }

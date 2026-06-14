@@ -142,7 +142,7 @@ namespace negocio
                     INNER JOIN ESTADO E ON E.Id = S.IdEstado
                     INNER JOIN PROYECTO P ON P.Id = S.IdProyecto
                     INNER JOIN AREA A ON A.Id = S.IdArea
-                    WHERE P.IdEmpresa = @IdEmpresa  
+                    WHERE P.IdEmpresa = @IdEmpresa  AND S.Activo = 1
                 ");
                 datos.setearParametro("@IdEmpresa", idEmpresa);
                 datos.ejecutarLectura();
