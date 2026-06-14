@@ -189,6 +189,7 @@
     <Content Include="SprintsUsuario.aspx" />
     <Content Include="Tickets.aspx" />
     <Content Include="TicketsUsuario.aspx" />
+    <Content Include="TicketsUsuariosDesactivados.aspx" />
     <Content Include="UsuarioDefault.aspx" />
     <Content Include="Usuarios.aspx" />
     <Content Include="ValidarEmail.aspx" />
@@ -295,6 +296,13 @@
     </Compile>
     <Compile Include="TicketsUsuario.aspx.designer.cs">
       <DependentUpon>TicketsUsuario.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TicketsUsuariosDesactivados.aspx.cs">
+      <DependentUpon>TicketsUsuariosDesactivados.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TicketsUsuariosDesactivados.aspx.designer.cs">
+      <DependentUpon>TicketsUsuariosDesactivados.aspx</DependentUpon>
     </Compile>
     <Compile Include="UsuarioDefault.aspx.cs">
       <DependentUpon>UsuarioDefault.aspx</DependentUpon>
