@@ -1,4 +1,5 @@
-﻿using System;
+﻿using dominio;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -21,7 +22,6 @@ namespace negocio
             server.Port = 2525;
             server.Host = "sandbox.smtp.mailtrap.io";
         }
-
         public void armarCorreo(string emailDestino, string asunto, string cuerpo)
         {
             email = new MailMessage();
@@ -32,7 +32,6 @@ namespace negocio
             email.Body = cuerpo;
 
         }
-
         public bool enviarEmail()
         {
             try
@@ -45,6 +44,19 @@ namespace negocio
                 throw ex;
             }
         }
+        public bool EnviarMailTicketAsignado(int idUsuario, Ticket ticket, string linkTicket)
+        {
+            UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
+            Usuario usuarioAsignado = usuarioNegocio.BuscarPorId(idUsuario);
 
+            if (usuarioAsignado == null || !usuarioAsignado.Activo || !usuarioAsignado.EmailVerificado)
+                return false;
+
+            string area = usuarioAsignado.Area != null ? usuarioAsignado.Area.Nombre : "";
+            string cuerpo = EmailTemplates.TicketAsignado(usuarioAsignado.Nombre, ticket, area, linkTicket);
+
+            armarCorreo(usuarioAsignado.Email, "Nuevo ticket asignado en TinyDesk", cuerpo);
+            return enviarEmail();
+        }
     }
 }

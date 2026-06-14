@@ -226,7 +226,6 @@ namespace TP_Final_Programacion_III
                 }
             }
         }
-
         private void MostrarErrorProyecto(string mensaje)
         {
             litMensaje.Text = $@"<div class='alert alert-danger alert-dismissible fade show' role='alert'>
@@ -234,13 +233,17 @@ namespace TP_Final_Programacion_III
                                     <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                                 </div>";
         }
-
         private void MostrarExitoProyecto(string mensaje)
         {
             litMensaje.Text = $@"<div class='alert alert-success alert-dismissible fade show' role='alert'>
                                     <strong>¡Éxito!</strong> {mensaje}
                                     <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                                 </div>";
+        }
+        protected void dgvSprintsProyecto_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int idSprint = (int)dgvSprintsProyecto.SelectedDataKey.Value;
+            Response.Redirect("Sprints.aspx?id=" + idSprint, false);
         }
     }
 }

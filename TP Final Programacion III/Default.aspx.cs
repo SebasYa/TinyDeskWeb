@@ -28,7 +28,6 @@ namespace TP_Final_Programacion_III
                     CargarCombosProyecto(idEmpresa);
                     CargarCombosSprint(idEmpresa);
                     CargarCombosTicket(idEmpresa);
-                    CargarCombosTicket(idEmpresa);
                     lblTicketsAbiertos.Text = ticketNegocio.ContarAbiertos(idEmpresa).ToString();
 
                     int ticketsUsuariosDesactivados = ticketNegocio.ContarAsignadosUsuariosDesactivados(idEmpresa);
@@ -74,11 +73,10 @@ namespace TP_Final_Programacion_III
                 int idEmpresa = userLogueado.Empresa.Id;
                 lblSprintsEnCurso.Text = sprintNegocio.ContarEnCurso(idEmpresa).ToString();
 
-                litMensaje.Text = @"
-                <div class='alert alert-success alert-dismissible fade show' role='alert'>
-                    <strong>¡Éxito!</strong> El Sprint se guardó perfectamente.
-                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                </div>";
+                litMensaje.Text = @"<div class='alert alert-success alert-dismissible fade show' role='alert'>
+                                        <strong>¡Éxito!</strong> El Sprint se guardó perfectamente.
+                                        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                                    </div>";
 
 
                 txtFechaInicio.Text = "";
@@ -92,11 +90,10 @@ namespace TP_Final_Programacion_III
             }
             catch (Exception ex)
             {
-                litMensaje.Text = $@"
-                <div class='alert alert-danger alert-dismissible fade show' role='alert'>
-                    <strong>Hubo un error:</strong> {ex.Message}
-                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                </div>";
+                litMensaje.Text = $@"<div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                                         <strong>Hubo un error:</strong> {ex.Message}
+                                         <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                                     </div>";
                 Session.Add("error", ex.ToString());
                 Response.Redirect("Default.aspx", false);
             }
@@ -134,11 +131,10 @@ namespace TP_Final_Programacion_III
                 int idEmpresa = userLogueado.Empresa.Id;
                 lblProyectosActivos.Text = proyectoNegocio.ContarActivos(idEmpresa).ToString();
 
-                litMensaje.Text = @"
-                <div class='alert alert-success alert-dismissible fade show' role='alert'>
-                    <strong>¡Éxito!</strong> El Proyecto se guardó perfectamente.
-                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                </div>";
+                litMensaje.Text = @"<div class='alert alert-success alert-dismissible fade show' role='alert'>
+                                        <strong>¡Éxito!</strong> El Proyecto se guardó perfectamente.
+                                        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                                    </div>";
 
                 txtNombreProyecto.Text = "";
                 txtDescripcionProyecto.Text = "";
@@ -148,11 +144,10 @@ namespace TP_Final_Programacion_III
             }
             catch (Exception ex)
             {
-                litMensaje.Text = $@"
-        <div class='alert alert-danger alert-dismissible fade show' role='alert'>
-            <strong>Hubo un error:</strong> {ex.Message}
-            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-        </div>";
+                litMensaje.Text = $@"<div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                                         <strong>Hubo un error:</strong> {ex.Message}
+                                         <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                                     </div>";
 
                 Session.Add("error", ex.ToString());
             }
@@ -214,27 +209,29 @@ namespace TP_Final_Programacion_III
                 int idTicket = ticketNegocio.AgregarTicket(nuevoTicket);
                 nuevoTicket.Id = idTicket;
 
-                UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
-                Usuario usuarioAsignado = usuarioNegocio.BuscarPorId(nuevoTicket.Usuario.Id);
-
                 // Enviar mail al usuario asignado
                 EmailService emailService = new EmailService();
-
                 string linkTicket = LinkHelper.GenerarLink(this, "Tickets.aspx", "id", nuevoTicket.Id.ToString());
-                string cuerpo = EmailTemplates.TicketAsignado(usuarioAsignado.Nombre, nuevoTicket, usuarioAsignado.Area.Nombre, linkTicket
-                );
 
-                emailService.armarCorreo(usuarioAsignado.Email, "Nuevo ticket asignado en TinyDesk", cuerpo);
-                emailService.enviarEmail();
+                bool mailEnviado = emailService.EnviarMailTicketAsignado(nuevoTicket.Usuario.Id, nuevoTicket, linkTicket);
 
-                Usuario userLogueado = (Usuario)Session["usuario"];
-                lblTicketsAbiertos.Text = ticketNegocio.ContarAbiertos(userLogueado.Empresa.Id).ToString();
-
-                litMensaje.Text = @"<div class='alert alert-success alert-dismissible fade show' role='alert'>
+                if (mailEnviado)
+                {
+                    litMensaje.Text = @"<div class='alert alert-success alert-dismissible fade show' role='alert'>
                                         El ticket fue creado y se notificó al usuario asignado.
                                         <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
                                     </div>";
+                }
+                else
+                {
+                    litMensaje.Text = @"<div class='alert alert-warning alert-dismissible fade show' role='alert'>
+                                            El ticket fue creado, pero no se pudo enviar el mail al usuario asignado.
+                                            <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                                        </div>";
+                }
 
+                Usuario userLogueado = (Usuario)Session["usuario"];
+                lblTicketsAbiertos.Text = ticketNegocio.ContarAbiertos(userLogueado.Empresa.Id).ToString();
 
                 //Limpiar Campos
                 LimpiarCamposTicket();
@@ -242,11 +239,10 @@ namespace TP_Final_Programacion_III
             catch (Exception ex)
             {
 
-                litMensaje.Text = @"
-                <div class='alert alert-info alert-dismissible fade show' role='alert'>
-                Funcionalidad de Tickets en desarrollo.
-                <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
-                </div>";
+                litMensaje.Text = @"<div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                                        Ocurrió un error al guardar el ticket.
+                                        <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                                    </div>";
                 Session.Add("error", ex.ToString());
             }
         }
@@ -258,6 +254,10 @@ namespace TP_Final_Programacion_III
             ddlEstado.SelectedIndex = 0;
             ddlProyecto.SelectedIndex = 0;
         }
+        public void btnCancelarTicket_Click(object sender, EventArgs e)
+        {
+            LimpiarCamposTicket();
+        }
         private void CargarLista<T>(DropDownList ddl, List<T> lista, string valueField, string textField, string textoInicial)
         {
             ddl.DataSource = lista;
@@ -265,60 +265,6 @@ namespace TP_Final_Programacion_III
             ddl.DataTextField = textField;
             ddl.DataBind();
             ddl.Items.Insert(0, new ListItem(textoInicial, ""));
-        }
-        private void CargarCombosTicket(int idEmpresa)
-        {
-            ProyectoNegocio proyectoNegocio = new ProyectoNegocio();
-            EstadoNegocio estadoNegocio = new EstadoNegocio();
-            PrioridadNegocio prioridadNegocio = new PrioridadNegocio();
-            AreaNegocio areaNegocio = new AreaNegocio();
-            PuestoNegocio puestoNegocio = new PuestoNegocio();
-            SeniorityNegocio seniorityNegocio = new SeniorityNegocio();
-            UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
-
-            txtFechaInicioTicket.Text = DateTime.Today.ToString("yyyy-MM-dd");
-
-            CargarLista(ddlProyectoTicket, proyectoNegocio.listar(idEmpresa), "Id", "Nombre", "Seleccione Proyecto...");
-            CargarLista(ddlEstadoTicket, estadoNegocio.listar(idEmpresa), "Id", "Nombre", "Seleccione Estado...");
-            CargarLista(ddlPrioridadTicket, prioridadNegocio.listar(), "Id", "Nombre", "Seleccione Prioridad...");
-            CargarLista(ddlAreaTicket, areaNegocio.listar(idEmpresa), "Id", "Nombre", "Seleccione Área...");
-            CargarLista(ddlPuestoTicket, puestoNegocio.listar(idEmpresa), "Id", "Nombre", "Seleccione Puesto...");
-            CargarLista(ddlSeniorityTicket, seniorityNegocio.listar(), "Id", "Nombre", "Seleccione Seniority...");
-
-            ddlSprintTicket.Items.Clear();
-            ddlSprintTicket.Items.Insert(0, new ListItem("Seleccione Sprint...", ""));
-
-            Session.Add("listaUsuariosTicket", usuarioNegocio.listar(idEmpresa));
-
-            List<Usuario> listaUsuarios = ((List<Usuario>)Session["listaUsuariosTicket"]).FindAll(x => x.Activo && x.EmailVerificado);
-            ddlUsuarioTicket.DataSource = listaUsuarios.Select(x => new
-            {
-                Id = x.Id,
-                Nombre = x.Nombre + " " + x.Apellido + " (" + x.NombreUsuario + ")"
-            }).ToList();
-
-            ddlUsuarioTicket.DataValueField = "Id";
-            ddlUsuarioTicket.DataTextField = "Nombre";
-            ddlUsuarioTicket.DataBind();
-            ddlUsuarioTicket.Items.Insert(0, new ListItem("Seleccione Usuario...", ""));
-        }
-        private void LimpiarCamposTicket()
-        {
-            txtDescripcionTicket.Text = "";
-            txtFechaInicioTicket.Text = DateTime.Today.ToString("yyyy-MM-dd");
-            txtFechaEstimadaTicket.Text = "";
-
-            ddlProyectoTicket.SelectedIndex = 0;
-
-            ddlSprintTicket.Items.Clear();
-            ddlSprintTicket.Items.Insert(0, new ListItem("Seleccione Sprint...", ""));
-
-            ddlEstadoTicket.SelectedIndex = 0;
-            ddlPrioridadTicket.SelectedIndex = 0;
-            ddlAreaTicket.SelectedIndex = 0;
-            ddlPuestoTicket.SelectedIndex = 0;
-            ddlSeniorityTicket.SelectedIndex = 0;
-            ddlUsuarioTicket.SelectedIndex = 0;
         }
         protected void ddlProyectoTicket_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -484,9 +430,23 @@ namespace TP_Final_Programacion_III
                 Session.Add("error", ex.ToString());
             }
         }
-        public void btnCancelarTicket_Click(object sender, EventArgs e)
+        private void LimpiarCamposTicket()
         {
-            LimpiarCamposTicket();
+            txtDescripcionTicket.Text = "";
+            txtFechaInicioTicket.Text = DateTime.Today.ToString("yyyy-MM-dd");
+            txtFechaEstimadaTicket.Text = "";
+
+            ddlProyectoTicket.SelectedIndex = 0;
+
+            ddlSprintTicket.Items.Clear();
+            ddlSprintTicket.Items.Insert(0, new ListItem("Seleccione Sprint...", ""));
+
+            ddlEstadoTicket.SelectedIndex = 0;
+            ddlPrioridadTicket.SelectedIndex = 0;
+            ddlAreaTicket.SelectedIndex = 0;
+            ddlPuestoTicket.SelectedIndex = 0;
+            ddlSeniorityTicket.SelectedIndex = 0;
+            ddlUsuarioTicket.SelectedIndex = 0;
         }
         private void CargarCombosSprint(int idEmpresa)
         {
@@ -529,6 +489,42 @@ namespace TP_Final_Programacion_III
                 "Nombre",
                 "Seleccione Estado..."
             );
+        }
+        private void CargarCombosTicket(int idEmpresa)
+        {
+            ProyectoNegocio proyectoNegocio = new ProyectoNegocio();
+            EstadoNegocio estadoNegocio = new EstadoNegocio();
+            PrioridadNegocio prioridadNegocio = new PrioridadNegocio();
+            AreaNegocio areaNegocio = new AreaNegocio();
+            PuestoNegocio puestoNegocio = new PuestoNegocio();
+            SeniorityNegocio seniorityNegocio = new SeniorityNegocio();
+            UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
+
+            txtFechaInicioTicket.Text = DateTime.Today.ToString("yyyy-MM-dd");
+
+            CargarLista(ddlProyectoTicket, proyectoNegocio.listar(idEmpresa), "Id", "Nombre", "Seleccione Proyecto...");
+            CargarLista(ddlEstadoTicket, estadoNegocio.listar(idEmpresa), "Id", "Nombre", "Seleccione Estado...");
+            CargarLista(ddlPrioridadTicket, prioridadNegocio.listar(), "Id", "Nombre", "Seleccione Prioridad...");
+            CargarLista(ddlAreaTicket, areaNegocio.listar(idEmpresa), "Id", "Nombre", "Seleccione Área...");
+            CargarLista(ddlPuestoTicket, puestoNegocio.listar(idEmpresa), "Id", "Nombre", "Seleccione Puesto...");
+            CargarLista(ddlSeniorityTicket, seniorityNegocio.listar(), "Id", "Nombre", "Seleccione Seniority...");
+
+            ddlSprintTicket.Items.Clear();
+            ddlSprintTicket.Items.Insert(0, new ListItem("Seleccione Sprint...", ""));
+
+            Session.Add("listaUsuariosTicket", usuarioNegocio.listar(idEmpresa));
+
+            List<Usuario> listaUsuarios = ((List<Usuario>)Session["listaUsuariosTicket"]).FindAll(x => x.Activo && x.EmailVerificado);
+            ddlUsuarioTicket.DataSource = listaUsuarios.Select(x => new
+            {
+                Id = x.Id,
+                Nombre = x.Nombre + " " + x.Apellido + " (" + x.NombreUsuario + ")"
+            }).ToList();
+
+            ddlUsuarioTicket.DataValueField = "Id";
+            ddlUsuarioTicket.DataTextField = "Nombre";
+            ddlUsuarioTicket.DataBind();
+            ddlUsuarioTicket.Items.Insert(0, new ListItem("Seleccione Usuario...", ""));
         }
     }
 }
