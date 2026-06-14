@@ -198,5 +198,36 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
+        public void ReasignarUsuario(int idTicket, int idUsuario)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.setearConsulta(@"UPDATE TICKET
+                                       SET IdUsuario = @IdUsuario
+                                       WHERE Id = @IdTicket
+                                         AND EXISTS (
+                                             SELECT 1
+                                             FROM USUARIO
+                                             WHERE Id = @IdUsuario
+                                               AND Activo = 1
+                                               AND EmailVerificado = 1)"
+                );
+
+                datos.setearParametro("@IdUsuario", idUsuario);
+                datos.setearParametro("@IdTicket", idTicket);
+
+                datos.ejecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
     }
 }

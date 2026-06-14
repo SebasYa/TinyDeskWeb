@@ -2,15 +2,18 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container mt-4">
-        <asp:Literal ID="litMensaje" runat="server"></asp:Literal>
+        <asp:Literal ID="litMensajeAccion" runat="server"></asp:Literal>
+        <asp:Literal ID="litMensajeEstado" runat="server"></asp:Literal>
 
         <asp:GridView ID="dgvTickets" runat="server"
             CssClass="table table-hover align-middle bg-white border-0 shadow-sm rounded mb-0"
             AutoGenerateColumns="false"
+            DataKeyNames="Id"
             AllowPaging="true"
             PageSize="10"
             GridLines="None"
-            OnPageIndexChanging="dgvTickets_PageIndexChanging">
+            OnPageIndexChanging="dgvTickets_PageIndexChanging"
+            OnSelectedIndexChanged="dgvTickets_SelectedIndexChanged">
 
             <HeaderStyle CssClass="table-light text-secondary fw-semibold border-bottom" />
 
@@ -70,7 +73,49 @@
                         </div>
                     </ItemTemplate>
                 </asp:TemplateField>
+
+                <asp:TemplateField HeaderText="Reasignar">
+                    <ItemTemplate>
+                        <asp:LinkButton ID="btnReasignarTicket" runat="server" CommandName="Select" CssClass="btn btn-sm btn-primary">
+                            Reasignar
+                        </asp:LinkButton>
+                    </ItemTemplate>
+                </asp:TemplateField>
             </Columns>
         </asp:GridView>
+
+        <div class="modal fade" id="reasignarTicketModal" tabindex="-1" aria-labelledby="reasignarTicketModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-light">
+                        <h5 class="modal-title fw-bold" id="reasignarTicketModalLabel">
+                            <asp:Label ID="lblTituloReasignar" runat="server" Text="Reasignar Ticket"></asp:Label>
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <asp:HiddenField ID="hfIdTicketReasignar" runat="server" />
+
+                        <asp:Literal ID="litDetalleReasignacion" runat="server"></asp:Literal>
+
+                        <div class="mt-3">
+                            <label for="ddlNuevoUsuario" class="form-label fw-semibold">Nuevo usuario asignado</label>
+                            <asp:DropDownList ID="ddlNuevoUsuario" runat="server" CssClass="form-select" style="min-width: 100%;">
+                            </asp:DropDownList>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+
+                        <asp:Button ID="btnConfirmarReasignacion" runat="server"
+                            CssClass="btn btn-primary"
+                            Text="Guardar reasignación"
+                            OnClick="btnConfirmarReasignacion_Click" />
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </asp:Content>

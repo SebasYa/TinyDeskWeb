@@ -64,6 +64,7 @@
         <asp:GridView ID="dgvSprintsProyecto" runat="server"
             AutoGenerateColumns="False"
             DataKeyNames="Id"
+            OnSelectedIndexChanged="dgvSprintsProyecto_SelectedIndexChanged"
             CssClass="table table-hover table-bordered shadow-sm"
             EmptyDataText="Este proyecto todavía no tiene sprints cargados.">
 
@@ -92,7 +93,6 @@
                 <asp:CommandField ShowSelectButton="True" SelectText="Ver" HeaderText="Detalle" />
             </Columns>
         </asp:GridView>
-
     </asp:Panel>
 
     <asp:Panel ID="pnlListadoProyectos" runat="server">
