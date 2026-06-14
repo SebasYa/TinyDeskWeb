@@ -141,7 +141,7 @@ namespace TP_Final_Programacion_III
 
                 DateTime hoy = DateTime.Today;
 
-                 if (fechaInicio.Date <= hoy)
+                 if (fechaInicio.Date < hoy)
                  {
                    MostrarErrorValidacion("La nueva fecha de inicio no puede ser anterior al día de hoy.");
                    return;
@@ -274,6 +274,7 @@ namespace TP_Final_Programacion_III
                     lblModalEditarTitulo.Text = $"Editar Sprint {sprintAEditar.NumeroSprint}";
 
                     txtEditFechaInicio.Text = sprintAEditar.FechaInicio.ToString("yyyy-MM-dd");
+                    txtEditFechaInicio.Enabled = false;
                     txtEditFechaEstimadaFin.Text = sprintAEditar.FechaEstimadaFin.ToString("yyyy-MM-dd");
 
                     if (sprintAEditar.FechaFin != null)
