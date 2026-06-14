@@ -115,7 +115,10 @@
                                     <div class="d-flex align-items-center mb-3">
                                         <div>
                                             <h6 class="mb-0 fw-bold text-dark">
-                                                <asp:Label ID="lblName_nav" runat="server" Text="Carlos"></asp:Label>
+                                                <asp:Label ID="lblName_nav" runat="server" Text=""></asp:Label>
+                                            </h6>
+                                            <h6 class="mb-0 text-muted">
+                                                <asp:Label ID="lblEmpresa" runat="server"  Text=""></asp:Label>
                                             </h6>
                                             <small class="text-muted">Sesión activa</small>
                                         </div>

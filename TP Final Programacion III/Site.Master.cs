@@ -40,6 +40,7 @@ namespace TP_Final_Programacion_III
                 lblUserWelcome.Text = $"{usuario.Nombre}";
                 btnUserNav.Text = firstLetter_usuario(usuario.Nombre);
                 lblName_nav.Text = usuario.Nombre+" "+usuario.Apellido;
+                lblEmpresa.Text = usuario.Empresa.Nombre;
                 txtRol.Text = usuario.Area.Nombre;
                 //txtSenority.Text = (usuario.Seniority != null) ? "No asignado" : usuario.Seniority.Nombre;
 
