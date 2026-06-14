@@ -401,6 +401,41 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
+        public void Modificar(Ticket ticket)
+        {
+            AccesoDatos datos = new AccesoDatos();
 
+            try
+            {
+                datos.setearConsulta(@"
+            UPDATE TICKET SET
+                FechaEstimadaFin = @FechaEstimadaFin,
+                Descripcion = @Descripcion,
+                IdPrioridad = @IdPrioridad,
+                IdUsuario = @IdUsuario,
+                IdEstado = @IdEstado,
+                IdSprint = @IdSprint
+            WHERE Id = @Id
+        ");
+
+                datos.setearParametro("@FechaEstimadaFin", ticket.FechaEstimadaFin);
+                datos.setearParametro("@Descripcion", ticket.Descripcion);
+                datos.setearParametro("@IdPrioridad", ticket.Prioridad.Id);
+                datos.setearParametro("@IdUsuario", ticket.Usuario.Id);
+                datos.setearParametro("@IdEstado", ticket.Estado.Id);
+                datos.setearParametro("@IdSprint", ticket.Sprint.Id);
+                datos.setearParametro("@Id", ticket.Id);
+
+                datos.ejecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
     }
 }
