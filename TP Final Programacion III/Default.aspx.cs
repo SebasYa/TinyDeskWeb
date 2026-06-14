@@ -28,7 +28,6 @@ namespace TP_Final_Programacion_III
                     CargarCombosProyecto(idEmpresa);
                     CargarCombosSprint(idEmpresa);
                     CargarCombosTicket(idEmpresa);
-                    CargarCombosTicket(idEmpresa);
                     lblTicketsAbiertos.Text = ticketNegocio.ContarAbiertos(idEmpresa).ToString();
 
                     int ticketsUsuariosDesactivados = ticketNegocio.ContarAsignadosUsuariosDesactivados(idEmpresa);
@@ -210,26 +209,29 @@ namespace TP_Final_Programacion_III
                 int idTicket = ticketNegocio.AgregarTicket(nuevoTicket);
                 nuevoTicket.Id = idTicket;
 
-                UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
-                Usuario usuarioAsignado = usuarioNegocio.BuscarPorId(nuevoTicket.Usuario.Id);
-
                 // Enviar mail al usuario asignado
                 EmailService emailService = new EmailService();
-
                 string linkTicket = LinkHelper.GenerarLink(this, "Tickets.aspx", "id", nuevoTicket.Id.ToString());
-                string cuerpo = EmailTemplates.TicketAsignado(usuarioAsignado.Nombre, nuevoTicket, usuarioAsignado.Area.Nombre, linkTicket);
 
-                emailService.armarCorreo(usuarioAsignado.Email, "Nuevo ticket asignado en TinyDesk", cuerpo);
-                emailService.enviarEmail();
+                bool mailEnviado = emailService.EnviarMailTicketAsignado(nuevoTicket.Usuario.Id, nuevoTicket, linkTicket);
 
-                Usuario userLogueado = (Usuario)Session["usuario"];
-                lblTicketsAbiertos.Text = ticketNegocio.ContarAbiertos(userLogueado.Empresa.Id).ToString();
-
-                litMensaje.Text = @"<div class='alert alert-success alert-dismissible fade show' role='alert'>
+                if (mailEnviado)
+                {
+                    litMensaje.Text = @"<div class='alert alert-success alert-dismissible fade show' role='alert'>
                                         El ticket fue creado y se notificó al usuario asignado.
                                         <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
                                     </div>";
+                }
+                else
+                {
+                    litMensaje.Text = @"<div class='alert alert-warning alert-dismissible fade show' role='alert'>
+                                            El ticket fue creado, pero no se pudo enviar el mail al usuario asignado.
+                                            <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                                        </div>";
+                }
 
+                Usuario userLogueado = (Usuario)Session["usuario"];
+                lblTicketsAbiertos.Text = ticketNegocio.ContarAbiertos(userLogueado.Empresa.Id).ToString();
 
                 //Limpiar Campos
                 LimpiarCamposTicket();
@@ -237,9 +239,9 @@ namespace TP_Final_Programacion_III
             catch (Exception ex)
             {
 
-                litMensaje.Text = @"<div class='alert alert-info alert-dismissible fade show' role='alert'>
-                                         Funcionalidad de Tickets en desarrollo.
-                                    <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                litMensaje.Text = @"<div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                                        Ocurrió un error al guardar el ticket.
+                                        <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
                                     </div>";
                 Session.Add("error", ex.ToString());
             }

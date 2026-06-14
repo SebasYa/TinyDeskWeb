@@ -165,8 +165,32 @@ namespace TP_Final_Programacion_III
                 int idTicket = int.Parse(hfIdTicketReasignar.Value);
                 int idUsuario = int.Parse(ddlNuevoUsuario.SelectedValue);
 
+                List<Ticket> listaTickets = (List<Ticket>)Session["listaTicketsUsuariosDesactivados"];
+                Ticket ticket = listaTickets.Find(x => x.Id == idTicket);
+
+                if (ticket == null)
+                {
+                    litMensajeAccion.Text = @"<div class='alert alert-danger'>
+                                                  No se encontró el ticket seleccionado.
+                                             </div>";
+                    return;
+                }
+
                 TicketNegocio ticketNegocio = new TicketNegocio();
                 ticketNegocio.ReasignarUsuario(idTicket, idUsuario);
+
+                EmailService emailService = new EmailService();
+                string linkTicket = LinkHelper.GenerarLink(this, "Tickets.aspx", "id", idTicket.ToString());
+
+                bool mailEnviado = emailService.EnviarMailTicketAsignado(idUsuario, ticket, linkTicket);
+
+                if (!mailEnviado)
+                {
+                    litMensajeAccion.Text = @"<div class='alert alert-danger'>
+                                                 No se pudo enviar el mail al usuario asignado.
+                                             </div>";
+                    return;
+                }
 
                 litMensajeAccion.Text = @"<div id='mensajeReasignacionExitosa' class='alert alert-success alert-dismissible fade show' role='alert'>
                                                El ticket fue reasignado correctamente.
