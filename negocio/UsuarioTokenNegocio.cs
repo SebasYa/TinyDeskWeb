@@ -46,84 +46,16 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
-
-        public UsuarioToken BuscarTokenValido(string token, string tipo)
-        {
-            AccesoDatos datos = new AccesoDatos();
-
-            try
-            {
-                datos.setearConsulta(@"
-                    SELECT 
-                        UT.Id,
-                        UT.Token,
-                        UT.Tipo,
-                        UT.FechaCreacion,
-                        UT.FechaExpiracion,
-                        UT.FechaUso,
-                        UT.Usado,
-                        U.Id AS IdUsuario,
-                        U.NombreUsuario,
-                        U.Email,
-                        U.Nombre,
-                        U.Apellido
-                    FROM USUARIO_TOKEN UT
-                    INNER JOIN USUARIO U ON UT.IdUsuario = U.Id
-                    WHERE UT.Token = @Token
-                    AND UT.Tipo = @Tipo
-                    AND UT.Usado = 0
-                    AND UT.FechaExpiracion > GETDATE()
-                ");
-
-                datos.setearParametro("@Token", token);
-                datos.setearParametro("@Tipo", tipo);
-
-                datos.ejecutarLectura();
-
-                if (datos.Lector.Read())
-                {
-                    Usuario usuario = new Usuario();
-                    usuario.Id = (int)datos.Lector["IdUsuario"];
-                    usuario.NombreUsuario = (string)datos.Lector["NombreUsuario"];
-                    usuario.Email = (string)datos.Lector["Email"];
-                    usuario.Nombre = (string)datos.Lector["Nombre"];
-                    usuario.Apellido = (string)datos.Lector["Apellido"];
-
-                    UsuarioToken usuarioToken = new UsuarioToken();
-                    usuarioToken.Id = (int)datos.Lector["Id"];
-                    usuarioToken.Usuario = usuario;
-                    usuarioToken.Token = (string)datos.Lector["Token"];
-                    usuarioToken.Tipo = (string)datos.Lector["Tipo"];
-                    usuarioToken.FechaCreacion = (DateTime)datos.Lector["FechaCreacion"];
-                    usuarioToken.FechaExpiracion = (DateTime)datos.Lector["FechaExpiracion"];
-                    usuarioToken.Usado = (bool)datos.Lector["Usado"];
-
-                    return usuarioToken;
-                }
-
-                return null;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                datos.cerrarConexion();
-            }
-        }
-
         public void MarcarComoUsado(UsuarioToken usuarioToken)
         {
             AccesoDatos datos = new AccesoDatos();
 
             try
             {
-                datos.setearConsulta(@"
-                    UPDATE USUARIO_TOKEN
-                    SET Usado = 1,
-                        FechaUso = GETDATE()
-                    WHERE Id = @Id
+                datos.setearConsulta(@"UPDATE USUARIO_TOKEN
+                                       SET Usado = 1,
+                                           FechaUso = GETDATE()
+                                       WHERE Id = @Id
                 ");
 
                 datos.setearParametro("@Id", usuarioToken.Id);
@@ -145,10 +77,10 @@ namespace negocio
             try
             {
                 datos.setearConsulta(@"SELECT TOP 1 FechaExpiracion, Usado
-                               FROM USUARIO_TOKEN
-                               WHERE IdUsuario = @IdUsuario
-                                 AND Tipo = @Tipo
-                               ORDER BY FechaCreacion DESC, Id DESC");
+                                       FROM USUARIO_TOKEN
+                                       WHERE IdUsuario = @IdUsuario
+                                         AND Tipo = @Tipo
+                                       ORDER BY FechaCreacion DESC, Id DESC");
 
                 datos.setearParametro("@IdUsuario", idUsuario);
                 datos.setearParametro("@Tipo", tipo);
@@ -159,11 +91,9 @@ namespace negocio
                     bool usado = (bool)datos.Lector["Usado"];
                     DateTime fechaExpiracion = (DateTime)datos.Lector["FechaExpiracion"];
 
-                    if (usado)
-                        return EstadoTokenUsuario.Usado;
+                    if (usado) return EstadoTokenUsuario.Usado;
 
-                    if (fechaExpiracion > DateTime.Now)
-                        return EstadoTokenUsuario.Pendiente;
+                    if (fechaExpiracion > DateTime.Now) return EstadoTokenUsuario.Pendiente;
 
                     return EstadoTokenUsuario.Vencido;
                 }
@@ -198,14 +128,13 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
-        public UsuarioToken BuscarToken(string token, string tipo)
+        public UsuarioToken BuscarToken(string token, string tipo, bool soloValido = false)
         {
             AccesoDatos datos = new AccesoDatos();
 
             try
             {
-                datos.setearConsulta(@"SELECT 
-                                           UT.Id,
+                string consulta = @"SELECT UT.Id,
                                            UT.Token,
                                            UT.Tipo,
                                            UT.FechaCreacion,
@@ -219,12 +148,16 @@ namespace negocio
                                            U.Apellido,
                                            U.Activo,
                                            U.EmailVerificado
-                                       FROM USUARIO_TOKEN UT
-                                       INNER JOIN USUARIO U ON UT.IdUsuario = U.Id
-                                       WHERE UT.Token = @Token
-                                         AND UT.Tipo = @Tipo
-        ");
-
+                                    FROM USUARIO_TOKEN UT
+                                    INNER JOIN USUARIO U ON UT.IdUsuario = U.Id
+                                    WHERE UT.Token = @Token
+                                      AND UT.Tipo = @Tipo";
+                if (soloValido)
+                {
+                    consulta += @" AND UT.Usado = 0
+                                   AND UT.FechaExpiracion > GETDATE()";
+                }
+                datos.setearConsulta(consulta);
                 datos.setearParametro("@Token", token);
                 datos.setearParametro("@Tipo", tipo);
 

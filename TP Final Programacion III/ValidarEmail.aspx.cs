@@ -27,7 +27,7 @@ namespace TP_Final_Programacion_III
             try
             {
                 UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
-                UsuarioToken usuarioToken = tokenNegocio.BuscarTokenValido(token, TipoTokenUsuario.ValidarEmail);
+                UsuarioToken usuarioToken = tokenNegocio.BuscarToken(token, TipoTokenUsuario.ValidarEmail, true);
 
                 if (usuarioToken == null)
                 {

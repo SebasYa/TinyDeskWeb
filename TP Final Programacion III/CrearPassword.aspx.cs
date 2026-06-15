@@ -29,11 +29,11 @@ namespace TP_Final_Programacion_III
                 UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
 
                 bool esResetPassword = false;
-                UsuarioToken usuarioToken = tokenNegocio.BuscarTokenValido(token, TipoTokenUsuario.CrearPassword);
+                UsuarioToken usuarioToken = tokenNegocio.BuscarToken(token, TipoTokenUsuario.CrearPassword, true);
 
                 if (usuarioToken == null)
                 {
-                    usuarioToken = tokenNegocio.BuscarTokenValido(token, TipoTokenUsuario.ResetPassword);
+                    usuarioToken = tokenNegocio.BuscarToken(token, TipoTokenUsuario.ResetPassword, true);
                     esResetPassword = usuarioToken != null;
                 }
 
@@ -61,7 +61,6 @@ namespace TP_Final_Programacion_III
                 MostrarError("Ocurrió un error al validar el link. Intente nuevamente más tarde.");
             }
         }
-
         protected void btnCrearPassword_Click(object sender, EventArgs e)
         {
             string token = Request.QueryString["token"];
@@ -90,11 +89,11 @@ namespace TP_Final_Programacion_III
                 UsuarioTokenNegocio tokenNegocio = new UsuarioTokenNegocio();
 
                 bool esResetPassword = false;
-                UsuarioToken usuarioToken = tokenNegocio.BuscarTokenValido(token, TipoTokenUsuario.CrearPassword);
+                UsuarioToken usuarioToken = tokenNegocio.BuscarToken(token, TipoTokenUsuario.CrearPassword, true);
 
                 if (usuarioToken == null)
                 {
-                    usuarioToken = tokenNegocio.BuscarTokenValido(token, TipoTokenUsuario.ResetPassword);
+                    usuarioToken = tokenNegocio.BuscarToken(token, TipoTokenUsuario.ResetPassword, true);
                     esResetPassword = usuarioToken != null;
                 }
 
@@ -128,7 +127,6 @@ namespace TP_Final_Programacion_III
                 MostrarError("Ocurrió un error al cambiar la contraseña. Intente nuevamente más tarde.");
             }
         }
-
         private void MostrarExito(string mensaje)
         {
             lblMensaje.Text = mensaje;
@@ -144,7 +142,6 @@ namespace TP_Final_Programacion_III
                     }, 3000);
                 </script>";
         }
-
         private void MostrarError(string mensaje)
         {
             lblMensaje.Text = mensaje;
