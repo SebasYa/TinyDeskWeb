@@ -273,10 +273,10 @@
                             <button type="button" class="btn btn-secondary"
                                 data-bs-dismiss="modal">
                                 Cancelar</button>
-                            <asp:Button ID="btnDesactivar" runat="server"
+                            <asp:Button ID="btnBajaLogica" runat="server"
                                 CssClass="btn btn-danger"
                                 Text="Desactivar Ticket"
-                                OnClick="btnDesactivar_Click" />
+                                OnClick="btnBajaLogica_Click" />
                             <asp:Button ID="btnGuardarEdicion" runat="server"
                                 CssClass="btn btn-primary"
                                 Text="Guardar Cambios"

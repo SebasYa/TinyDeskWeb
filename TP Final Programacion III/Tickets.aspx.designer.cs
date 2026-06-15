@@ -186,13 +186,13 @@ namespace TP_Final_Programacion_III
         protected global::System.Web.UI.WebControls.DropDownList ddlEditSprint;
 
         /// <summary>
-        /// btnDesactivar control.
+        /// btnBajaLogica control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnDesactivar;
+        protected global::System.Web.UI.WebControls.Button btnBajaLogica;
 
         /// <summary>
         /// btnGuardarEdicion control.

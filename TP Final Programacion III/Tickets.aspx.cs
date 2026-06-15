@@ -20,12 +20,13 @@ namespace TP_Final_Programacion_III
                 return;
             }
 
-            if (!IsPostBack)
+            try
             {
-                try
+                int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
+                CargarDropdowns(idEmpresa);
+
+                if (!IsPostBack)
                 {
-                    int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
-                    CargarDropdowns(idEmpresa);
 
                     if (Request.QueryString["id"] != null)
                     {
@@ -37,11 +38,11 @@ namespace TP_Final_Programacion_III
                         CargarListado(idEmpresa);
                     }
                 }
-                catch (Exception ex)
-                {
-                    Session.Add("error", ex.ToString());
-                    MostrarError("Ocurrió un error al cargar los tickets.");
-                }
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                MostrarError("Ocurrió un error al cargar los tickets.");
             }
         }
 
@@ -250,10 +251,67 @@ namespace TP_Final_Programacion_III
         }
         protected void btnGuardarEdicion_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(txtEditDescripcion.Text) ||
+                string.IsNullOrWhiteSpace(txtEditFechaEstimadaFin.Text) ||
+                string.IsNullOrWhiteSpace(ddlEditPrioridad.SelectedValue) ||
+                string.IsNullOrWhiteSpace(ddlEditEstado.SelectedValue) ||
+                string.IsNullOrWhiteSpace(ddlEditUsuario.SelectedValue) ||
+                string.IsNullOrWhiteSpace(ddlEditSprint.SelectedValue))
+            {
+                MostrarError("Completá todos los campos obligatorios.");
+                return;
+            }
+
+            try
+            {
+                Ticket ticket = new Ticket();
+                ticket.Id = int.Parse(hdnIdTicket.Value);
+                ticket.Descripcion = txtEditDescripcion.Text;
+                ticket.FechaEstimadaFin = Convert.ToDateTime(txtEditFechaEstimadaFin.Text);
+
+                ticket.Prioridad = new Prioridad();
+                ticket.Prioridad.Id = int.Parse(ddlEditPrioridad.SelectedValue);
+
+                List<Estado> estados = (List<Estado>)Session["listaEstadosTicket"];
+                Estado estadoSeleccionado = estados.Find(x => x.Id == int.Parse(ddlEditEstado.SelectedValue));
+                ticket.Estado = estadoSeleccionado ?? new Estado { Id = int.Parse(ddlEditEstado.SelectedValue) };
+
+                ticket.Usuario = new Usuario();
+                ticket.Usuario.Id = int.Parse(ddlEditUsuario.SelectedValue);
+
+                ticket.Sprint = new Sprint();
+                ticket.Sprint.Id = int.Parse(ddlEditSprint.SelectedValue);
+
+                TicketNegocio negocio = new TicketNegocio();
+                negocio.Modificar(ticket);
+
+                MostrarExito("Ticket modificado correctamente.");
+                CargarDetalleTicket(ticket.Id, ((Usuario)Session["usuario"]).Empresa.Id);
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                MostrarError("Ocurrió un error al modificar el ticket.");
+            }
         }
 
-        protected void btnDesactivar_Click(object sender, EventArgs e)
+        protected void btnBajaLogica_Click(object sender, EventArgs e)
         {
+            try
+            {
+                int idTicket = int.Parse(hdnIdTicket.Value);
+                TicketNegocio negocio = new TicketNegocio();
+                negocio.BajaLogica(idTicket);
+
+                int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
+                MostrarExito("Ticket desactivado correctamente.");
+                CargarListado(idEmpresa);
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                MostrarError("Ocurrió un error al desactivar el ticket.");
+            }
         }
 
         protected void dgvTickets_RowCommand(object sender, GridViewCommandEventArgs e)
