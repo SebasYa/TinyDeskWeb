@@ -2,7 +2,7 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <h1>Tickets</h1>
-    ---------------
+
     <asp:Literal ID="litMensaje" runat="server"></asp:Literal>
     <asp:HiddenField ID="hdnIdTicket" runat="server" />
 
@@ -32,9 +32,118 @@
         </asp:GridView>
     </asp:Panel>
 
-    <asp:Panel ID="pnlDetalle" runat="server" Visible="false">
-    </asp:Panel>
-    --------------------------
+   
 
+    <asp:Panel ID="pnlDetalle"
+    runat="server"
+    Visible="false">
+
+    <div class="row mb-4">
+
+        <div class="col-12">
+
+            <h2 class="fw-bold">
+                Detalle del Ticket
+            </h2>
+
+        </div>
+
+    </div>
+
+    <table class="table table-bordered">
+
+        <tr>
+            <th>Descripción</th>
+            <td>
+                <asp:Label ID="lblDetalleDescripcion"
+                    runat="server" />
+            </td>
+        </tr>
+
+        <tr>
+            <th>Estado</th>
+            <td>
+                <asp:Label ID="lblDetalleEstado"
+                    runat="server" />
+            </td>
+        </tr>
+
+        <tr>
+            <th>Prioridad</th>
+            <td>
+                <asp:Label ID="lblDetallePrioridad"
+                    runat="server" />
+            </td>
+        </tr>
+
+        <tr>
+            <th>Usuario</th>
+            <td>
+                <asp:Label ID="lblDetalleUsuario"
+                    runat="server" />
+            </td>
+        </tr>
+
+        <tr>
+            <th>Sprint</th>
+            <td>
+                <asp:Label ID="lblDetalleSprint"
+                    runat="server" />
+            </td>
+        </tr>
+
+        <tr>
+            <th>Proyecto</th>
+            <td>
+                <asp:Label ID="lblDetalleProyecto"
+                    runat="server" />
+            </td>
+        </tr>
+
+        <tr>
+            <th>Fecha Inicio</th>
+            <td>
+                <asp:Label ID="lblDetalleFechaInicio"
+                    runat="server" />
+            </td>
+        </tr>
+
+        <tr>
+            <th>Fecha Estimada Fin</th>
+            <td>
+                <asp:Label ID="lblDetalleFechaEstimadaFin"
+                    runat="server" />
+            </td>
+        </tr>
+
+        <tr>
+            <th>Fecha Fin</th>
+            <td>
+                <asp:Label ID="lblDetalleFechaFin"
+                    runat="server" />
+            </td>
+        </tr>
+
+    </table>
+
+    <div class="mb-3">
+
+        <button type="button"
+            class="btn btn-warning"
+            data-bs-toggle="modal"
+            data-bs-target="#modalEditarTicket">
+
+            Editar Ticket
+        </button>
+
+        <a href="Tickets.aspx"
+            class="btn btn-secondary">
+
+            Volver
+        </a>
+
+    </div>
+
+</asp:Panel>
 
 </asp:Content>
