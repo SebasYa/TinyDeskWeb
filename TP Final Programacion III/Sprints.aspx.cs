@@ -90,18 +90,12 @@ namespace TP_Final_Programacion_III
                     {
                         int idSprint = int.Parse(Request.QueryString["id"]);
 
-                        // Ocultas el listado y los filtros principales
                         pnlListadoSprints.Visible = false;
-
-                        // Muestras el panel de detalle que creaste
                         pnlDetalleSprint.Visible = true;
-
-                        // Ejecutas la carga de los datos específicos del Sprint y sus Tickets
                         CargarDetalleDelSprint(idSprint);
                     }
                     else
                     {
-                        // Si no hay ID en la URL, te aseguras de que el comportamiento sea el normal
                         pnlListadoSprints.Visible = true;
                         pnlDetalleSprint.Visible = false;
                     }
@@ -506,21 +500,88 @@ namespace TP_Final_Programacion_III
 
         private void CargarDetalleDelSprint(int idSprint)
         {
-            // 1. Buscar el sprint (puedes usar el que ya está en Session o ir a buscarlo a la BD)
             List<Sprint> listaSprints = (List<Sprint>)Session["listaSprints"];
             Sprint sprint = listaSprints?.Find(x => x.Id == idSprint);
 
             if (sprint != null)
             {
-                // 2. Mapear los datos del sprint a los controles de tu panel de detalles
-                //lblDetalleTituloSprint.Text = $"Detalle de Sprint {sprint.NumeroSprint}";
+                lblDetalleTituloSprint.Text = $"Detalle de Sprint {sprint.NumeroSprint}";
+                lblSprintProyectoArea.Text = $"{sprint.Proyecto.Nombre} / {sprint.Area.Nombre}";
+                lblDetalleFechaInicio.Text = sprint.FechaInicio.ToString("dd/MM/yyyy");
+                lblDetalleFechaEstimadaFin.Text = sprint.FechaEstimadaFin.ToString("dd/MM/yyyy");
+                lblDetalleFechaFin.Text = sprint.FechaFin != null ? ((DateTime)sprint.FechaFin).ToString("dd/MM/yyyy") : "-";
+                lblDetalleEstado.Text = sprint.Estado.Nombre;
+                lblDetalleEstado.CssClass += " " + GetClassEtiquetaEstado(sprint.Estado.Nombre);
 
-                // 3. Cargar los tickets asignados a este sprint en un GridView interno del panel
-                //TicketNegocio ticketNegocio = new TicketNegocio();
-                //dgvTicketsDelSprint.DataSource = ticketNegocio.listarPorSprint(idSprint);
-                //dgvTicketsDelSprint.DataBind();
+                // =======================================================
+                // MOCKUP DE TICKETS AJUSTADO A TU CLASE REAL
+                // =======================================================
+                List<Ticket> listaMockupTickets = new List<Ticket>();
+
+                // Ticket 1: Prioridad Alta y Estado Abierto
+                listaMockupTickets.Add(new Ticket
+                {
+                    Id = 1,
+                    Descripcion = "Error al generar reporte de facturación", // Lo usamos como título
+                    //Proyecto = sprint.Proyecto, // Reutiliza el proyecto del sprint actual
+                    Prioridad = new Prioridad { Nombre = "Alta" },
+                    Estado = new Estado { Nombre = "Abierto" },
+                    Usuario = new Usuario { Nombre = "Juan Pérez" },
+                    FechaInicio = DateTime.Now.AddDays(-5)
+                });
+
+                // Ticket 2: Prioridad Media y Estado En Progreso
+                listaMockupTickets.Add(new Ticket
+                {
+                    Id = 2,
+                    Descripcion = "No puedo iniciar sesión desde el celular",
+                    //Proyecto = sprint.Proyecto,
+                    Prioridad = new Prioridad { Nombre = "Media" },
+                    Estado = new Estado { Nombre = "En Progreso" },
+                    Usuario = new Usuario { Nombre = "María López" },
+                    FechaInicio = DateTime.Now.AddDays(-4)
+                });
+
+                // Ticket 3: Prioridad Baja y Estado Resuelto
+                listaMockupTickets.Add(new Ticket
+                {
+                    Id = 3,
+                    Descripcion = "Solicitud de nuevo acceso al módulo de auditoría",
+                    //Proyecto = sprint.Proyecto,
+                    Prioridad = new Prioridad { Nombre = "Baja" },
+                    Estado = new Estado { Nombre = "Resuelto" },
+                    Usuario = new Usuario { Nombre = "Pedro Gómez" },
+                    FechaInicio = DateTime.Now.AddDays(-2)
+                });
+
+                // 3. Enlazamos la lista falsa al GridView
+                dgvTicketsDelSprint.DataSource = listaMockupTickets;
+                dgvTicketsDelSprint.DataBind();
             }
         }
+
+        
+
+        public string GetClassEtiquetaPrioridad(object prioridad)
+        {
+            if (prioridad == null) return "badge text-bg-secondary text-uppercase";
+
+            string p = prioridad.ToString().ToUpper().Trim();
+
+            switch (p)
+            {
+                case "ALTA":
+                    return "badge text-bg-danger text-uppercase px-3 py-2 fw-semibold";
+                case "MEDIA":
+                    return "badge text-bg-warning text-uppercase px-3 py-2 fw-semibold";
+                case "BAJA":
+                    return "badge text-bg-success text-uppercase px-3 py-2 fw-semibold";
+                default:
+                    return "badge text-bg-dark text-uppercase px-3 py-2 fw-semibold border";
+            }
+        }
+
+     
     }
 
 
