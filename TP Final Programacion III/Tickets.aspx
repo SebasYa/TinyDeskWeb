@@ -1,7 +1,6 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Tickets.aspx.cs" Inherits="TP_Final_Programacion_III.Tickets" %>
+﻿<%@ Page Title="Gestión de Tickets" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Tickets.aspx.cs" Inherits="TP_Final_Programacion_III.Tickets" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-    <h1>Tickets</h1>
 
     <asp:Literal ID="litMensaje" runat="server"></asp:Literal>
     <asp:HiddenField ID="hdnIdTicket" runat="server" />
@@ -9,7 +8,6 @@
     <asp:Panel ID="pnlListado" runat="server">
         <div class="row mb-4">
             <div class="col-12">
-                <h2 class="fw-bold">Tickets</h2>
             </div>
         </div>
 

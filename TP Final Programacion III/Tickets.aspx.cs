@@ -25,6 +25,7 @@ namespace TP_Final_Programacion_III
                 try
                 {
                     int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
+                    CargarDropdowns(idEmpresa);
 
                     if (Request.QueryString["id"] != null)
                     {
@@ -79,8 +80,14 @@ namespace TP_Final_Programacion_III
             lblDetalleProyecto.Text = ticket.Sprint.Proyecto.Nombre;
             lblDetalleFechaInicio.Text = ticket.FechaInicio.ToString("dd/MM/yyyy");
             lblDetalleFechaEstimadaFin.Text = ticket.FechaEstimadaFin.ToString("dd/MM/yyyy");
-            lblDetalleFechaFin.Text = ticket.FechaFin.HasValue
-                ? ticket.FechaFin.Value.ToString("dd/MM/yyyy") : "-";
+            lblDetalleFechaFin.Text = ticket.FechaFin.HasValue ? ticket.FechaFin.Value.ToString("dd/MM/yyyy") : "-";
+
+            txtEditDescripcion.Text = ticket.Descripcion;
+            txtEditFechaEstimadaFin.Text = ticket.FechaEstimadaFin.ToString("yyyy-MM-dd");
+            ddlEditPrioridad.SelectedValue = ticket.Prioridad.Id.ToString();
+            ddlEditEstado.SelectedValue = ticket.Estado.Id.ToString();
+            ddlEditUsuario.SelectedValue = ticket.Usuario.Id.ToString();
+            ddlEditSprint.SelectedValue = ticket.Sprint.Id.ToString();
 
             hdnIdTicket.Value = ticket.Id.ToString();
         }
