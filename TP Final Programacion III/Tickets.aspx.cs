@@ -413,9 +413,19 @@ namespace TP_Final_Programacion_III
                 ddlEditSprint.SelectedValue = ticket.Sprint.Id.ToString();
 
                 // Abrir el modal
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "AbrirModalEditar",
-                    "var modal = new bootstrap.Modal(document.getElementById('ticketEditarModal')); modal.show();",
-                    true);
+                //ScriptManager.RegisterStartupScript(this, this.GetType(), "AbrirModalEditar",
+                //    "var modal = new bootstrap.Modal(document.getElementById('ticketEditarModal')); modal.show();",
+                //    true);
+                string script = @"
+                    setTimeout(function() {
+                        var el = document.getElementById('ticketEditarModal');
+                        if (el) {
+                            var modal = new bootstrap.Modal(el);
+                            modal.show();
+                        }
+                    }, 200);";
+
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "AbrirModalEditar", script, true);
             }
         }
         public string GetClassEtiquetaEstado(object estadoNombre)
