@@ -13,6 +13,7 @@ namespace TP_Final_Programacion_III
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            
             if (!Seguridad.sessionActiva(Session["usuario"]))
             {
                 Response.Redirect("Login.aspx", false);
@@ -24,7 +25,16 @@ namespace TP_Final_Programacion_III
                 try
                 {
                     int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
-                    CargarListado(idEmpresa);
+
+                    if (Request.QueryString["id"] != null)
+                    {
+                        int idTicket = int.Parse(Request.QueryString["id"]);
+                        CargarDetalleTicket(idTicket, idEmpresa);
+                    }
+                    else
+                    {
+                        CargarListado(idEmpresa);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -45,6 +55,34 @@ namespace TP_Final_Programacion_III
             Session["listaTickets"] = lista;
             dgvTickets.DataSource = lista;
             dgvTickets.DataBind();
+        }
+
+        private void CargarDetalleTicket(int idTicket, int idEmpresa)
+        {
+            pnlListado.Visible = false;
+            pnlDetalle.Visible = true;
+
+            TicketNegocio negocio = new TicketNegocio();
+            Ticket ticket = negocio.BuscarPorId(idTicket);
+
+            if (ticket == null)
+            {
+                Response.Redirect("Tickets.aspx", false);
+                return;
+            }
+
+            lblDetalleDescripcion.Text = ticket.Descripcion;
+            lblDetalleEstado.Text = ticket.Estado.Nombre;
+            lblDetallePrioridad.Text = ticket.Prioridad.Nombre;
+            lblDetalleUsuario.Text = ticket.Usuario.Nombre + " " + ticket.Usuario.Apellido;
+            lblDetalleSprint.Text = "Sprint " + ticket.Sprint.NumeroSprint;
+            lblDetalleProyecto.Text = ticket.Sprint.Proyecto.Nombre;
+            lblDetalleFechaInicio.Text = ticket.FechaInicio.ToString("dd/MM/yyyy");
+            lblDetalleFechaEstimadaFin.Text = ticket.FechaEstimadaFin.ToString("dd/MM/yyyy");
+            lblDetalleFechaFin.Text = ticket.FechaFin.HasValue
+                ? ticket.FechaFin.Value.ToString("dd/MM/yyyy") : "-";
+
+            hdnIdTicket.Value = ticket.Id.ToString();
         }
 
         protected void dgvTickets_PageIndexChanging(object sender, GridViewPageEventArgs e)
