@@ -43,9 +43,9 @@ namespace TP_Final_Programacion_III
             }
         }
 
-        // -------------------------------------------------------
-        // CARGA DE DATOS
-        // -------------------------------------------------------
+
+        //CARGA DE DATOS
+
 
         private void CargarListado(int idEmpresa)
         {
@@ -140,7 +140,8 @@ namespace TP_Final_Programacion_III
             var usuarios = usuarioNegocio.listar(idEmpresa)
                 .FindAll(u => u.Activo && u.EmailVerificado);
 
-            ddlUsuario.DataSource = usuarios.Select(u => new {
+            ddlUsuario.DataSource = usuarios.Select(u => new
+            {
                 Id = u.Id,
                 NombreCompleto = u.Nombre + " " + u.Apellido
             }).ToList();
@@ -149,7 +150,8 @@ namespace TP_Final_Programacion_III
             ddlUsuario.DataBind();
             ddlUsuario.Items.Insert(0, new ListItem("Seleccione usuario...", ""));
 
-            ddlEditUsuario.DataSource = usuarios.Select(u => new {
+            ddlEditUsuario.DataSource = usuarios.Select(u => new
+            {
                 Id = u.Id,
                 NombreCompleto = u.Nombre + " " + u.Apellido
             }).ToList();
@@ -162,7 +164,8 @@ namespace TP_Final_Programacion_III
             SprintNegocio sprintNegocio = new SprintNegocio();
             var sprints = sprintNegocio.listar(idEmpresa);
 
-            ddlSprint.DataSource = sprints.Select(s => new {
+            ddlSprint.DataSource = sprints.Select(s => new
+            {
                 Id = s.Id,
                 Nombre = "Sprint " + s.NumeroSprint + " - " + s.Proyecto.Nombre
             }).ToList();
@@ -171,7 +174,8 @@ namespace TP_Final_Programacion_III
             ddlSprint.DataBind();
             ddlSprint.Items.Insert(0, new ListItem("Seleccione sprint...", ""));
 
-            ddlEditSprint.DataSource = sprints.Select(s => new {
+            ddlEditSprint.DataSource = sprints.Select(s => new
+            {
                 Id = s.Id,
                 Nombre = "Sprint " + s.NumeroSprint + " - " + s.Proyecto.Nombre
             }).ToList();
@@ -181,9 +185,9 @@ namespace TP_Final_Programacion_III
             ddlEditSprint.Items.Insert(0, new ListItem("Seleccione sprint...", ""));
         }
 
-        // -------------------------------------------------------
-        // CREAR TICKET
-        // -------------------------------------------------------
+        
+        //CREAR TICKET
+        
 
         protected void btnGuardarTicket_Click(object sender, EventArgs e)
         {
@@ -232,9 +236,9 @@ namespace TP_Final_Programacion_III
             }
         }
 
-        // -------------------------------------------------------
-        // MODIFICAR TICKET
-        // -------------------------------------------------------
+        
+        //MODIFICAR TICKET
+        
 
         protected void btnGuardarEdicion_Click(object sender, EventArgs e)
         {
@@ -283,9 +287,9 @@ namespace TP_Final_Programacion_III
             }
         }
 
-        // -------------------------------------------------------
-        // BAJA LÓGICA
-        // -------------------------------------------------------
+        
+        //BAJA LÓGICA
+        
 
         protected void btnBajaLogica_Click(object sender, EventArgs e)
         {
@@ -306,9 +310,9 @@ namespace TP_Final_Programacion_III
             }
         }
 
-        // -------------------------------------------------------
-        // GRILLA — paginación y selección
-        // -------------------------------------------------------
+        
+        // GRILLA 
+        
 
         protected void dgvTickets_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
@@ -323,9 +327,9 @@ namespace TP_Final_Programacion_III
             Response.Redirect("Tickets.aspx?id=" + idTicket, false);
         }
 
-        // -------------------------------------------------------
+        
         // HELPERS
-        // -------------------------------------------------------
+        
 
         private void MostrarError(string mensaje)
         {
@@ -382,7 +386,8 @@ namespace TP_Final_Programacion_III
                 UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
                 var usuarios = usuarioNegocio.listar(idEmpresa)
                     .FindAll(u => u.Activo && u.EmailVerificado);
-                ddlEditUsuario.DataSource = usuarios.Select(u => new {
+                ddlEditUsuario.DataSource = usuarios.Select(u => new
+                {
                     Id = u.Id,
                     NombreCompleto = u.Nombre + " " + u.Apellido
                 }).ToList();
@@ -393,7 +398,8 @@ namespace TP_Final_Programacion_III
 
                 SprintNegocio sprintNegocio = new SprintNegocio();
                 var sprints = sprintNegocio.listar(idEmpresa);
-                ddlEditSprint.DataSource = sprints.Select(s => new {
+                ddlEditSprint.DataSource = sprints.Select(s => new
+                {
                     Id = s.Id,
                     Nombre = "Sprint " + s.NumeroSprint + " - " + s.Proyecto.Nombre
                 }).ToList();
@@ -412,10 +418,6 @@ namespace TP_Final_Programacion_III
                 ddlEditUsuario.SelectedValue = ticket.Usuario.Id.ToString();
                 ddlEditSprint.SelectedValue = ticket.Sprint.Id.ToString();
 
-                // Abrir el modal
-                //ScriptManager.RegisterStartupScript(this, this.GetType(), "AbrirModalEditar",
-                //    "var modal = new bootstrap.Modal(document.getElementById('ticketEditarModal')); modal.show();",
-                //    true);
                 string script = @"
                     setTimeout(function() {
                         var el = document.getElementById('ticketEditarModal');
@@ -427,6 +429,39 @@ namespace TP_Final_Programacion_III
 
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "AbrirModalEditar", script, true);
             }
+        }
+        protected void txtFiltroTickets_TextChanged(object sender, EventArgs e)
+        {
+            string filtro = txtFiltroTickets.Text.Trim().ToLower();
+
+            List<Ticket> lista = (List<Ticket>)Session["listaTickets"];
+
+            if (lista == null)
+            {
+                int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
+                CargarListado(idEmpresa);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(filtro))
+            {
+                dgvTickets.DataSource = lista;
+                dgvTickets.DataBind();
+                return;
+            }
+
+            List<Ticket> filtrada = lista.FindAll(t =>
+                (t.Descripcion != null && t.Descripcion.ToLower().Contains(filtro)) ||
+                (t.Sprint != null && t.Sprint.Proyecto != null && t.Sprint.Proyecto.Nombre != null && t.Sprint.Proyecto.Nombre.ToLower().Contains(filtro)) ||
+                (t.Usuario != null && t.Usuario.Nombre != null && t.Usuario.Nombre.ToLower().Contains(filtro)) ||
+                (t.Usuario != null && t.Usuario.Apellido != null && t.Usuario.Apellido.ToLower().Contains(filtro)) ||
+                (t.Estado != null && t.Estado.Nombre != null && t.Estado.Nombre.ToLower().Contains(filtro)) ||
+                (t.Prioridad != null && t.Prioridad.Nombre != null && t.Prioridad.Nombre.ToLower().Contains(filtro))
+            );
+
+            dgvTickets.PageIndex = 0;
+            dgvTickets.DataSource = filtrada;
+            dgvTickets.DataBind();
         }
         public string GetClassEtiquetaEstado(object estadoNombre)
         {
