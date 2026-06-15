@@ -259,10 +259,3 @@ GO
 select * from USUARIO;
 select * from SENIORITY;
 
-/*-----------
-CAMBIO PARA SPRINTS
---------------*/
-ALTER TABLE SPRINT
-ADD IdEmpresa INT NOT NULL
-ALTER TABLE SPRINT
-ADD CONSTRAINT FK_Sprint_Empresa FOREIGN KEY (IdEmpresa) REFERENCES EMPRESA(Id);
