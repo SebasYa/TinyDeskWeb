@@ -204,8 +204,49 @@ namespace TP_Final_Programacion_III
 
         protected void btnGuardarTicket_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(txtDescripcion.Text) ||
+                string.IsNullOrWhiteSpace(txtFechaEstimadaFin.Text) ||
+                string.IsNullOrWhiteSpace(ddlPrioridad.SelectedValue) ||
+                string.IsNullOrWhiteSpace(ddlEstado.SelectedValue) ||
+                string.IsNullOrWhiteSpace(ddlUsuario.SelectedValue) ||
+                string.IsNullOrWhiteSpace(ddlSprint.SelectedValue))
+            {
+                MostrarError("Completá todos los campos obligatorios.");
+                return;
+            }
 
+            try
+            {
+                Ticket ticket = new Ticket();
+                ticket.Descripcion = txtDescripcion.Text;
+                ticket.FechaInicio = DateTime.Today;
+                ticket.FechaEstimadaFin = Convert.ToDateTime(txtFechaEstimadaFin.Text);
+                ticket.Activo = true;
 
+                ticket.Prioridad = new Prioridad();
+                ticket.Prioridad.Id = int.Parse(ddlPrioridad.SelectedValue);
+
+                ticket.Estado = new Estado();
+                ticket.Estado.Id = int.Parse(ddlEstado.SelectedValue);
+
+                ticket.Usuario = new Usuario();
+                ticket.Usuario.Id = int.Parse(ddlUsuario.SelectedValue);
+
+                ticket.Sprint = new Sprint();
+                ticket.Sprint.Id = int.Parse(ddlSprint.SelectedValue);
+
+                TicketNegocio negocio = new TicketNegocio();
+                negocio.AgregarTicket(ticket);
+
+                int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
+                MostrarExito("Ticket creado correctamente.");
+                CargarListado(idEmpresa);
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                MostrarError("Ocurrió un error al crear el ticket.");
+            }
         }
         protected void btnGuardarEdicion_Click(object sender, EventArgs e)
         {
