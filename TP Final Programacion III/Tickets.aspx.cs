@@ -284,5 +284,39 @@ namespace TP_Final_Programacion_III
             if (prioridad == "baja") return "badge text-bg-success px-3 py-2";
             return "badge text-bg-secondary px-3 py-2";
         }
+
+        protected void txtFiltroTickets_TextChanged(object sender, EventArgs e)
+        {
+            string filtro = txtFiltroTickets.Text.Trim().ToLower();
+
+            List<Ticket> lista = (List<Ticket>)Session["listaTickets"];
+
+            if (lista == null)
+            {
+                int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
+                CargarListado(idEmpresa);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(filtro))
+            {
+                dgvTickets.DataSource = lista;
+                dgvTickets.DataBind();
+                return;
+            }
+
+            List<Ticket> filtrada = lista.FindAll(t =>
+                (t.Descripcion != null && t.Descripcion.ToLower().Contains(filtro)) ||
+                (t.Sprint?.Proyecto?.Nombre != null && t.Sprint.Proyecto.Nombre.ToLower().Contains(filtro)) ||
+                (t.Usuario?.Nombre != null && t.Usuario.Nombre.ToLower().Contains(filtro)) ||
+                (t.Usuario?.Apellido != null && t.Usuario.Apellido.ToLower().Contains(filtro)) ||
+                (t.Estado?.Nombre != null && t.Estado.Nombre.ToLower().Contains(filtro)) ||
+                (t.Prioridad?.Nombre != null && t.Prioridad.Nombre.ToLower().Contains(filtro))
+            );
+
+            dgvTickets.PageIndex = 0;
+            dgvTickets.DataSource = filtrada;
+            dgvTickets.DataBind();
+        }
     }
 }

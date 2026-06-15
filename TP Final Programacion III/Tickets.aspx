@@ -14,7 +14,9 @@
                     <div class="mb-3">
                         <asp:TextBox runat="server" ID="txtFiltroTickets"
                             CssClass="form-control"
-                            placeholder="Filtrar por descripción o proyecto" />
+                            placeholder="Filtrar por descripción o proyecto"
+                            AutoPostBack="true"
+                            OnTextChanged="txtFiltroTickets_TextChanged" />
                     </div>
                 </div>
                 <div class="col-6 d-flex align-items-center flex-row-reverse">
