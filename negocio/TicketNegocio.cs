@@ -381,7 +381,6 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
-
         public void BajaLogica(int id)
         {
             AccesoDatos datos = new AccesoDatos();

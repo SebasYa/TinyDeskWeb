@@ -1,11 +1,10 @@
-﻿using System;
+﻿using dominio;
+using negocio;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using dominio;
-using negocio;
 
 namespace TP_Final_Programacion_III
 {
@@ -13,20 +12,18 @@ namespace TP_Final_Programacion_III
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
             if (!Seguridad.sessionActiva(Session["usuario"]))
             {
                 Response.Redirect("Login.aspx", false);
                 return;
             }
 
-            try
+            if (!IsPostBack)
             {
-                int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
-                CargarDropdowns(idEmpresa);
-
-                if (!IsPostBack)
+                try
                 {
+                    int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
+                    CargarDropdowns(idEmpresa);
 
                     if (Request.QueryString["id"] != null)
                     {
@@ -38,13 +35,17 @@ namespace TP_Final_Programacion_III
                         CargarListado(idEmpresa);
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Session.Add("error", ex.ToString());
-                MostrarError("Ocurrió un error al cargar los tickets.");
+                catch (Exception ex)
+                {
+                    Session.Add("error", ex.ToString());
+                    MostrarError("Ocurrió un error al cargar los tickets.");
+                }
             }
         }
+
+        // -------------------------------------------------------
+        // CARGA DE DATOS
+        // -------------------------------------------------------
 
         private void CargarListado(int idEmpresa)
         {
@@ -73,6 +74,7 @@ namespace TP_Final_Programacion_III
                 return;
             }
 
+            // Mostrar datos en pantalla
             lblDetalleDescripcion.Text = ticket.Descripcion;
             lblDetalleEstado.Text = ticket.Estado.Nombre;
             lblDetallePrioridad.Text = ticket.Prioridad.Nombre;
@@ -81,8 +83,10 @@ namespace TP_Final_Programacion_III
             lblDetalleProyecto.Text = ticket.Sprint.Proyecto.Nombre;
             lblDetalleFechaInicio.Text = ticket.FechaInicio.ToString("dd/MM/yyyy");
             lblDetalleFechaEstimadaFin.Text = ticket.FechaEstimadaFin.ToString("dd/MM/yyyy");
-            lblDetalleFechaFin.Text = ticket.FechaFin.HasValue ? ticket.FechaFin.Value.ToString("dd/MM/yyyy") : "-";
+            lblDetalleFechaFin.Text = ticket.FechaFin.HasValue
+                ? ticket.FechaFin.Value.ToString("dd/MM/yyyy") : "-";
 
+            // Precargar formulario de edición
             txtEditDescripcion.Text = ticket.Descripcion;
             txtEditFechaEstimadaFin.Text = ticket.FechaEstimadaFin.ToString("yyyy-MM-dd");
             ddlEditPrioridad.SelectedValue = ticket.Prioridad.Id.ToString();
@@ -95,6 +99,7 @@ namespace TP_Final_Programacion_III
 
         private void CargarDropdowns(int idEmpresa)
         {
+            // Prioridades
             PrioridadNegocio prioridadNegocio = new PrioridadNegocio();
             var prioridades = prioridadNegocio.listar();
 
@@ -110,6 +115,7 @@ namespace TP_Final_Programacion_III
             ddlEditPrioridad.DataBind();
             ddlEditPrioridad.Items.Insert(0, new ListItem("Seleccione prioridad...", ""));
 
+            // Estados
             EstadoNegocio estadoNegocio = new EstadoNegocio();
             var estados = estadoNegocio.listar(idEmpresa);
             Session["listaEstadosTicket"] = estados;
@@ -126,12 +132,12 @@ namespace TP_Final_Programacion_III
             ddlEditEstado.DataBind();
             ddlEditEstado.Items.Insert(0, new ListItem("Seleccione estado...", ""));
 
+            // Usuarios activos de la empresa
             UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
             var usuarios = usuarioNegocio.listar(idEmpresa)
                 .FindAll(u => u.Activo && u.EmailVerificado);
 
-            ddlUsuario.DataSource = usuarios.Select(u => new
-            {
+            ddlUsuario.DataSource = usuarios.Select(u => new {
                 Id = u.Id,
                 NombreCompleto = u.Nombre + " " + u.Apellido
             }).ToList();
@@ -140,8 +146,7 @@ namespace TP_Final_Programacion_III
             ddlUsuario.DataBind();
             ddlUsuario.Items.Insert(0, new ListItem("Seleccione usuario...", ""));
 
-            ddlEditUsuario.DataSource = usuarios.Select(u => new
-            {
+            ddlEditUsuario.DataSource = usuarios.Select(u => new {
                 Id = u.Id,
                 NombreCompleto = u.Nombre + " " + u.Apellido
             }).ToList();
@@ -150,11 +155,11 @@ namespace TP_Final_Programacion_III
             ddlEditUsuario.DataBind();
             ddlEditUsuario.Items.Insert(0, new ListItem("Seleccione usuario...", ""));
 
+            // Sprints activos de la empresa
             SprintNegocio sprintNegocio = new SprintNegocio();
             var sprints = sprintNegocio.listar(idEmpresa);
 
-            ddlSprint.DataSource = sprints.Select(s => new
-            {
+            ddlSprint.DataSource = sprints.Select(s => new {
                 Id = s.Id,
                 Nombre = "Sprint " + s.NumeroSprint + " - " + s.Proyecto.Nombre
             }).ToList();
@@ -163,8 +168,7 @@ namespace TP_Final_Programacion_III
             ddlSprint.DataBind();
             ddlSprint.Items.Insert(0, new ListItem("Seleccione sprint...", ""));
 
-            ddlEditSprint.DataSource = sprints.Select(s => new
-            {
+            ddlEditSprint.DataSource = sprints.Select(s => new {
                 Id = s.Id,
                 Nombre = "Sprint " + s.NumeroSprint + " - " + s.Proyecto.Nombre
             }).ToList();
@@ -174,34 +178,9 @@ namespace TP_Final_Programacion_III
             ddlEditSprint.Items.Insert(0, new ListItem("Seleccione sprint...", ""));
         }
 
-        protected void dgvTickets_PageIndexChanging(object sender, GridViewPageEventArgs e)
-        {
-            dgvTickets.PageIndex = e.NewPageIndex;
-            dgvTickets.DataSource = Session["listaTickets"];
-            dgvTickets.DataBind();
-        }
-
-        protected void dgvTickets_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            int idTicket = (int)dgvTickets.SelectedDataKey.Value;
-            Response.Redirect("Tickets.aspx?id=" + idTicket, false);
-        }
-
-        private void MostrarError(string mensaje)
-        {
-            litMensaje.Text = $@"<div class='alert alert-danger alert-dismissible fade show' role='alert'>
-                                    <strong>Error:</strong> {mensaje}
-                                    <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
-                                  </div>";
-        }
-
-        private void MostrarExito(string mensaje)
-        {
-            litMensaje.Text = $@"<div class='alert alert-success alert-dismissible fade show' role='alert'>
-                                    <strong>¡Éxito!</strong> {mensaje}
-                                    <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
-                                  </div>";
-        }
+        // -------------------------------------------------------
+        // CREAR TICKET
+        // -------------------------------------------------------
 
         protected void btnGuardarTicket_Click(object sender, EventArgs e)
         {
@@ -249,6 +228,11 @@ namespace TP_Final_Programacion_III
                 MostrarError("Ocurrió un error al crear el ticket.");
             }
         }
+
+        // -------------------------------------------------------
+        // MODIFICAR TICKET
+        // -------------------------------------------------------
+
         protected void btnGuardarEdicion_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtEditDescripcion.Text) ||
@@ -272,6 +256,7 @@ namespace TP_Final_Programacion_III
                 ticket.Prioridad = new Prioridad();
                 ticket.Prioridad.Id = int.Parse(ddlEditPrioridad.SelectedValue);
 
+                // Si el estado es final, cerrar el ticket
                 List<Estado> estados = (List<Estado>)Session["listaEstadosTicket"];
                 Estado estadoSeleccionado = estados.Find(x => x.Id == int.Parse(ddlEditEstado.SelectedValue));
                 ticket.Estado = estadoSeleccionado ?? new Estado { Id = int.Parse(ddlEditEstado.SelectedValue) };
@@ -295,6 +280,10 @@ namespace TP_Final_Programacion_III
             }
         }
 
+        // -------------------------------------------------------
+        // BAJA LÓGICA
+        // -------------------------------------------------------
+
         protected void btnBajaLogica_Click(object sender, EventArgs e)
         {
             try
@@ -314,67 +303,41 @@ namespace TP_Final_Programacion_III
             }
         }
 
-        protected void dgvTickets_RowCommand(object sender, GridViewCommandEventArgs e)
+        // -------------------------------------------------------
+        // GRILLA — paginación y selección
+        // -------------------------------------------------------
+
+        protected void dgvTickets_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
-            if (e.CommandName == "VerDetalle")
-            {
-                int idTicket = int.Parse(e.CommandArgument.ToString());
-                Response.Redirect("Tickets.aspx?id=" + idTicket, false);
-            }
-        }
-
-        public string GetClassEtiquetaEstado(object estadoNombre)
-        {
-            if (estadoNombre == null) return "badge text-bg-secondary px-3 py-2";
-            string estado = estadoNombre.ToString().ToLower();
-            if (estado == "en progreso") return "badge text-bg-primary px-3 py-2";
-            if (estado == "finalizado") return "badge text-bg-success px-3 py-2";
-            if (estado == "pendiente") return "badge text-bg-warning px-3 py-2";
-            return "badge text-bg-dark px-3 py-2";
-        }
-
-        public string GetClassEtiquetaPrioridad(object prioridadNombre)
-        {
-            if (prioridadNombre == null) return "badge text-bg-secondary px-3 py-2";
-            string prioridad = prioridadNombre.ToString().ToLower();
-            if (prioridad == "alta") return "badge text-bg-danger px-3 py-2";
-            if (prioridad == "media") return "badge text-bg-warning px-3 py-2";
-            if (prioridad == "baja") return "badge text-bg-success px-3 py-2";
-            return "badge text-bg-secondary px-3 py-2";
-        }
-
-        protected void txtFiltroTickets_TextChanged(object sender, EventArgs e)
-        {
-            string filtro = txtFiltroTickets.Text.Trim().ToLower();
-
-            List<Ticket> lista = (List<Ticket>)Session["listaTickets"];
-
-            if (lista == null)
-            {
-                int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
-                CargarListado(idEmpresa);
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(filtro))
-            {
-                dgvTickets.DataSource = lista;
-                dgvTickets.DataBind();
-                return;
-            }
-
-            List<Ticket> filtrada = lista.FindAll(t =>
-                (t.Descripcion != null && t.Descripcion.ToLower().Contains(filtro)) ||
-                (t.Sprint?.Proyecto?.Nombre != null && t.Sprint.Proyecto.Nombre.ToLower().Contains(filtro)) ||
-                (t.Usuario?.Nombre != null && t.Usuario.Nombre.ToLower().Contains(filtro)) ||
-                (t.Usuario?.Apellido != null && t.Usuario.Apellido.ToLower().Contains(filtro)) ||
-                (t.Estado?.Nombre != null && t.Estado.Nombre.ToLower().Contains(filtro)) ||
-                (t.Prioridad?.Nombre != null && t.Prioridad.Nombre.ToLower().Contains(filtro))
-            );
-
-            dgvTickets.PageIndex = 0;
-            dgvTickets.DataSource = filtrada;
+            dgvTickets.PageIndex = e.NewPageIndex;
+            dgvTickets.DataSource = Session["listaTickets"];
             dgvTickets.DataBind();
+        }
+
+        protected void dgvTickets_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int idTicket = (int)dgvTickets.SelectedDataKey.Value;
+            Response.Redirect("Tickets.aspx?id=" + idTicket, false);
+        }
+
+        // -------------------------------------------------------
+        // HELPERS
+        // -------------------------------------------------------
+
+        private void MostrarError(string mensaje)
+        {
+            litMensaje.Text = $@"<div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                                    <strong>Error:</strong> {mensaje}
+                                    <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                                  </div>";
+        }
+
+        private void MostrarExito(string mensaje)
+        {
+            litMensaje.Text = $@"<div class='alert alert-success alert-dismissible fade show' role='alert'>
+                                    <strong>¡Éxito!</strong> {mensaje}
+                                    <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                                  </div>";
         }
     }
 }
