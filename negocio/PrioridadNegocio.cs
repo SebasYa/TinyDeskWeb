@@ -37,7 +37,6 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
-
         public Prioridad buscarPorId(int id)
         {
             return listar().Find(x => x.Id == id);

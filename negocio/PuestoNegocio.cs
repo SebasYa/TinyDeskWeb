@@ -110,18 +110,17 @@ namespace negocio
         public void eliminar(Puesto puesto)
         {
             Puesto actual = buscarPorId(puesto.Id, puesto.Empresa.Id);
-            validarEditable(actual);
 
-            if (contarReferencias(puesto.Id) > 0)
-                throw new Exception("No se puede eliminar porque el puesto está en uso.");
+            validarEditable(actual);
+            if (contarReferencias(actual.Id) > 0) throw new Exception("No se puede eliminar porque el puesto está en uso.");
 
             AccesoDatos datos = new AccesoDatos();
 
             try
             {
                 datos.setearConsulta("DELETE FROM PUESTO WHERE Id = @Id AND IdEmpresa = @IdEmpresa");
-                datos.setearParametro("@Id", puesto.Id);
-                datos.setearParametro("@IdEmpresa", puesto.Empresa.Id);
+                datos.setearParametro("@Id", actual.Id);
+                datos.setearParametro("@IdEmpresa", actual.Empresa.Id);
                 datos.ejecutarAccion();
             }
             finally

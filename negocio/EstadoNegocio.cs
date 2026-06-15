@@ -36,7 +36,6 @@ namespace negocio
             if (estado.Empresa == null)
                 throw new Exception("Este estado es parte del sistema y no se puede modificar ni eliminar.");
         }
-
         private int contarReferencias(int id)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -129,18 +128,17 @@ namespace negocio
         }
         public void eliminar(Estado estado)
         {
-            validarEditable(estado);
-
-            if (contarReferencias(estado.Id) > 0)
-                throw new Exception("No se puede eliminar porque el estado está en uso.");
+            Estado actual = buscarPorId(estado.Id, estado.Empresa.Id);
+            validarEditable(actual);
+            if (contarReferencias(actual.Id) > 0) throw new Exception("No se puede eliminar porque el estado está en uso.");
 
             AccesoDatos datos = new AccesoDatos();
 
             try
             {
                 datos.setearConsulta("DELETE FROM ESTADO WHERE Id = @Id AND IdEmpresa = @IdEmpresa");
-                datos.setearParametro("@Id", estado.Id);
-                datos.setearParametro("@IdEmpresa", estado.Empresa.Id);
+                datos.setearParametro("@Id", actual.Id);
+                datos.setearParametro("@IdEmpresa", actual.Empresa.Id);
                 datos.ejecutarAccion();
             }
             finally

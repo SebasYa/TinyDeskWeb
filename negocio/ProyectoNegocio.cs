@@ -87,7 +87,6 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
-
         public List<Proyecto> listar(int idEmpresa)
         {
             List<Proyecto> lista = new List<Proyecto>();
@@ -160,7 +159,6 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
-
         public int ContarActivos(int idEmpresa) {
             AccesoDatos datos = new AccesoDatos();
             try

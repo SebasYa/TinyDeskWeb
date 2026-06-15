@@ -45,7 +45,6 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
-
         public Area buscarPorId(int id, int idEmpresa)
         {
             return listar(idEmpresa).Find(x => x.Id == id);
@@ -55,7 +54,6 @@ namespace negocio
             if (area.Empresa == null)
                 throw new Exception("Esta área es parte del sistema y no se puede modificar ni eliminar.");
         }
-
         private int contarReferencias(int id)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -114,18 +112,17 @@ namespace negocio
         public void eliminar(Area area)
         {
             Area actual = buscarPorId(area.Id, area.Empresa.Id);
-            validarEditable(actual);
 
-            if (contarReferencias(area.Id) > 0)
-                throw new Exception("No se puede eliminar porque el área está en uso.");
+            validarEditable(actual);
+            if (contarReferencias(actual.Id) > 0) throw new Exception("No se puede eliminar porque el área está en uso.");
 
             AccesoDatos datos = new AccesoDatos();
 
             try
             {
                 datos.setearConsulta("DELETE FROM AREA WHERE Id = @Id AND IdEmpresa = @IdEmpresa");
-                datos.setearParametro("@Id", area.Id);
-                datos.setearParametro("@IdEmpresa", area.Empresa.Id);
+                datos.setearParametro("@Id", actual.Id);
+                datos.setearParametro("@IdEmpresa", actual.Empresa.Id);
                 datos.ejecutarAccion();
             }
             finally
