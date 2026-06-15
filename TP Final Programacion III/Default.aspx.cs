@@ -218,9 +218,9 @@ namespace TP_Final_Programacion_III
                 if (mailEnviado)
                 {
                     litMensaje.Text = @"<div class='alert alert-success alert-dismissible fade show' role='alert'>
-                                        El ticket fue creado y se notificó al usuario asignado.
-                                        <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
-                                    </div>";
+                                            El ticket fue creado y se notificó al usuario asignado.
+                                            <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                                        </div>";
                 }
                 else
                 {

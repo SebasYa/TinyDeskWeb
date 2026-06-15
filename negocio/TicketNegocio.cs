@@ -229,5 +229,213 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
+
+        public List<Ticket> Listar(int idEmpresa)
+        {
+            List<Ticket> lista = new List<Ticket>();
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.setearConsulta(@"
+            SELECT T.Id, T.FechaInicio, T.FechaFin, T.FechaEstimadaFin, T.Descripcion, T.Activo,
+                   PR.Id AS IdPrioridad, PR.Nombre AS NombrePrioridad,
+                   U.Id AS IdUsuario, U.Nombre AS NombreUsuario, U.Apellido AS ApellidoUsuario,
+                   E.Id AS IdEstado, E.Nombre AS NombreEstado, E.EsFinal, E.EsSistema,
+                   S.Id AS IdSprint, S.NumeroSprint,
+                   P.Id AS IdProyecto, P.Nombre AS NombreProyecto
+            FROM TICKET T
+            INNER JOIN PRIORIDAD PR ON PR.Id = T.IdPrioridad
+            INNER JOIN USUARIO U ON U.Id = T.IdUsuario
+            INNER JOIN ESTADO E ON E.Id = T.IdEstado
+            INNER JOIN SPRINT S ON S.Id = T.IdSprint
+            INNER JOIN PROYECTO P ON P.Id = S.IdProyecto
+            WHERE P.IdEmpresa = @IdEmpresa AND T.Activo = 1
+            ORDER BY T.FechaEstimadaFin ASC
+        ");
+
+                datos.setearParametro("@IdEmpresa", idEmpresa);
+                datos.ejecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    Ticket ticket = new Ticket();
+                    ticket.Id = (int)datos.Lector["Id"];
+                    ticket.FechaInicio = (DateTime)datos.Lector["FechaInicio"];
+                    ticket.FechaEstimadaFin = (DateTime)datos.Lector["FechaEstimadaFin"];
+
+                    if (datos.Lector["FechaFin"] != DBNull.Value)
+                        ticket.FechaFin = (DateTime)datos.Lector["FechaFin"];
+
+                    ticket.Descripcion = (string)datos.Lector["Descripcion"];
+                    ticket.Activo = (bool)datos.Lector["Activo"];
+
+                    ticket.Prioridad = new Prioridad();
+                    ticket.Prioridad.Id = (int)datos.Lector["IdPrioridad"];
+                    ticket.Prioridad.Nombre = (string)datos.Lector["NombrePrioridad"];
+
+                    ticket.Usuario = new Usuario();
+                    ticket.Usuario.Id = (int)datos.Lector["IdUsuario"];
+                    ticket.Usuario.Nombre = (string)datos.Lector["NombreUsuario"];
+                    ticket.Usuario.Apellido = (string)datos.Lector["ApellidoUsuario"];
+
+                    ticket.Estado = new Estado();
+                    ticket.Estado.Id = (int)datos.Lector["IdEstado"];
+                    ticket.Estado.Nombre = (string)datos.Lector["NombreEstado"];
+                    ticket.Estado.EsFinal = (bool)datos.Lector["EsFinal"];
+                    ticket.Estado.EsSistema = (bool)datos.Lector["EsSistema"];
+
+                    ticket.Sprint = new Sprint();
+                    ticket.Sprint.Id = (int)datos.Lector["IdSprint"];
+                    ticket.Sprint.NumeroSprint = (int)datos.Lector["NumeroSprint"];
+                    ticket.Sprint.Proyecto = new Proyecto();
+                    ticket.Sprint.Proyecto.Id = (int)datos.Lector["IdProyecto"];
+                    ticket.Sprint.Proyecto.Nombre = (string)datos.Lector["NombreProyecto"];
+
+                    lista.Add(ticket);
+                }
+
+                return lista;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        public Ticket BuscarPorId(int id)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.setearConsulta(@"
+            SELECT T.Id, T.FechaInicio, T.FechaFin, T.FechaEstimadaFin, T.Descripcion, T.Activo,
+                   PR.Id AS IdPrioridad, PR.Nombre AS NombrePrioridad,
+                   U.Id AS IdUsuario, U.Nombre AS NombreUsuario, U.Apellido AS ApellidoUsuario,
+                   E.Id AS IdEstado, E.Nombre AS NombreEstado, E.EsFinal, E.EsSistema,
+                   S.Id AS IdSprint, S.NumeroSprint,
+                   P.Id AS IdProyecto, P.Nombre AS NombreProyecto
+            FROM TICKET T
+            INNER JOIN PRIORIDAD PR ON PR.Id = T.IdPrioridad
+            INNER JOIN USUARIO U ON U.Id = T.IdUsuario
+            INNER JOIN ESTADO E ON E.Id = T.IdEstado
+            INNER JOIN SPRINT S ON S.Id = T.IdSprint
+            INNER JOIN PROYECTO P ON P.Id = S.IdProyecto
+            WHERE T.Id = @Id
+        ");
+
+                datos.setearParametro("@Id", id);
+                datos.ejecutarLectura();
+
+                if (datos.Lector.Read())
+                {
+                    Ticket ticket = new Ticket();
+                    ticket.Id = (int)datos.Lector["Id"];
+                    ticket.FechaInicio = (DateTime)datos.Lector["FechaInicio"];
+                    ticket.FechaEstimadaFin = (DateTime)datos.Lector["FechaEstimadaFin"];
+
+                    if (datos.Lector["FechaFin"] != DBNull.Value)
+                        ticket.FechaFin = (DateTime)datos.Lector["FechaFin"];
+
+                    ticket.Descripcion = (string)datos.Lector["Descripcion"];
+                    ticket.Activo = (bool)datos.Lector["Activo"];
+
+                    ticket.Prioridad = new Prioridad();
+                    ticket.Prioridad.Id = (int)datos.Lector["IdPrioridad"];
+                    ticket.Prioridad.Nombre = (string)datos.Lector["NombrePrioridad"];
+
+                    ticket.Usuario = new Usuario();
+                    ticket.Usuario.Id = (int)datos.Lector["IdUsuario"];
+                    ticket.Usuario.Nombre = (string)datos.Lector["NombreUsuario"];
+                    ticket.Usuario.Apellido = (string)datos.Lector["ApellidoUsuario"];
+
+                    ticket.Estado = new Estado();
+                    ticket.Estado.Id = (int)datos.Lector["IdEstado"];
+                    ticket.Estado.Nombre = (string)datos.Lector["NombreEstado"];
+                    ticket.Estado.EsFinal = (bool)datos.Lector["EsFinal"];
+                    ticket.Estado.EsSistema = (bool)datos.Lector["EsSistema"];
+
+                    ticket.Sprint = new Sprint();
+                    ticket.Sprint.Id = (int)datos.Lector["IdSprint"];
+                    ticket.Sprint.NumeroSprint = (int)datos.Lector["NumeroSprint"];
+                    ticket.Sprint.Proyecto = new Proyecto();
+                    ticket.Sprint.Proyecto.Id = (int)datos.Lector["IdProyecto"];
+                    ticket.Sprint.Proyecto.Nombre = (string)datos.Lector["NombreProyecto"];
+
+                    return ticket;
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        public void BajaLogica(int id)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.setearConsulta("UPDATE TICKET SET Activo = 0 WHERE Id = @Id");
+                datos.setearParametro("@Id", id);
+                datos.ejecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+        public void Modificar(Ticket ticket)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.setearConsulta(@"
+            UPDATE TICKET SET
+                FechaEstimadaFin = @FechaEstimadaFin,
+                Descripcion = @Descripcion,
+                IdPrioridad = @IdPrioridad,
+                IdUsuario = @IdUsuario,
+                IdEstado = @IdEstado,
+                IdSprint = @IdSprint
+            WHERE Id = @Id
+        ");
+
+                datos.setearParametro("@FechaEstimadaFin", ticket.FechaEstimadaFin);
+                datos.setearParametro("@Descripcion", ticket.Descripcion);
+                datos.setearParametro("@IdPrioridad", ticket.Prioridad.Id);
+                datos.setearParametro("@IdUsuario", ticket.Usuario.Id);
+                datos.setearParametro("@IdEstado", ticket.Estado.Id);
+                datos.setearParametro("@IdSprint", ticket.Sprint.Id);
+                datos.setearParametro("@Id", ticket.Id);
+
+                datos.ejecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
     }
 }

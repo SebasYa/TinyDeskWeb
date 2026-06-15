@@ -196,8 +196,9 @@ namespace negocio
                 datos.setearConsulta(@"
                     SELECT COUNT(*)
                     FROM SPRINT S
-                    INNER JOIN ESTADO E ON S.IdEstado = E.Id
-                    WHERE E.EsFinal = 0 AND S.IdEmpresa = @idEmpresa
+                    INNER JOIN PROYECTO P ON S.IdProyecto = P.Id
+                    INNER JOIN EMPRESA E ON P.IdEmpresa = E.Id
+                    WHERE S.Activo = 1 AND P.IdEmpresa = @IdEmpresa
                 ");
                 datos.setearParametro("@idEmpresa", idEmpresa);
                 return datos.ejecutarScalar();
