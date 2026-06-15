@@ -251,9 +251,119 @@
                 </div>
           </div>
         </asp:Panel>
-            <asp:Panel ID="pnlDetalleSprint" runat="server">
+        <asp:Panel ID="pnlDetalleSprint" runat="server">
+             <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1 fw-bold text-dark">
+                <asp:Label ID="lblDetalleTituloSprint" runat="server" Text="Detalle de Sprint"></asp:Label>
+            </h2>
+            <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill fw-semibold">
+                <asp:Label ID="lblSprintProyectoArea" runat="server" Text="Proyecto / Área"></asp:Label>
+            </span>
+        </div>
 
-            </asp:Panel>
+        <div class="d-flex gap-2">
+            <a href="Sprints.aspx" class="btn btn-primary d-flex align-items-center gap-2">
+                <i class="bi bi-arrow-left"></i> Volver al listado
+            </a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-5" style="border-radius: 12px; border: 1px solid #f0f2f5 !important;">
+        <div class="card-body p-4">
+            <h5 class="fw-bold text-dark mb-4">Información del Sprint</h5>
+            
+            <div class="row g-3">
+                <div class="col-6 col-md-3">
+                    <span class="text-uppercase text-muted fw-semibold d-block text-xs" style="font-size: 0.75rem; letter-spacing: 0.5px;">Fecha Inicio</span>
+                    <strong class="text-dark fs-6"><asp:Label ID="lblDetalleFechaInicio" runat="server"></asp:Label></strong>
+                </div>
+                <div class="col-6 col-md-3">
+                    <span class="text-uppercase text-muted fw-semibold d-block text-xs" style="font-size: 0.75rem; letter-spacing: 0.5px;">Fecha Estimada Fin</span>
+                    <strong class="text-dark fs-6"><asp:Label ID="lblDetalleFechaEstimadaFin" runat="server"></asp:Label></strong>
+                </div>
+                <div class="col-6 col-md-3">
+                    <span class="text-uppercase text-muted fw-semibold d-block text-xs" style="font-size: 0.75rem; letter-spacing: 0.5px;">Fecha Fin Real</span>
+                    <strong class="text-dark fs-6"><asp:Label ID="lblDetalleFechaFin" runat="server" Text="-"></asp:Label></strong>
+                </div>
+                <div class="col-6 col-md-3">
+                    <span class="text-uppercase text-muted fw-semibold d-block text-xs" style="font-size: 0.75rem; letter-spacing: 0.5px;">Estado General</span>
+                    <asp:Label ID="lblDetalleEstado" runat="server" CssClass="badge text-uppercase border  px-2"></asp:Label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold text-dark mb-0">Tickets incluidos en el Sprint</h4>
+        <span class="badge bg-light text-dark border fw-medium px-2 py-1">
+            <i class="bi bi-layers-half me-1 text-muted"></i> Total de tareas
+        </span>
+    </div>
+
+    <div class="bg-white rounded-3 shadow-sm border-0 overflow-hidden" style="border: 1px solid #f0f2f5 !important;">
+        <asp:GridView ID="dgvTicketsDelSprint" runat="server"
+            AutoGenerateColumns="False"
+            DataKeyNames="Id"
+            CssClass="table table-hover align-middle mb-0"
+            GridLines="None"
+            EmptyDataText="Este sprint todavía no tiene tickets asignados.">
+
+            <HeaderStyle CssClass="table-light text-secondary fw-semibold border-bottom small" />
+
+            <Columns>
+
+                <asp:TemplateField HeaderText="ID" ItemStyle-Width="100px">
+                    <ItemTemplate>
+                        <a href='Tickets?idTicket=<%# Eval("Id") %>' class="text-primary fw-bold text-decoration-none">
+                            TK-<%# Eval("Id").ToString().PadLeft(3, '0') %>
+                        </a>
+                    </ItemTemplate>
+                </asp:TemplateField>
+
+                <asp:TemplateField HeaderText="Título">
+                    <ItemTemplate>
+                        <span class="text-dark"><%# Eval("Descripcion") %></span>
+                    </ItemTemplate>
+                </asp:TemplateField>
+
+                <asp:TemplateField HeaderText="Prioridad" ItemStyle-Width="110px">
+                    <ItemTemplate>
+                        <span class='<%# GetClassEtiquetaPrioridad(Eval("Prioridad.Nombre")) %>'>
+                            <%# Eval("Prioridad.Nombre") %>
+                        </span>
+                    </ItemTemplate>
+                </asp:TemplateField>
+
+                <asp:TemplateField HeaderText="Estado" ItemStyle-Width="130px">
+                    <ItemTemplate>
+                        <span class='<%# GetClassEtiquetaEstado(Eval("Estado.Nombre")) %>'>
+                            <%# Eval("Estado.Nombre") %>
+                        </span>
+                    </ItemTemplate>
+                </asp:TemplateField>
+
+                <asp:TemplateField HeaderText="Asignado a">
+                    <ItemTemplate>
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-person text-muted me-2"></i>
+                            <span class="text-dark fw-medium text-sm"><%# Eval("Usuario.Nombre") %></span>
+                        </div>
+                    </ItemTemplate>
+                </asp:TemplateField>
+
+                 <asp:TemplateField HeaderText="Creado el" ItemStyle-Width="120px">
+                     <ItemTemplate>
+                         <span class="text-muted small">
+                             <%# Convert.ToDateTime(Eval("FechaInicio")).ToString("dd/MM/yyyy") %>
+                         </span>
+                     </ItemTemplate>
+                 </asp:TemplateField>
+
+            </Columns>
+        </asp:GridView>
+    </div>
+        </asp:Panel>
     </div>
     <!-- CODIGO JS PARA VALIDACION DE CAMPOS MODAL -->
     <script type="text/javascript">

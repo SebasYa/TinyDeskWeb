@@ -46,6 +46,7 @@ CREATE TABLE ESTADO (
     FOREIGN KEY (IdEmpresa) REFERENCES EMPRESA(Id)
 )
 GO
+
 -- CREACIÓN TABLA USUARIO (Verrsión Limpia sin ROL y con PUESTO)
 CREATE TABLE USUARIO (
     Id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
@@ -257,3 +258,11 @@ update USUARIO Set EsAdmin = 1 where Nombre = 'phantom_user';
 GO
 select * from USUARIO;
 select * from SENIORITY;
+
+/*-----------
+CAMBIO PARA SPRINTS
+--------------*/
+ALTER TABLE SPRINT
+ADD IdEmpresa INT NOT NULL
+ALTER TABLE SPRINT
+ADD CONSTRAINT FK_Sprint_Empresa FOREIGN KEY (IdEmpresa) REFERENCES EMPRESA(Id);
