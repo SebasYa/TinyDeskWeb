@@ -77,7 +77,10 @@ namespace TP_Final_Programacion_III
             // Mostrar datos en pantalla
             lblDetalleDescripcion.Text = ticket.Descripcion;
             lblDetalleEstado.Text = ticket.Estado.Nombre;
+            lblDetalleEstado.CssClass = GetClassEtiquetaEstado(ticket.Estado.Nombre) + " text-uppercase";
+
             lblDetallePrioridad.Text = ticket.Prioridad.Nombre;
+            lblDetallePrioridad.CssClass = GetClassEtiquetaPrioridad(ticket.Prioridad.Nombre) + " text-uppercase";
             lblDetalleUsuario.Text = ticket.Usuario.Nombre + " " + ticket.Usuario.Apellido;
             lblDetalleSprint.Text = "Sprint " + ticket.Sprint.NumeroSprint;
             lblDetalleProyecto.Text = ticket.Sprint.Proyecto.Nombre;
