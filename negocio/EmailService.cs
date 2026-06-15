@@ -32,6 +32,7 @@ namespace negocio
             email.Body = cuerpo;
 
         }
+        public string UltimoError { get; set; }
         public bool enviarEmail()
         {
             try
@@ -39,9 +40,10 @@ namespace negocio
                 server.Send(email);
                 return true;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
-                throw ex;
+                UltimoError = ex.Message;
+                return false;
             }
         }
         public bool EnviarMailTicketAsignado(int idUsuario, Ticket ticket, string linkTicket)

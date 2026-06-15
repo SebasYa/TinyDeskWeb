@@ -121,8 +121,7 @@ namespace negocio
         }
         public int CalcularUsuarioSugerido(string prioridad, List<CandidatoAsignacionIA> candidatos)
         {
-            if (candidatos == null || candidatos.Count == 0)
-                return 0;
+            if (candidatos == null || candidatos.Count == 0) return 0;
 
             prioridad = prioridad.ToUpper();
 
@@ -180,38 +179,41 @@ namespace negocio
         }
         private int PuntajePrioridadAlta(CandidatoAsignacionIA candidato)
         {
-            if (candidato.Seniority == null)
-                return 0;
+            if (candidato.Seniority == null) return 0;
 
-            if (candidato.Seniority.Nombre == "Senior") return 3;
-            if (candidato.Seniority.Nombre == "Semi Senior") return 2;
-            if (candidato.Seniority.Nombre == "Junior") return 1;
-
-            return 0;
+            switch (candidato.Seniority.Nombre)
+            {
+                case "Senior": return 3;
+                case "Semi Senior": return 2;
+                case "Junior": return 1;
+                default: return 0;
+            }
         }
 
         private int PuntajePrioridadMedia(CandidatoAsignacionIA candidato)
         {
-            if (candidato.Seniority == null)
-                return 0;
+            if (candidato.Seniority == null) return 0;
 
-            if (candidato.Seniority.Nombre == "Semi Senior") return 3;
-            if (candidato.Seniority.Nombre == "Junior") return 2;
-            if (candidato.Seniority.Nombre == "Senior") return 1;
-
-            return 0;
+            switch (candidato.Seniority.Nombre)
+            {
+                case "Semi Senior": return 3;
+                case "Junior": return 2;
+                case "Senior": return 1;
+                default: return 0;
+            }
         }
 
         private int PuntajePrioridadBaja(CandidatoAsignacionIA candidato)
         {
-            if (candidato.Seniority == null)
-                return 0;
+            if (candidato.Seniority == null) return 0;
 
-            if (candidato.Seniority.Nombre == "Junior") return 3;
-            if (candidato.Seniority.Nombre == "Semi Senior") return 2;
-            if (candidato.Seniority.Nombre == "Senior") return 1;
-
-            return 0;
+            switch (candidato.Seniority.Nombre)
+            {
+                case "Junior": return 3;
+                case "Semi Senior": return 2;
+                case "Senior": return 1;
+                default: return 0;
+            }
         }
     }
 }

@@ -22,7 +22,7 @@
             AutoGenerateColumns="false"
             DataKeyNames="Id"
             AllowPaging="true"
-            PageSize="10"
+            PageSize="7"
             GridLines="None"
             OnPageIndexChanging="dgvTickets_PageIndexChanging"
             OnSelectedIndexChanged="dgvTickets_SelectedIndexChanged">
@@ -144,6 +144,9 @@
                             AutoGenerateColumns="false"
                             GridLines="None"
                             DataKeyNames="IdTicket"
+                            AllowPaging="true"
+                            PageSize="7"
+                            OnPageIndexChanging="dgvVistaPreviaIA_PageIndexChanging"
                             OnRowDataBound="dgvVistaPreviaIA_RowDataBound">
 
                             <Columns>

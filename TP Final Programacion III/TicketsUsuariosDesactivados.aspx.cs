@@ -19,6 +19,7 @@ namespace TP_Final_Programacion_III
             public string Area { get; set; }
             public string Puesto { get; set; }
             public int IdUsuarioSugerido { get; set; }
+            public int IdUsuarioSeleccionado { get; set; }
             public string Motivo { get; set; }
             public List<CandidatoAsignacionIA> Candidatos { get; set; }
         }
@@ -209,7 +210,7 @@ namespace TP_Final_Programacion_III
                                          </div>";
 
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "OcultarMensajeReasignacion",
-                    "setTimeout(function(){ var mensaje = document.getElementById('mensajeReasignacionExitosa'); if (mensaje) { mensaje.style.display = 'none'; } }, 5000);",
+                    "setTimeout(function(){ var mensaje = document.getElementById('mensajeReasignacionExitosa'); if (mensaje) { mensaje.style.display = 'none'; } }, 10000);",
                     true);
 
                 CargarTickets();
@@ -260,6 +261,7 @@ namespace TP_Final_Programacion_III
                     item.Area = ticket.Usuario.Area.Nombre;
                     item.Puesto = ticket.Usuario.Puesto.Nombre;
                     item.IdUsuarioSugerido = idUsuarioSugerido;
+                    item.IdUsuarioSeleccionado = idUsuarioSugerido;
                     item.Motivo = candidatoNegocio.ObtenerMotivoSugerencia(usuarioSugerido);
                     item.Candidatos = candidatos;
 
@@ -308,51 +310,98 @@ namespace TP_Final_Programacion_III
 
             ddlUsuarioIA.Items.Insert(0, new ListItem("Sin usuario asignado", ""));
 
-            if (item.IdUsuarioSugerido > 0 && ddlUsuarioIA.Items.FindByValue(item.IdUsuarioSugerido.ToString()) != null)
-                ddlUsuarioIA.SelectedValue = item.IdUsuarioSugerido.ToString();
+            if (item.IdUsuarioSeleccionado > 0 && ddlUsuarioIA.Items.FindByValue(item.IdUsuarioSeleccionado.ToString()) != null)
+                ddlUsuarioIA.SelectedValue = item.IdUsuarioSeleccionado.ToString();
 
             ddlUsuarioIA.Enabled = item.Candidatos.Count > 0;
             lblMotivoIA.Text = item.Motivo;
+        }
+        protected void dgvVistaPreviaIA_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            GuardarSeleccionPaginaActualIA();
+
+            dgvVistaPreviaIA.PageIndex = e.NewPageIndex;
+            dgvVistaPreviaIA.DataSource = Session["vistaPreviaAsignacionIA"];
+            dgvVistaPreviaIA.DataBind();
+
+            string scriptOpen = @"document.addEventListener('DOMContentLoaded', function () {
+                          var modalElement = document.getElementById('modalReasignarConIA');
+                          var myModal = new bootstrap.Modal(modalElement);
+                          myModal.show();
+                    });";
+
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "OpenModalReasignarConIA", scriptOpen, true);
         }
         protected void btnConfirmarReasignacionIA_Click(object sender, EventArgs e)
         {
             try
             {
+                GuardarSeleccionPaginaActualIA();
                 TicketNegocio ticketNegocio = new TicketNegocio();
-                EmailService emailService = new EmailService();
-
                 List<Ticket> listaTickets = (List<Ticket>)Session["listaTicketsUsuariosDesactivados"];
+                List<VistaPreviaAsignacionIA> vistaPrevia = (List<VistaPreviaAsignacionIA>)Session["vistaPreviaAsignacionIA"];
 
-                int total = dgvVistaPreviaIA.Rows.Count;
+                int total = vistaPrevia.Count;
                 int reasignados = 0;
                 int noReasignados = 0;
                 int mailsNoEnviados = 0;
+                string erroresMail = "";
+                bool yaSeEnvioUnMail = false;
 
-                foreach (GridViewRow row in dgvVistaPreviaIA.Rows)
+                foreach (VistaPreviaAsignacionIA item in vistaPrevia)
                 {
-                    DropDownList ddlUsuarioIA = (DropDownList)row.FindControl("ddlUsuarioIA");
+                    int idTicket = item.IdTicket;
+                    int idUsuario = item.IdUsuarioSeleccionado;
 
-                    int idTicket = int.Parse(dgvVistaPreviaIA.DataKeys[row.RowIndex].Value.ToString());
-
-                    if (string.IsNullOrWhiteSpace(ddlUsuarioIA.SelectedValue))
+                    if (idUsuario == 0)
                     {
                         noReasignados++;
                         continue;
                     }
 
-                    int idUsuario = int.Parse(ddlUsuarioIA.SelectedValue);
+                    try
+                    {
+                        ticketNegocio.ReasignarUsuario(idTicket, idUsuario);
 
-                    ticketNegocio.ReasignarUsuario(idTicket, idUsuario);
+                        Ticket ticket = listaTickets.Find(x => x.Id == idTicket);
 
-                    Ticket ticket = listaTickets.Find(x => x.Id == idTicket);
-                    string linkTicket = LinkHelper.GenerarLink(this, "Tickets.aspx", "id", idTicket.ToString());
+                        if (ticket != null)
+                        {
+                            try
+                            {
+                                // se agregan 11 segundos entre envio de mail y otro. Mailtrap gratuito concede 1 mail cada 10 seg.
+                                if (yaSeEnvioUnMail) System.Threading.Thread.Sleep(11000);
 
-                    bool mailEnviado = emailService.EnviarMailTicketAsignado(idUsuario, ticket, linkTicket);
+                                EmailService emailService = new EmailService();
+                                string linkTicket = LinkHelper.GenerarLink(this, "Tickets.aspx", "id", idTicket.ToString());
 
-                    if (!mailEnviado)
-                        mailsNoEnviados++;
+                                bool mailEnviado = emailService.EnviarMailTicketAsignado(idUsuario, ticket, linkTicket);
 
-                    reasignados++;
+                                if (!mailEnviado)
+                                {
+                                    mailsNoEnviados++;
+                                    erroresMail += " Ticket #" + idTicket + ": " + emailService.UltimoError;
+                                }
+                                yaSeEnvioUnMail = true;
+                            }
+                            catch (Exception ex)
+                            {
+                                mailsNoEnviados++;
+                                erroresMail += " Ticket #" + idTicket + ": " + ex.Message;
+                                yaSeEnvioUnMail = true;
+                            }
+                        }
+                        else
+                        {
+                            mailsNoEnviados++;
+                        }
+
+                        reasignados++;
+                    }
+                    catch
+                    {
+                        noReasignados++;
+                    }
                 }
 
                 string mensajeMail = mailsNoEnviados > 0
@@ -361,12 +410,12 @@ namespace TP_Final_Programacion_III
 
                 litMensajeAccion.Text = @"<div id='mensajeReasignacionIA' class='alert alert-success alert-dismissible fade show' role='alert'>
                                               Se reasignaron " + reasignados + " de " + total + @" tickets.
-                                              Quedaron " + noReasignados + @" para revisar manualmente." + mensajeMail + @"
+                                              Quedaron " + noReasignados + @" para revisar manualmente." + mensajeMail + erroresMail + @"
                                               <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
                                           </div>";
 
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "OcultarMensajeReasignacionIA",
-                    "setTimeout(function(){ var mensaje = document.getElementById('mensajeReasignacionIA'); if (mensaje) { mensaje.style.display = 'none'; } }, 5000);",
+                    "setTimeout(function(){ var mensaje = document.getElementById('mensajeReasignacionIA'); if (mensaje) { mensaje.style.display = 'none'; } }, 10000);",
                     true);
 
                 CargarTickets();
@@ -378,6 +427,31 @@ namespace TP_Final_Programacion_III
                                               Ocurrió un error al confirmar las reasignaciones con IA.
                                           </div>";
             }
+        }
+        private void GuardarSeleccionPaginaActualIA()
+        {
+            List<VistaPreviaAsignacionIA> vistaPrevia = (List<VistaPreviaAsignacionIA>)Session["vistaPreviaAsignacionIA"];
+
+            if (vistaPrevia == null)
+                return;
+
+            foreach (GridViewRow row in dgvVistaPreviaIA.Rows)
+            {
+                DropDownList ddlUsuarioIA = (DropDownList)row.FindControl("ddlUsuarioIA");
+                int idTicket = int.Parse(dgvVistaPreviaIA.DataKeys[row.RowIndex].Value.ToString());
+
+                VistaPreviaAsignacionIA item = vistaPrevia.Find(x => x.IdTicket == idTicket);
+
+                if (item != null)
+                {
+                    if (string.IsNullOrWhiteSpace(ddlUsuarioIA.SelectedValue))
+                        item.IdUsuarioSeleccionado = 0;
+                    else
+                        item.IdUsuarioSeleccionado = int.Parse(ddlUsuarioIA.SelectedValue);
+                }
+            }
+
+            Session["vistaPreviaAsignacionIA"] = vistaPrevia;
         }
     }
 }

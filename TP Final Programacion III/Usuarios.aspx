@@ -8,7 +8,14 @@
             </a>
         </div>
 
-        <asp:GridView ID="dgvUsuarios" runat="server" AutoGenerateColumns="False" DataKeyNames="Id" OnSelectedIndexChanged="dgvUsuarios_SelectedIndexChanged" OnPageIndexChanging="dgvUsuarios_PageIndexChanging" CssClass="table table-striped table-bordered shadow-sm">
+        <asp:GridView ID="dgvUsuarios" runat="server"
+            AutoGenerateColumns="False"
+            DataKeyNames="Id"
+            AllowPaging="true"
+            PageSize="8"
+            OnSelectedIndexChanged="dgvUsuarios_SelectedIndexChanged"
+            OnPageIndexChanging="dgvUsuarios_PageIndexChanging"
+            CssClass="table table-striped table-bordered shadow-sm">
             <Columns>
                 <asp:BoundField DataField="Apellido" HeaderText="Apellido" />
                 <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
