@@ -13,6 +13,11 @@ namespace TP_Final_Programacion_III
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["usuario"] != null)
+            {
+                Response.Redirect("Default.aspx", false);
+                return;
+            }
             lblErrorUsuario.Visible = false;
             lblErrorPass.Visible = false;
             if (!IsPostBack)

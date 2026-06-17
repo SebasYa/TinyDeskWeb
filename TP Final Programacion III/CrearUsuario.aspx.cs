@@ -259,7 +259,7 @@ namespace TP_Final_Programacion_III
                 default:
                     txtNombreUsuario.CssClass = "form-control is-invalid";
                     txtEmail.CssClass = "form-control is-invalid";
-                    MostrarErrorFormulario("Ya existe un usuario con ese nombre de usuario o correo electrónico.");
+                    MostrarErrorFormulario("ERROR!!");
                     break;
             }
         }

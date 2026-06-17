@@ -101,7 +101,6 @@ namespace TP_Final_Programacion_III
         protected void btnGuardarProyecto_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtNombreProyecto.Text) ||
-                string.IsNullOrWhiteSpace(txtFechaInicioProyecto.Text) ||
                 string.IsNullOrWhiteSpace(txtFechaEstimadaFinProyecto.Text) ||
                 string.IsNullOrWhiteSpace(ddlEstadoProyecto.SelectedValue))
             {
@@ -115,7 +114,7 @@ namespace TP_Final_Programacion_III
 
                 nuevoProyecto.Nombre = txtNombreProyecto.Text;
                 nuevoProyecto.Descripcion = txtDescripcionProyecto.Text;
-                nuevoProyecto.FechaInicio = Convert.ToDateTime(txtFechaInicioProyecto.Text);
+                nuevoProyecto.FechaInicio = DateTime.Today;
                 nuevoProyecto.FechaEstimadaFin = Convert.ToDateTime(txtFechaEstimadaFinProyecto.Text);
                 nuevoProyecto.Activo = true;
 
@@ -138,7 +137,7 @@ namespace TP_Final_Programacion_III
 
                 txtNombreProyecto.Text = "";
                 txtDescripcionProyecto.Text = "";
-                txtFechaInicioProyecto.Text = "";
+                txtFechaInicioProyecto.Text = DateTime.Today.ToString("yyyy-MM-dd");
                 txtFechaEstimadaFinProyecto.Text = "";
                 ddlEstadoProyecto.SelectedIndex = 0;
             }
@@ -156,7 +155,7 @@ namespace TP_Final_Programacion_III
         {
             txtNombreProyecto.Text = "";
             txtDescripcionProyecto.Text = "";
-            txtFechaInicioProyecto.Text = "";
+            txtFechaInicioProyecto.Text = DateTime.Today.ToString("yyyy-MM-dd");
             txtFechaEstimadaFinProyecto.Text = "";
             ddlEstadoProyecto.SelectedIndex = 0;
         }
@@ -484,11 +483,13 @@ namespace TP_Final_Programacion_III
 
             CargarLista(
                 ddlEstadoProyecto,
-                estadoNegocio.listar(idEmpresa),
+                estadoNegocio.listar(idEmpresa).FindAll(x => !x.EsFinal),
                 "Id",
                 "Nombre",
                 "Seleccione Estado..."
             );
+            txtFechaInicioProyecto.Text = DateTime.Today.ToString("yyyy-MM-dd");
+            txtFechaInicioProyecto.Enabled = false;
         }
         private void CargarCombosTicket(int idEmpresa)
         {

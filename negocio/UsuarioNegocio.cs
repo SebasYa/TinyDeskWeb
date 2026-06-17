@@ -457,16 +457,14 @@ namespace negocio
 
             try
             {
-                datos.setearConsulta(@"
-            SELECT
-                (SELECT COUNT(*) 
-                 FROM USUARIO 
-                 WHERE NombreUsuario = @NombreUsuario
-                   AND Id <> @Id) AS CoincidenciasUsuario,
-                (SELECT COUNT(*) 
-                 FROM USUARIO 
-                 WHERE Email = @Email
-                   AND Id <> @Id) AS CoincidenciasEmail
+                datos.setearConsulta(@"SELECT(SELECT COUNT(*) 
+                                       FROM USUARIO 
+                                       WHERE NombreUsuario = @NombreUsuario
+                                         AND Id <> @Id) AS CoincidenciasUsuario,
+                                       (SELECT COUNT(*) 
+                                        FROM USUARIO 
+                                        WHERE Email = @Email
+                                          AND Id <> @Id) AS CoincidenciasEmail
         ");
 
                 datos.setearParametro("@NombreUsuario", nombreUsuario);

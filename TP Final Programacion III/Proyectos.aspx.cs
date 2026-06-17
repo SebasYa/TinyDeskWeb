@@ -27,13 +27,11 @@ namespace TP_Final_Programacion_III
                     {
                         CargarListadoProyectos(idEmpresa);
                     }
-
                 }
                 catch (Exception ex)
                 {
                     Session.Add("error", ex.ToString());
                     MostrarErrorProyecto("Ocurrio un error al cargar el formulario.");
-                    //Response.Redirect("Proyectos.aspx", false);
                 }
             }
         }
@@ -41,7 +39,8 @@ namespace TP_Final_Programacion_III
         {
             pnlListadoProyectos.Visible = true;
             pnlDetalleProyecto.Visible = false;
-            txtFechaInicioProyecto.Enabled = true;
+            txtFechaInicioProyecto.Text = DateTime.Today.ToString("yyyy-MM-dd");
+            txtFechaInicioProyecto.Enabled = false;
 
             ProyectoNegocio negocio = new ProyectoNegocio();
             List<Proyecto> lista = negocio.listar(idEmpresa);
@@ -125,7 +124,6 @@ namespace TP_Final_Programacion_III
         protected void btnGuardarProyecto_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtNombreProyecto.Text) ||
-                string.IsNullOrWhiteSpace(txtFechaInicioProyecto.Text) ||
                 string.IsNullOrWhiteSpace(txtFechaEstimadaFinProyecto.Text) ||
                 string.IsNullOrWhiteSpace(ddlEstadoProyecto.SelectedValue))
             {
@@ -133,8 +131,9 @@ namespace TP_Final_Programacion_III
                 return;
             }
             bool esEdicion = Request.QueryString["id"] != null;
-            DateTime fechaInicio;
             int idProyecto = esEdicion ? int.Parse(Request.QueryString["id"]) : 0;
+            DateTime fechaInicio;
+
             if (esEdicion)
             {
                 int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
@@ -147,11 +146,12 @@ namespace TP_Final_Programacion_III
                     MostrarErrorProyecto("No se encontro el proyecto solicitado.");
                     return;
                 }
+
                 fechaInicio = proyectoActual.FechaInicio;
             }
             else
             {
-                fechaInicio = Convert.ToDateTime(txtFechaInicioProyecto.Text);
+                fechaInicio = DateTime.Today;
             }
 
             DateTime fechaEstimadaFin = Convert.ToDateTime(txtFechaEstimadaFinProyecto.Text);
@@ -169,12 +169,6 @@ namespace TP_Final_Programacion_III
                 return;
             }
 
-            if (fechaInicio.Date < DateTime.Today && !esEdicion)
-            {
-                MostrarErrorProyecto("La fecha inicial no puede ser anterior a la fecha de hoy.");
-                return;
-            }
-
             try
             {
                 ProyectoNegocio proyectoNegocio = new ProyectoNegocio();
@@ -189,21 +183,9 @@ namespace TP_Final_Programacion_III
                 proyecto.Estado = new Estado();
                 proyecto.Estado.Id = int.Parse(ddlEstadoProyecto.SelectedValue);
 
-                List<Estado> estados = (List<Estado>)Session["listaEstadosProyecto"];
-                Estado estadoSeleccionado = estados.Find(x => x.Id == proyecto.Estado.Id);
 
-
-                if (estadoSeleccionado != null && estadoSeleccionado.EsFinal)
-                {
-                    proyecto.Activo = false;
-                    proyecto.FechaFin = DateTime.Today;
-                }
-                else
-                {
-                    proyecto.Activo = true;
-                    proyecto.FechaFin = null;
-                }
-
+                proyecto.Activo = true;
+                proyecto.FechaFin = null;
                 proyecto.Empresa = new Empresa();
                 proyecto.Empresa.Id = userLogueado.Empresa.Id;
 
@@ -223,7 +205,7 @@ namespace TP_Final_Programacion_III
 
                     txtNombreProyecto.Text = "";
                     txtDescripcionProyecto.Text = "";
-                    txtFechaInicioProyecto.Text = "";
+                    txtFechaInicioProyecto.Text = DateTime.Today.ToString("yyyy-MM-dd");
                     txtFechaEstimadaFinProyecto.Text = "";
                     ddlEstadoProyecto.SelectedIndex = 0;
 

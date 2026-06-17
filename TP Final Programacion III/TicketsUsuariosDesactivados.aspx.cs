@@ -38,6 +38,29 @@ namespace TP_Final_Programacion_III
                 }
             }
         }
+        private void CargarTickets()
+        {
+            Usuario userLogueado = (Usuario)Session["usuario"];
+            int idEmpresa = userLogueado.Empresa.Id;
+
+            TicketNegocio ticketNegocio = new TicketNegocio();
+            List<Ticket> lista = ticketNegocio.ListarAsignadosUsuariosDesactivados(idEmpresa);
+
+            Session["listaTicketsUsuariosDesactivados"] = lista;
+            dgvTickets.DataSource = lista;
+            dgvTickets.DataBind();
+
+            if (lista.Count == 0)
+            {
+                litMensajeEstado.Text = @"<div class='alert alert-success shadow-sm'>
+                                             No hay tickets asignados a usuarios desactivados.
+                                          </div>";
+            }
+            else
+            {
+                litMensajeEstado.Text = "";
+            }
+        }
         protected void dgvTickets_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
             dgvTickets.PageIndex = e.NewPageIndex;
@@ -67,29 +90,6 @@ namespace TP_Final_Programacion_III
             if (estado == "pendiente") return "badge text-bg-warning px-3 py-2";
 
             return "badge text-bg-dark px-3 py-2";
-        }
-        private void CargarTickets()
-        {
-            Usuario userLogueado = (Usuario)Session["usuario"];
-            int idEmpresa = userLogueado.Empresa.Id;
-
-            TicketNegocio ticketNegocio = new TicketNegocio();
-            List<Ticket> lista = ticketNegocio.ListarAsignadosUsuariosDesactivados(idEmpresa);
-
-            Session["listaTicketsUsuariosDesactivados"] = lista;
-            dgvTickets.DataSource = lista;
-            dgvTickets.DataBind();
-
-            if (lista.Count == 0)
-            {
-                litMensajeEstado.Text = @"<div class='alert alert-success shadow-sm'>
-                                             No hay tickets asignados a usuarios desactivados.
-                                          </div>";
-            }
-            else
-            {
-                litMensajeEstado.Text = "";
-            }
         }
         protected void dgvTickets_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -346,10 +346,10 @@ namespace TP_Final_Programacion_III
             RegistrarScriptMotivoIA();
 
             string scriptOpen = @"document.addEventListener('DOMContentLoaded', function () {
-                          var modalElement = document.getElementById('modalReasignarConIA');
-                          var myModal = new bootstrap.Modal(modalElement);
-                          myModal.show();
-                    });";
+                                  var modalElement = document.getElementById('modalReasignarConIA');
+                                  var myModal = new bootstrap.Modal(modalElement);
+                                  myModal.show();
+                                  });";
 
             ScriptManager.RegisterStartupScript(this, this.GetType(), "OpenModalReasignarConIA", scriptOpen, true);
         }

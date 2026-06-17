@@ -169,8 +169,7 @@
 
                         <div class="col-md-6">
                             <label for="txtFechaInicioProyecto" class="form-label fw-semibold">Fecha Inicio</label>
-                            <asp:TextBox ID="txtFechaInicioProyecto" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
-                            <asp:RequiredFieldValidator ID="rfvFechaInicioProyecto" runat="server" ControlToValidate="txtFechaInicioProyecto" ErrorMessage="La fecha de inicio es obligatoria." CssClass="text-danger text-validation-error" Display="Dynamic" ValidationGroup="vgProyecto" />
+                            <asp:TextBox ID="txtFechaInicioProyecto" runat="server" CssClass="form-control" TextMode="Date" Enabled="false"></asp:TextBox>
                         </div>
 
                         <div class="col-md-6">

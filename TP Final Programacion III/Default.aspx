@@ -242,10 +242,9 @@
                             <label for="txtDescripcionProyecto" class="form-label fw-semibold">Descripción</label>
                             <asp:TextBox ID="txtDescripcionProyecto" runat="server" CssClass="form-control w-100 mw-100" TextMode="MultiLine" Rows="3" placeholder="Ingresá una descripción breve..."></asp:TextBox>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label for="txtFechaInicioProyecto" class="form-label fw-semibold">Fecha Inicio</label>
-                            <asp:TextBox ID="txtFechaInicioProyecto" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
-                            <asp:RequiredFieldValidator ID="rfvFechaInicioProyecto" runat="server" ControlToValidate="txtFechaInicioProyecto" ErrorMessage="La fecha de inicio es obligatoria." CssClass="text-danger text-validation-error" Display="Dynamic" ValidationGroup="vgProyecto" />
+                            <asp:TextBox ID="txtFechaInicioProyecto" runat="server" CssClass="form-control" TextMode="Date" Enabled="false"></asp:TextBox>
                         </div>
                         <div class="col-md-4">
                             <label for="txtFechaEstimadaFinProyecto" class="form-label fw-semibold">Fecha Estimada Fin</label>
