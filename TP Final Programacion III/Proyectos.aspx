@@ -103,12 +103,21 @@
 
     <asp:Panel ID="pnlListadoProyectos" runat="server">
 
-        <div class="col-12 col-md-auto mb-4">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
             <div class="d-flex flex-wrap gap-2">
-                <button type="button" class="btn btn-primary shadow-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#proyectoModal">
-                    <i class="bi bi-plus-circle"></i>Nuevo Proyecto
-                </button>
+                <asp:Button ID="btnFiltroActivos" runat="server"
+                    Text="Activos"
+                    CssClass="btn btn-primary"
+                    OnClick="btnFiltroActivos_Click" />
+
+                <asp:Button ID="btnFiltroFinalizados" runat="server"
+                    Text="Finalizados"
+                    CssClass="btn btn-outline-secondary"
+                    OnClick="btnFiltroFinalizados_Click" />
             </div>
+            <button type="button" class="btn btn-primary shadow-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#proyectoModal">
+                <i class="bi bi-plus-circle"></i>Nuevo Proyecto
+            </button>
         </div>
 
         <div class="row">

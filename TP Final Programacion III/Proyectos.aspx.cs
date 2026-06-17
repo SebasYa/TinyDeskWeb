@@ -37,7 +37,6 @@ namespace TP_Final_Programacion_III
                 }
             }
         }
-
         private void CargarListadoProyectos(int idEmpresa)
         {
             pnlListadoProyectos.Visible = true;
@@ -46,6 +45,25 @@ namespace TP_Final_Programacion_III
 
             ProyectoNegocio negocio = new ProyectoNegocio();
             List<Proyecto> lista = negocio.listar(idEmpresa);
+            bool mostrarFinalizados = false;
+
+            if (Session["FiltroProyectosFinalizados"] != null)
+            {
+                mostrarFinalizados = (bool)Session["FiltroProyectosFinalizados"];
+            }
+
+            if (mostrarFinalizados)
+            {
+                lista = lista.FindAll(x => !x.Activo);
+                btnFiltroActivos.CssClass = "btn btn-outline-primary";
+                btnFiltroFinalizados.CssClass = "btn btn-secondary";
+            }
+            else
+            {
+                lista = lista.FindAll(x => x.Activo);
+                btnFiltroActivos.CssClass = "btn btn-primary";
+                btnFiltroFinalizados.CssClass = "btn btn-outline-secondary";
+            }
 
             repProyectos.DataSource = lista;
             repProyectos.DataBind();
@@ -53,7 +71,6 @@ namespace TP_Final_Programacion_III
             lblModalProyectoTitulo.Text = "Nuevo Proyecto";
             btnGuardarProyecto.Text = "Guardar Proyecto";
         }
-
         private void CargarDetalleProyecto(int idProyecto, int idEmpresa)
         {
             pnlListadoProyectos.Visible = false;
@@ -295,6 +312,20 @@ namespace TP_Final_Programacion_III
                 Session.Add("error", ex.ToString());
                 MostrarErrorProyecto("Ocurrió un error al finalizar el proyecto.");
             }
+        }
+        protected void btnFiltroActivos_Click(object sender, EventArgs e)
+        {
+            Session["FiltroProyectosFinalizados"] = false;
+
+            Usuario userLogueado = (Usuario)Session["usuario"];
+            CargarListadoProyectos(userLogueado.Empresa.Id);
+        }
+        protected void btnFiltroFinalizados_Click(object sender, EventArgs e)
+        {
+            Session["FiltroProyectosFinalizados"] = true;
+
+            Usuario userLogueado = (Usuario)Session["usuario"];
+            CargarListadoProyectos(userLogueado.Empresa.Id);
         }
     }
 }

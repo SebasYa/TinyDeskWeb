@@ -8,13 +8,9 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
                 <h4 class="mb-0">Tickets asignados a usuarios desactivados</h4>
-                <small class="text-muted">La IA sugiere usuarios, pero podés revisar antes de confirmar.</small>
             </div>
 
-            <asp:Button ID="btnReasignarConIA" runat="server"
-                CssClass="btn btn-success"
-                Text="Reasignar con IA"
-                OnClick="btnReasignarConIA_Click" />
+            <asp:Button ID="btnReasignarConIA" runat="server" CssClass="btn btn-success" Text="Reasignar con IA" OnClick="btnReasignarConIA_Click" />
         </div>
 
         <asp:GridView ID="dgvTickets" runat="server"
@@ -22,7 +18,7 @@
             AutoGenerateColumns="false"
             DataKeyNames="Id"
             AllowPaging="true"
-            PageSize="7"
+            PageSize="8"
             GridLines="None"
             OnPageIndexChanging="dgvTickets_PageIndexChanging"
             OnSelectedIndexChanged="dgvTickets_SelectedIndexChanged">
@@ -45,7 +41,7 @@
                     </ItemTemplate>
                 </asp:TemplateField>
 
-                <asp:TemplateField HeaderText="Área / Puesto">
+                <asp:TemplateField HeaderText="Area / Puesto">
                     <ItemTemplate>
                         <span class="badge bg-secondary-subtle text-secondary rounded-pill">
                             <%# Eval("Usuario.Area.Nombre") %>
