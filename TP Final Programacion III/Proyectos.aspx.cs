@@ -79,8 +79,14 @@ namespace TP_Final_Programacion_III
             txtFechaInicioProyecto.Text = proyecto.FechaInicio.ToString("yyyy-MM-dd");
             txtFechaInicioProyecto.Enabled = false;
             txtFechaEstimadaFinProyecto.Text = proyecto.FechaEstimadaFin.ToString("yyyy-MM-dd");
-            ddlEstadoProyecto.SelectedValue = proyecto.Estado.Id.ToString();
-
+            if (ddlEstadoProyecto.Items.FindByValue(proyecto.Estado.Id.ToString()) != null)
+            {
+                ddlEstadoProyecto.SelectedValue = proyecto.Estado.Id.ToString();
+            }
+            else
+            {
+                ddlEstadoProyecto.SelectedIndex = 0;
+            }
             lblModalProyectoTitulo.Text = "Editar Proyecto";
             btnGuardarProyecto.Text = "Guardar Cambios";
 
@@ -92,9 +98,8 @@ namespace TP_Final_Programacion_III
         {
             EstadoNegocio estadoNegocio = new EstadoNegocio();
             List<Estado> estados = estadoNegocio.listar(idEmpresa);
-            estados = estados.FindAll(x => !x.EsFinal);
-            Session["listaEstadosProyecto"] = estados; ;
-            ddlEstadoProyecto.DataSource = estados;
+            Session["listaEstadosProyecto"] = estados;
+            ddlEstadoProyecto.DataSource = estados.FindAll(x => !x.EsFinal);
             ddlEstadoProyecto.DataValueField = "Id";
             ddlEstadoProyecto.DataTextField = "Nombre";
             ddlEstadoProyecto.DataBind();
