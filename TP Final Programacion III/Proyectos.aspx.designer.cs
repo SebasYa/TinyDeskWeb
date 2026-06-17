@@ -51,6 +51,15 @@ namespace TP_Final_Programacion_III
         protected global::System.Web.UI.WebControls.Label lblDetalleEstado;
 
         /// <summary>
+        /// Control phFinalizarProyecto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder phFinalizarProyecto;
+
+        /// <summary>
         /// Control lblDetalleDescripcion.
         /// </summary>
         /// <remarks>
@@ -229,5 +238,41 @@ namespace TP_Final_Programacion_III
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnGuardarProyecto;
+
+        /// <summary>
+        /// Control lblFinalizarProyectoNombre.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblFinalizarProyectoNombre;
+
+        /// <summary>
+        /// Control litFinalizarProyectoConfirmacion.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litFinalizarProyectoConfirmacion;
+
+        /// <summary>
+        /// Control txtConfirmarFinalizarProyecto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtConfirmarFinalizarProyecto;
+
+        /// <summary>
+        /// Control btnConfirmarFinalizarProyecto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnConfirmarFinalizarProyecto;
     }
 }

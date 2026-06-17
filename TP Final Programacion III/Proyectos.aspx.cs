@@ -14,22 +14,22 @@ namespace TP_Final_Programacion_III
             {
                 try
                 {
-                     int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
+                    int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
 
-                     CargarEstadosProyecto(idEmpresa);
+                    CargarEstadosProyecto(idEmpresa);
 
-                     if (Request.QueryString["id"] != null)
-                     {
-                         int idProyecto = int.Parse(Request.QueryString["id"]);
-                         CargarDetalleProyecto(idProyecto, idEmpresa);
-                     }
-                     else
-                     {
-                         CargarListadoProyectos(idEmpresa);
-                     }
+                    if (Request.QueryString["id"] != null)
+                    {
+                        int idProyecto = int.Parse(Request.QueryString["id"]);
+                        CargarDetalleProyecto(idProyecto, idEmpresa);
+                    }
+                    else
+                    {
+                        CargarListadoProyectos(idEmpresa);
+                    }
 
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Session.Add("error", ex.ToString());
                     MostrarErrorProyecto("Ocurrio un error al cargar el formulario.");
@@ -69,6 +69,10 @@ namespace TP_Final_Programacion_III
             lblDetalleFechaEstimadaFin.Text = proyecto.FechaEstimadaFin.ToString("dd/MM/yyyy");
             lblDetalleFechaFin.Text = proyecto.FechaFin.HasValue ? proyecto.FechaFin.Value.ToString("dd/MM/yyyy") : "-";
             lblDetalleActivo.Text = proyecto.Activo ? "Sí" : "No";
+            phFinalizarProyecto.Visible = proyecto.Activo;
+            lblFinalizarProyectoNombre.Text = proyecto.Nombre;
+            litFinalizarProyectoConfirmacion.Text = proyecto.Nombre.ToUpper();
+            txtConfirmarFinalizarProyecto.Text = "";
 
             txtNombreProyecto.Text = proyecto.Nombre;
             txtDescripcionProyecto.Text = proyecto.Descripcion;
@@ -84,19 +88,18 @@ namespace TP_Final_Programacion_III
             dgvSprintsProyecto.DataSource = sprintNegocio.listarPorProyecto(idProyecto, idEmpresa);
             dgvSprintsProyecto.DataBind();
         }
-
         private void CargarEstadosProyecto(int idEmpresa)
         {
             EstadoNegocio estadoNegocio = new EstadoNegocio();
             List<Estado> estados = estadoNegocio.listar(idEmpresa);
-            Session["listaEstadosProyecto"] = estados;
+            estados = estados.FindAll(x => !x.EsFinal);
+            Session["listaEstadosProyecto"] = estados; ;
             ddlEstadoProyecto.DataSource = estados;
             ddlEstadoProyecto.DataValueField = "Id";
             ddlEstadoProyecto.DataTextField = "Nombre";
             ddlEstadoProyecto.DataBind();
             ddlEstadoProyecto.Items.Insert(0, new ListItem("Seleccione Estado..", ""));
         }
-
         protected void btnGuardarProyecto_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtNombreProyecto.Text) ||
@@ -117,7 +120,7 @@ namespace TP_Final_Programacion_III
                 ProyectoNegocio negocioFecha = new ProyectoNegocio();
                 Proyecto proyectoActual = negocioFecha.BuscarPorId(idProyecto, idEmpresa);
 
-                if(proyectoActual == null)
+                if (proyectoActual == null)
                 {
                     MostrarErrorProyecto("No se encontro el proyecto solicitado.");
                     return;
@@ -126,7 +129,7 @@ namespace TP_Final_Programacion_III
             }
             else
             {
-               fechaInicio = Convert.ToDateTime(txtFechaInicioProyecto.Text);
+                fechaInicio = Convert.ToDateTime(txtFechaInicioProyecto.Text);
             }
 
             DateTime fechaEstimadaFin = Convert.ToDateTime(txtFechaEstimadaFinProyecto.Text);
@@ -244,6 +247,49 @@ namespace TP_Final_Programacion_III
         {
             int idSprint = (int)dgvSprintsProyecto.SelectedDataKey.Value;
             Response.Redirect("Sprints.aspx?id=" + idSprint, false);
+        }
+        protected void btnConfirmarFinalizarProyecto_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Request.QueryString["id"] == null)
+                {
+                    MostrarErrorProyecto("No se encontró el proyecto solicitado.");
+                    return;
+                }
+
+                int idProyecto = int.Parse(Request.QueryString["id"]);
+                Usuario userLogueado = (Usuario)Session["usuario"];
+
+                ProyectoNegocio proyectoNegocio = new ProyectoNegocio();
+                Proyecto proyecto = proyectoNegocio.BuscarPorId(idProyecto, userLogueado.Empresa.Id);
+
+                if (proyecto == null)
+                {
+                    MostrarErrorProyecto("No se encontró el proyecto solicitado.");
+                    return;
+                }
+
+                string nombreEsperado = proyecto.Nombre.ToUpper();
+                string nombreIngresado = txtConfirmarFinalizarProyecto.Text.Trim();
+
+                if (nombreIngresado != nombreEsperado)
+                {
+                    MostrarErrorProyecto("El nombre ingresado no coincide. El proyecto no fue finalizado.");
+                    CargarDetalleProyecto(idProyecto, userLogueado.Empresa.Id);
+                    return;
+                }
+
+                proyectoNegocio.BajaLogica(idProyecto);
+
+                MostrarExitoProyecto("El proyecto, sus sprints y sus tickets activos se finalizaron correctamente.");
+                CargarDetalleProyecto(idProyecto, userLogueado.Empresa.Id);
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                MostrarErrorProyecto("Ocurrió un error al finalizar el proyecto.");
+            }
         }
     }
 }

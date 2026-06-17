@@ -25,6 +25,12 @@
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#proyectoModal">
                     <i class="bi bi-pencil me-1"></i>Editar Proyecto
                 </button>
+
+                <asp:PlaceHolder ID="phFinalizarProyecto" runat="server">
+                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#finalizarProyectoModal">
+                        <i class="bi bi-check-circle me-1"></i>Finalizar
+                    </button>
+                </asp:PlaceHolder>
             </div>
         </div>
 
@@ -177,6 +183,41 @@
                 <div class="modal-footer bg-light">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <asp:Button ID="btnGuardarProyecto" runat="server" CssClass="btn btn-primary" Text="Guardar Proyecto" OnClick="btnGuardarProyecto_Click" ValidationGroup="vgProyecto" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="finalizarProyectoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content border-danger">
+                <div class="modal-header bg-danger-subtle">
+                    <h5 class="modal-title fw-bold text-danger">Finalizar proyecto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p class="mb-2">
+                        Vas a finalizar <strong>
+                            <asp:Label ID="lblFinalizarProyectoNombre" runat="server"></asp:Label></strong>.
+                    </p>
+
+                    <p class="text-muted small mb-3">
+                        Al continuar se finalizarán también los sprints y tickets activos de este proyecto.
+                    </p>
+
+                    <p class="text-muted small mb-3">
+                        Para confirmar, escribí el nombre en mayúscula:
+                    <strong>
+                        <asp:Literal ID="litFinalizarProyectoConfirmacion" runat="server"></asp:Literal></strong>
+                    </p>
+
+                    <asp:TextBox ID="txtConfirmarFinalizarProyecto" runat="server" CssClass="form-control" autocomplete="off"></asp:TextBox>
+                </div>
+
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <asp:Button ID="btnConfirmarFinalizarProyecto" runat="server" CssClass="btn btn-danger" Text="Finalizar" OnClick="btnConfirmarFinalizarProyecto_Click" />
                 </div>
             </div>
         </div>

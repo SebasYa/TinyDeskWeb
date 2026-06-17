@@ -139,12 +139,58 @@ namespace negocio
         public void BajaLogica(int id)
         {
             AccesoDatos datos = new AccesoDatos();
+
             try
             {
-                datos.setearConsulta(@"
-                    UPDATE PROYECTO
-                    SET ACTIVO = 0
-                    WHERE Id = @id
+                datos.setearConsulta(@"DECLARE @IdEstadoFinal INT;
+                                       
+                                       SELECT TOP 1 @IdEstadoFinal = E.Id
+                                       FROM PROYECTO P
+                                       INNER JOIN ESTADO E
+                                           ON E.EsFinal = 1
+                                          AND E.Nombre = 'Finalizado'
+                                          AND (E.IdEmpresa = P.IdEmpresa OR E.IdEmpresa IS NULL)
+                                       WHERE P.Id = @Id
+                                       ORDER BY CASE WHEN E.IdEmpresa = P.IdEmpresa THEN 0 ELSE 1 END;
+                                       
+                                       IF @IdEstadoFinal IS NULL
+                                           THROW 50001, 'No existe un estado Finalizado para cerrar el proyecto.', 1;
+                                       
+                                       UPDATE T
+                                       SET T.Activo = 0,
+                                           T.FechaFin = CASE
+                                               WHEN T.FechaInicio <= CAST(GETDATE() AS DATE)
+                                               THEN CAST(GETDATE() AS DATE)
+                                               ELSE T.FechaInicio
+                                           END,
+                                           T.IdEstado = @IdEstadoFinal
+                                       FROM TICKET T
+                                       INNER JOIN SPRINT S ON S.Id = T.IdSprint
+                                       WHERE S.IdProyecto = @Id
+                                         AND T.Activo = 1;
+                                       
+                                       UPDATE S
+                                       SET S.Activo = 0,
+                                           S.FechaFin = CASE
+                                               WHEN S.FechaInicio <= CAST(GETDATE() AS DATE)
+                                               THEN CAST(GETDATE() AS DATE)
+                                               ELSE S.FechaInicio
+                                           END,
+                                           S.IdEstado = @IdEstadoFinal
+                                       FROM SPRINT S
+                                       WHERE S.IdProyecto = @Id
+                                         AND S.Activo = 1;
+                                       
+                                       UPDATE P
+                                       SET P.Activo = 0,
+                                           P.FechaFin = CASE
+                                               WHEN P.FechaInicio <= CAST(GETDATE() AS DATE)
+                                               THEN CAST(GETDATE() AS DATE)
+                                               ELSE P.FechaInicio
+                                           END,
+                                           P.IdEstado = @IdEstadoFinal
+                                       FROM PROYECTO P
+                                       WHERE P.Id = @Id;
                 ");
 
                 datos.setearParametro("@Id", id);
