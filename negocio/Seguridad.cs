@@ -16,10 +16,8 @@ namespace negocio
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
+            
         }
         public static bool EsAdmin(object user)
         {
@@ -28,10 +26,8 @@ namespace negocio
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
+            
         }
         public static bool PuedeEscribir(object user)
         {
@@ -40,10 +36,7 @@ namespace negocio
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
     }
 }

@@ -170,7 +170,7 @@ namespace negocio
             if (candidato == null)
                 return "Sin usuarios disponibles para esta área y puesto.";
 
-            string seniority = candidato.Seniority != null ? candidato.Seniority.Nombre : "Sin seniority";
+            string seniority = candidato.Seniority != null ? candidato.Seniority.Nombre : "";
 
             return seniority +
                    " | Abiertos: " + candidato.TicketsAbiertos +

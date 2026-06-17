@@ -106,7 +106,6 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
-
         public void eliminar(Puesto puesto)
         {
             Puesto actual = buscarPorId(puesto.Id, puesto.Empresa.Id);

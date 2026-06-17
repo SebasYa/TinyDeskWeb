@@ -138,6 +138,10 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
 
+                    <div class="alert alert-info">
+                        Se confirmarán todas las páginas. Revisa todo antes de guardar.   
+                    </div>
+
                     <div class="modal-body">
                         <asp:GridView ID="dgvVistaPreviaIA" runat="server"
                             CssClass="table table-hover align-middle"
@@ -169,9 +173,8 @@
 
                                 <asp:TemplateField HeaderText="Usuario sugerido">
                                     <ItemTemplate>
-                                        <asp:DropDownList ID="ddlUsuarioIA" runat="server" CssClass="form-select">
-                                        </asp:DropDownList>
-                                        <asp:Label ID="lblMotivoIA" runat="server" CssClass="small text-muted d-block mt-1"></asp:Label>
+                                        <asp:DropDownList ID="ddlUsuarioIA" runat="server" CssClass="form-select ddl-usuario-ia"></asp:DropDownList>
+                                        <asp:Label ID="lblMotivoIA" runat="server" CssClass="small text-muted d-block mt-1 motivo-ia"></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                             </Columns>

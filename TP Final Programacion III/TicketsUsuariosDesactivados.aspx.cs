@@ -262,7 +262,6 @@ namespace TP_Final_Programacion_III
                     item.Puesto = ticket.Usuario.Puesto.Nombre;
                     item.IdUsuarioSugerido = idUsuarioSugerido;
                     item.IdUsuarioSeleccionado = idUsuarioSugerido;
-                    item.Motivo = candidatoNegocio.ObtenerMotivoSugerencia(usuarioSugerido);
                     item.Candidatos = candidatos;
 
                     vistaPrevia.Add(item);
@@ -272,6 +271,7 @@ namespace TP_Final_Programacion_III
 
                 dgvVistaPreviaIA.DataSource = vistaPrevia;
                 dgvVistaPreviaIA.DataBind();
+                RegistrarScriptMotivoIA();
 
                 string scriptOpen = @"document.addEventListener('DOMContentLoaded', function () {
                       var modalElement = document.getElementById('modalReasignarConIA');
@@ -290,11 +290,9 @@ namespace TP_Final_Programacion_III
         }
         protected void dgvVistaPreviaIA_RowDataBound(object sender, GridViewRowEventArgs e)
         {
-            if (e.Row.RowType != DataControlRowType.DataRow)
-                return;
+            if (e.Row.RowType != DataControlRowType.DataRow) return;
 
             VistaPreviaAsignacionIA item = (VistaPreviaAsignacionIA)e.Row.DataItem;
-
             DropDownList ddlUsuarioIA = (DropDownList)e.Row.FindControl("ddlUsuarioIA");
             Label lblMotivoIA = (Label)e.Row.FindControl("lblMotivoIA");
 
@@ -309,12 +307,34 @@ namespace TP_Final_Programacion_III
             ddlUsuarioIA.DataBind();
 
             ddlUsuarioIA.Items.Insert(0, new ListItem("Sin usuario asignado", ""));
+            ddlUsuarioIA.Items[0].Attributes["data-motivo"] = "No se reasignará este ticket.";
+
+            CandidatoAsignacionIANegocio negocio = new CandidatoAsignacionIANegocio();
+
+            foreach (ListItem opcion in ddlUsuarioIA.Items)
+            {
+                if (!string.IsNullOrWhiteSpace(opcion.Value))
+                {
+                    CandidatoAsignacionIA candidato = item.Candidatos.Find(x => x.Id.ToString() == opcion.Value);
+
+                    if (candidato != null)
+                        opcion.Attributes["data-motivo"] = negocio.ObtenerMotivoSugerencia(candidato);
+                }
+            }
 
             if (item.IdUsuarioSeleccionado > 0 && ddlUsuarioIA.Items.FindByValue(item.IdUsuarioSeleccionado.ToString()) != null)
                 ddlUsuarioIA.SelectedValue = item.IdUsuarioSeleccionado.ToString();
 
             ddlUsuarioIA.Enabled = item.Candidatos.Count > 0;
-            lblMotivoIA.Text = item.Motivo;
+            if(item.IdUsuarioSeleccionado == 0)
+            {
+                lblMotivoIA.Text = "No se reasignará este ticket.";
+            }
+            else
+            {
+                CandidatoAsignacionIA candidatoSeleccionado = item.Candidatos.Find(x => x.Id == item.IdUsuarioSeleccionado);
+                lblMotivoIA.Text = negocio.ObtenerMotivoSugerencia(candidatoSeleccionado);
+            }
         }
         protected void dgvVistaPreviaIA_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
@@ -323,6 +343,7 @@ namespace TP_Final_Programacion_III
             dgvVistaPreviaIA.PageIndex = e.NewPageIndex;
             dgvVistaPreviaIA.DataSource = Session["vistaPreviaAsignacionIA"];
             dgvVistaPreviaIA.DataBind();
+            RegistrarScriptMotivoIA();
 
             string scriptOpen = @"document.addEventListener('DOMContentLoaded', function () {
                           var modalElement = document.getElementById('modalReasignarConIA');
@@ -452,6 +473,23 @@ namespace TP_Final_Programacion_III
             }
 
             Session["vistaPreviaAsignacionIA"] = vistaPrevia;
+        }
+        private void RegistrarScriptMotivoIA()
+        {
+            string script = @"document.addEventListener('change', function(e) {
+                                  if (e.target && e.target.classList.contains('ddl-usuario-ia')) {
+                                      var ddl = e.target;
+                                      var opcion = ddl.options[ddl.selectedIndex];
+                                      var motivo = opcion ? opcion.getAttribute('data-motivo') : '';
+                                      var celda = ddl.closest('td');
+                                      var label = celda ? celda.querySelector('.motivo-ia') : null;
+                          
+                                      if (label) {
+                                          label.innerText = motivo || 'No se reasignará este ticket.';
+                                      }
+                                  }
+                              }); ";
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "ScriptMotivoIA", script, true);
         }
     }
 }
