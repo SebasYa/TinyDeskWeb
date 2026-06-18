@@ -272,7 +272,7 @@ namespace TP_Final_Programacion_III
                 Usuario userLogueado = (Usuario)Session["usuario"];
                 SprintNegocio sprintNegocio = new SprintNegocio();
 
-                List<Sprint> listaSprints = sprintNegocio.listarPorProyecto(int.Parse(ddlProyectoTicket.SelectedValue), userLogueado.Empresa.Id);
+                List<Sprint> listaSprints = sprintNegocio.listarPorProyecto(int.Parse(ddlProyectoTicket.SelectedValue), userLogueado.Empresa.Id).FindAll(x => x.Activo);
 
                 ddlSprintTicket.DataSource = listaSprints.Select(x => new
                 {
@@ -464,7 +464,7 @@ namespace TP_Final_Programacion_III
 
             CargarLista(
                 ddlProyecto,
-                proyectoNegocio.listar(idEmpresa),
+                proyectoNegocio.listar(idEmpresa).FindAll(x => x.Activo),
                 "Id",
                 "Nombre",
                 "Seleccione Proyecto..."
@@ -497,7 +497,7 @@ namespace TP_Final_Programacion_III
             txtFechaInicioTicket.Text = DateTime.Today.ToString("yyyy-MM-dd");
             txtFechaInicioTicket.Enabled = false;
 
-            CargarLista(ddlProyectoTicket, proyectoNegocio.listar(idEmpresa), "Id", "Nombre", "Seleccione Proyecto...");
+            CargarLista(ddlProyectoTicket, proyectoNegocio.listar(idEmpresa).FindAll(x => x.Activo), "Id", "Nombre", "Seleccione Proyecto...");
             CargarLista(ddlEstadoTicket, estadoNegocio.listar(idEmpresa), "Id", "Nombre", "Seleccione Estado...");
             CargarLista(ddlPrioridadTicket, prioridadNegocio.listar(), "Id", "Nombre", "Seleccione Prioridad...");
             CargarLista(ddlAreaTicket, areaNegocio.listar(idEmpresa), "Id", "Nombre", "Seleccione Área...");
