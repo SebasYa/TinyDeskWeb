@@ -167,17 +167,9 @@ namespace TP_Final_Programacion_III
 
                 TicketNegocio ticketNegocio = new TicketNegocio();
                 Ticket nuevoTicket = new Ticket();
-                
-                DateTime fechaInicio = Convert.ToDateTime(txtFechaInicioTicket.Text);
+
+                DateTime fechaInicio = DateTime.Today;
                 DateTime fechaEstimadaFin = Convert.ToDateTime(txtFechaEstimadaTicket.Text);
-                if (fechaInicio.Date < DateTime.Today)
-                {
-                    litMensaje.Text = @"<div class='alert alert-warning alert-dismissible fade show' role='alert'>
-                                            La fecha de inicio no puede ser anterior al día de hoy.
-                                            <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
-                                        </div>";
-                    return;
-                }
                 if (fechaEstimadaFin.Date < fechaInicio.Date)
                 {
                     litMensaje.Text = @" <div class='alert alert-warning alert-dismissible fade show' role='alert'>
@@ -433,6 +425,7 @@ namespace TP_Final_Programacion_III
         {
             txtDescripcionTicket.Text = "";
             txtFechaInicioTicket.Text = DateTime.Today.ToString("yyyy-MM-dd");
+            txtFechaInicioTicket.Enabled = false;
             txtFechaEstimadaTicket.Text = "";
 
             ddlProyectoTicket.SelectedIndex = 0;
@@ -502,6 +495,7 @@ namespace TP_Final_Programacion_III
             UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
 
             txtFechaInicioTicket.Text = DateTime.Today.ToString("yyyy-MM-dd");
+            txtFechaInicioTicket.Enabled = false;
 
             CargarLista(ddlProyectoTicket, proyectoNegocio.listar(idEmpresa), "Id", "Nombre", "Seleccione Proyecto...");
             CargarLista(ddlEstadoTicket, estadoNegocio.listar(idEmpresa), "Id", "Nombre", "Seleccione Estado...");

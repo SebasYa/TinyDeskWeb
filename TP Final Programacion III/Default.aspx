@@ -80,7 +80,7 @@
 
                                 <div class="col-md-4">
                                     <label for="txtFechaInicioTicket" class="form-label fw-semibold">Fecha Inicio</label>
-                                    <asp:TextBox ID="txtFechaInicioTicket" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                                    <asp:TextBox ID="txtFechaInicioTicket" runat="server" CssClass="form-control" TextMode="Date" Enabled="false"></asp:TextBox>
                                 </div>
 
                                 <div class="col-md-4">
