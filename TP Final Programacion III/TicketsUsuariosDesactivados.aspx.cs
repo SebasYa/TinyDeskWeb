@@ -100,8 +100,7 @@ namespace TP_Final_Programacion_III
                 List<Ticket> listaTickets = (List<Ticket>)Session["listaTicketsUsuariosDesactivados"];
                 Ticket ticket = listaTickets.Find(x => x.Id == idTicket);
 
-                if (ticket == null)
-                    return;
+                if (ticket == null) return;
 
                 hfIdTicketReasignar.Value = ticket.Id.ToString();
                 lblTituloReasignar.Text = "Reasignar Ticket #" + ticket.Id;
@@ -317,8 +316,7 @@ namespace TP_Final_Programacion_III
                 {
                     CandidatoAsignacionIA candidato = item.Candidatos.Find(x => x.Id.ToString() == opcion.Value);
 
-                    if (candidato != null)
-                        opcion.Attributes["data-motivo"] = negocio.ObtenerMotivoSugerencia(candidato);
+                    if (candidato != null) opcion.Attributes["data-motivo"] = negocio.ObtenerMotivoSugerencia(candidato);
                 }
             }
 
@@ -453,8 +451,7 @@ namespace TP_Final_Programacion_III
         {
             List<VistaPreviaAsignacionIA> vistaPrevia = (List<VistaPreviaAsignacionIA>)Session["vistaPreviaAsignacionIA"];
 
-            if (vistaPrevia == null)
-                return;
+            if (vistaPrevia == null) return;
 
             foreach (GridViewRow row in dgvVistaPreviaIA.Rows)
             {
@@ -465,10 +462,8 @@ namespace TP_Final_Programacion_III
 
                 if (item != null)
                 {
-                    if (string.IsNullOrWhiteSpace(ddlUsuarioIA.SelectedValue))
-                        item.IdUsuarioSeleccionado = 0;
-                    else
-                        item.IdUsuarioSeleccionado = int.Parse(ddlUsuarioIA.SelectedValue);
+                    if (string.IsNullOrWhiteSpace(ddlUsuarioIA.SelectedValue)) item.IdUsuarioSeleccionado = 0;
+                    else item.IdUsuarioSeleccionado = int.Parse(ddlUsuarioIA.SelectedValue);
                 }
             }
 

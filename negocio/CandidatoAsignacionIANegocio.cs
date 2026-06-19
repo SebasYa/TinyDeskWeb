@@ -167,8 +167,7 @@ namespace negocio
         }
         public string ObtenerMotivoSugerencia(CandidatoAsignacionIA candidato)
         {
-            if (candidato == null)
-                return "Sin usuarios disponibles para esta área y puesto.";
+            if (candidato == null) return "Sin usuarios disponibles para esta área y puesto.";
 
             string seniority = candidato.Seniority != null ? candidato.Seniority.Nombre : "";
 

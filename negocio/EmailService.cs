@@ -13,6 +13,7 @@ namespace negocio
     {
         private MailMessage email;
         private SmtpClient server;
+        public string UltimoError { get; set; }
 
         public EmailService()
         {
@@ -32,7 +33,6 @@ namespace negocio
             email.Body = cuerpo;
 
         }
-        public string UltimoError { get; set; }
         public bool enviarEmail()
         {
             try
@@ -40,7 +40,7 @@ namespace negocio
                 server.Send(email);
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 UltimoError = ex.Message;
                 return false;

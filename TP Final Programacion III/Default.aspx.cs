@@ -253,6 +253,7 @@ namespace TP_Final_Programacion_III
         }
         public void btnCancelarTicket_Click(object sender, EventArgs e)
         {
+            CargarCombosTicket(((Usuario)Session["usuario"]).Empresa.Id);
             LimpiarCamposTicket();
         }
         private void CargarLista<T>(DropDownList ddl, List<T> lista, string valueField, string textField, string textoInicial)
@@ -513,7 +514,7 @@ namespace TP_Final_Programacion_III
             ddlSprintTicket.Items.Clear();
             ddlSprintTicket.Items.Insert(0, new ListItem("Seleccione Sprint...", ""));
 
-            Session.Add("listaUsuariosTicket", usuarioNegocio.listar(idEmpresa));
+            Session["listaUsuariosTicket"] = usuarioNegocio.listar(idEmpresa);
 
             List<Usuario> listaUsuarios = ((List<Usuario>)Session["listaUsuariosTicket"]).FindAll(x => x.Activo && x.EmailVerificado);
             ddlUsuarioTicket.DataSource = listaUsuarios.Select(x => new
