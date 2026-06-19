@@ -24,6 +24,15 @@ namespace TP_Final_Programacion_III
         protected global::System.Web.UI.WebControls.Literal litMensaje;
 
         /// <summary>
+        /// Control pnlAlertas.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlAlertas;
+
+        /// <summary>
         /// Control pnlTicketsUsuariosDesactivados.
         /// </summary>
         /// <remarks>
@@ -40,15 +49,6 @@ namespace TP_Final_Programacion_III
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblTicketsUsuariosDesactivados;
-
-        /// <summary>
-        /// Control pnlSinAlertas.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlSinAlertas;
 
         /// <summary>
         /// Control btnCloseTicket.

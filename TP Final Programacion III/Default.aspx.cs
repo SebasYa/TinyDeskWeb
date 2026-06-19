@@ -31,12 +31,18 @@ namespace TP_Final_Programacion_III
                     lblTicketsAbiertos.Text = ticketNegocio.ContarAbiertos(idEmpresa).ToString();
 
                     int ticketsUsuariosDesactivados = ticketNegocio.ContarAsignadosUsuariosDesactivados(idEmpresa);
-                    pnlTicketsUsuariosDesactivados.Visible = ticketsUsuariosDesactivados > 0;
-                    pnlSinAlertas.Visible = ticketsUsuariosDesactivados == 0;
+                    if (ticketsUsuariosDesactivados > 0)
+                    {
+                        pnlAlertas.Visible = true;
+                        pnlTicketsUsuariosDesactivados.Visible = true;
 
-                    if (ticketsUsuariosDesactivados == 1) lblTicketsUsuariosDesactivados.Text = "Hay 1 ticket asignado a un usuario desactivado.";
-                    else lblTicketsUsuariosDesactivados.Text = "Hay " + ticketsUsuariosDesactivados + " tickets asignados a usuarios desactivados.";
-
+                        if (ticketsUsuariosDesactivados == 1) lblTicketsUsuariosDesactivados.Text = "Hay 1 ticket asignado a un usuario desactivado.";
+                        else lblTicketsUsuariosDesactivados.Text = "Hay " + ticketsUsuariosDesactivados + " tickets asignados a usuarios desactivados.";
+                    }
+                    else
+                    {
+                        pnlAlertas.Visible = false;
+                    }
                 }
                 catch (Exception ex)
                 {

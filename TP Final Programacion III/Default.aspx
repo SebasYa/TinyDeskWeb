@@ -3,36 +3,29 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
     <asp:Literal ID="litMensaje" runat="server"></asp:Literal>
-    <section class="mt-4">
-        <h2>Alertas</h2>
+    <asp:Panel ID="pnlAlertas" runat="server" CssClass="mt-4" Visible="false">
+        <section>
+            <h2>Alertas</h2>
 
-        <asp:Panel ID="pnlTicketsUsuariosDesactivados" runat="server"
-            Visible="false"
-            CssClass="alert alert-danger shadow-sm d-flex justify-content-between align-items-center"
-            Style="cursor: pointer;"
-            onclick="window.location.href='TicketsUsuariosDesactivados.aspx';">
+            <asp:Panel ID="pnlTicketsUsuariosDesactivados" runat="server"
+                Visible="false"
+                CssClass="alert alert-danger shadow-sm d-flex justify-content-between align-items-center"
+                Style="cursor: pointer;"
+                onclick="window.location.href='TicketsUsuariosDesactivados.aspx';">
 
-            <div>
-                <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                <strong>Revisión requerida:</strong>
-                <asp:Label ID="lblTicketsUsuariosDesactivados" runat="server"></asp:Label>
-                <span>Revisá estas asignaciones para evitar demoras operativas.</span>
-            </div>
+                <div>
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <strong>Revisión requerida:</strong>
+                    <asp:Label ID="lblTicketsUsuariosDesactivados" runat="server"></asp:Label>
+                    <span>Revisá estas asignaciones para evitar demoras operativas.</span>
+                </div>
 
-            <i class="bi bi-chevron-right"></i>
-        </asp:Panel>
-
-        <asp:Panel ID="pnlSinAlertas" runat="server"
-            Visible="false"
-            CssClass="alert alert-success shadow-sm">
-            <i class="bi bi-check-circle-fill me-2"></i>
-            No hay alertas pendientes.
-        </asp:Panel>
-    </section>
+                <i class="bi bi-chevron-right"></i>
+            </asp:Panel>
+        </section>
+    </asp:Panel>
     <section>
         <div class="row align-items-center mb-4">
-
-
             <div class="col-12 col-md-auto">
                 <div class="d-flex flex-wrap gap-2">
                     <button type="button" class="btn btn-primary shadow-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#proyectoModal">
