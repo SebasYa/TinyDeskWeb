@@ -54,7 +54,16 @@ namespace negocio
 
             try
             {
-                datos.setearConsulta("INSERT INTO PUESTO (Nombre, IdEmpresa) VALUES (@Nombre, @IdEmpresa)");
+                datos.setearConsulta(@"IF EXISTS (SELECT 1
+                                                  FROM PUESTO
+                                                  WHERE Nombre = @Nombre
+                                                    AND IdEmpresa = @IdEmpresa)
+                                                  BEGIN
+                                                      RAISERROR('Ya existe un puesto con ese nombre en esta empresa.', 16, 1);
+                                                      RETURN;
+                                                  END
+                                       INSERT INTO PUESTO (Nombre, IdEmpresa) VALUES (@Nombre, @IdEmpresa)");
+
                 datos.setearParametro("@Nombre", puesto.Nombre);
                 datos.setearParametro("@IdEmpresa", puesto.Empresa.Id);
                 datos.ejecutarAccion();
@@ -95,7 +104,17 @@ namespace negocio
 
             try
             {
-                datos.setearConsulta("UPDATE PUESTO SET Nombre = @Nombre WHERE Id = @Id AND IdEmpresa = @IdEmpresa");
+                datos.setearConsulta(@"IF EXISTS (SELECT 1
+                                                  FROM PUESTO
+                                                  WHERE Nombre = @Nombre
+                                                    AND IdEmpresa = @IdEmpresa
+                                                    AND Id <> @Id)
+                                                  BEGIN
+                                                      RAISERROR('Ya existe un puesto con ese nombre en esta empresa.', 16, 1);
+                                                      RETURN;
+                                                  END
+                                       UPDATE PUESTO SET Nombre = @Nombre WHERE Id = @Id AND IdEmpresa = @IdEmpresa");
+
                 datos.setearParametro("@Nombre", puesto.Nombre);
                 datos.setearParametro("@Id", puesto.Id);
                 datos.setearParametro("@IdEmpresa", puesto.Empresa.Id);

@@ -127,6 +127,70 @@ CREATE TABLE TICKET (
     FOREIGN KEY (IdSprint) REFERENCES SPRINT(Id)
 )
 GO
+
+/*-------------------------------------------------------------------------------
+2.1. -- Quitar Constrains a las tablas y agrega restricciones de columnas conjuntas
+---------------------------------------------------------------------------------*/
+
+DECLARE @ConstraintName NVARCHAR(200);
+
+SELECT @ConstraintName = kc.name
+FROM sys.key_constraints kc
+INNER JOIN sys.tables t ON t.object_id = kc.parent_object_id
+WHERE t.name = 'AREA'
+  AND kc.type = 'UQ';
+
+IF @ConstraintName IS NOT NULL
+BEGIN
+    EXEC('ALTER TABLE AREA DROP CONSTRAINT ' + @ConstraintName);
+END
+GO
+
+CREATE UNIQUE INDEX UX_AREA_Nombre_Empresa
+ON AREA (IdEmpresa, Nombre)
+WHERE IdEmpresa IS NOT NULL;
+GO
+
+CREATE UNIQUE INDEX UX_AREA_Nombre_Sistema
+ON AREA (Nombre)
+WHERE IdEmpresa IS NULL;
+GO
+
+DECLARE @ConstraintName NVARCHAR(200);
+
+SELECT @ConstraintName = kc.name
+FROM sys.key_constraints kc
+INNER JOIN sys.tables t ON t.object_id = kc.parent_object_id
+WHERE t.name = 'PUESTO'
+  AND kc.type = 'UQ';
+
+IF @ConstraintName IS NOT NULL
+BEGIN
+    EXEC('ALTER TABLE PUESTO DROP CONSTRAINT ' + @ConstraintName);
+END
+GO
+
+CREATE UNIQUE INDEX UX_PUESTO_Nombre_Empresa
+ON PUESTO (IdEmpresa, Nombre)
+WHERE IdEmpresa IS NOT NULL;
+GO
+
+CREATE UNIQUE INDEX UX_PUESTO_Nombre_Sistema
+ON PUESTO (Nombre)
+WHERE IdEmpresa IS NULL;
+GO
+
+CREATE UNIQUE INDEX UX_ESTADO_Nombre_Empresa
+ON ESTADO (IdEmpresa, Nombre)
+WHERE IdEmpresa IS NOT NULL;
+GO
+
+CREATE UNIQUE INDEX UX_ESTADO_Nombre_Sistema
+ON ESTADO (Nombre)
+WHERE IdEmpresa IS NULL;
+GO
+
+
 /*-------------------------------------------------------------------------------
 				3. INSERCIÓN DE DATOS OBLIGATORIOS (SEMILLA)
 ---------------------------------------------------------------------------------*/
@@ -256,6 +320,5 @@ GO
 update USUARIO Set EsAdmin = 1 where Nombre = 'phantom_user';
 
 GO
-select * from USUARIO;
-select * from SENIORITY;
+
 

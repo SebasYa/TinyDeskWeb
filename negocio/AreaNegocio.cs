@@ -77,7 +77,16 @@ namespace negocio
 
             try
             {
-                datos.setearConsulta("INSERT INTO AREA (Nombre, IdEmpresa) VALUES (@Nombre, @IdEmpresa)");
+                datos.setearConsulta(@"IF EXISTS (SELECT 1
+                                                  FROM AREA
+                                                  WHERE Nombre = @Nombre
+                                                    AND IdEmpresa = @IdEmpresa)
+                                                   BEGIN
+                                                       RAISERROR('Ya existe un área con ese nombre en esta empresa.', 16, 1);
+                                                       RETURN;
+                                                   END
+                                       INSERT INTO AREA (Nombre, IdEmpresa) VALUES (@Nombre, @IdEmpresa)");
+
                 datos.setearParametro("@Nombre", area.Nombre);
                 datos.setearParametro("@IdEmpresa", area.Empresa.Id);
                 datos.ejecutarAccion();
@@ -97,7 +106,17 @@ namespace negocio
 
             try
             {
-                datos.setearConsulta("UPDATE AREA SET Nombre = @Nombre WHERE Id = @Id AND IdEmpresa = @IdEmpresa");
+                datos.setearConsulta(@"IF EXISTS (SELECT 1
+                                                  FROM AREA
+                                                  WHERE Nombre = @Nombre
+                                                    AND IdEmpresa = @IdEmpresa
+                                                    AND Id <> @Id)
+                                                  BEGIN
+                                                      RAISERROR('Ya existe un área con ese nombre en esta empresa.', 16, 1);
+                                                      RETURN;
+                                                  END
+                                       UPDATE AREA SET Nombre = @Nombre WHERE Id = @Id AND IdEmpresa = @IdEmpresa");
+
                 datos.setearParametro("@Nombre", area.Nombre);
                 datos.setearParametro("@Id", area.Id);
                 datos.setearParametro("@IdEmpresa", area.Empresa.Id);

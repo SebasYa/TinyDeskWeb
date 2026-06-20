@@ -231,6 +231,7 @@ namespace TP_Final_Programacion_III
                 lblTicketsAbiertos.Text = ticketNegocio.ContarAbiertos(userLogueado.Empresa.Id).ToString();
 
                 //Limpiar Campos
+                CargarCombosTicket(userLogueado.Empresa.Id);
                 LimpiarCamposTicket();
             }
             catch (Exception ex)

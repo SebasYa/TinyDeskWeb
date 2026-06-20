@@ -15,10 +15,18 @@ namespace negocio
 
             try
             {
-                datos.setearConsulta(@"
-                    INSERT INTO ESTADO (Nombre, EsFinal, EsSistema, IdEmpresa)
-                    VALUES (@Nombre, @EsFinal, 0, @IdEmpresa);
-                    SELECT SCOPE_IDENTITY();");
+                datos.setearConsulta(@"IF EXISTS (SELECT 1
+                                                  FROM ESTADO
+                                                  WHERE Nombre = @Nombre
+                                                    AND (IdEmpresa = @IdEmpresa OR IdEmpresa IS NULL))
+                                                  BEGIN
+                                                      RAISERROR('Ya existe un estado con ese nombre.', 16, 1);
+                                                      RETURN;
+                                                  END
+                                       INSERT INTO ESTADO (Nombre, EsFinal, EsSistema, IdEmpresa)
+                                       VALUES (@Nombre, @EsFinal, 0, @IdEmpresa);
+                                       SELECT SCOPE_IDENTITY();"
+                );
 
                 datos.setearParametro("@Nombre", estado.Nombre);
                 datos.setearParametro("@EsFinal", estado.EsFinal);
@@ -65,10 +73,19 @@ namespace negocio
 
             try
             {
-                datos.setearConsulta(@"
-                    UPDATE ESTADO
-                    SET Nombre = @Nombre, EsFinal = @EsFinal
-                    WHERE Id = @Id AND IdEmpresa = @IdEmpresa");
+                datos.setearConsulta(@"IF EXISTS (SELECT 1
+                                                  FROM ESTADO
+                                                  WHERE Nombre = @Nombre
+                                                    AND (IdEmpresa = @IdEmpresa OR IdEmpresa IS NULL)
+                                                    AND Id <> @Id)
+                                                  BEGIN
+                                                      RAISERROR('Ya existe un estado con ese nombre.', 16, 1);
+                                                      RETURN;
+                                                  END
+                                       UPDATE ESTADO
+                                       SET Nombre = @Nombre, EsFinal = @EsFinal
+                                       WHERE Id = @Id AND IdEmpresa = @IdEmpresa"
+                );
 
                 datos.setearParametro("@Nombre", estado.Nombre);
                 datos.setearParametro("@EsFinal", estado.EsFinal);
