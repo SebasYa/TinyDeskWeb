@@ -73,9 +73,23 @@
                         </ul>
                     </div>
 
-                    <div class="text-end border-top border-secondary pt-3">
-                        <span class="text-muted small me-1" style="font-size: 0.8rem;">Bienvenido,</span>
-                        <asp:Label ID="lblUserWelcome" runat="server" CssClass="text-light fw-bold" Style="font-size: 0.9rem;"></asp:Label>
+                    <div class="border-top border-secondary pt-3">
+                        <div class="d-flex align-items-center justify-content-between gap-2">
+
+                            <div class="text-truncate">
+                                <span class="text-muted small me-1" style="font-size: 0.8rem;">Bienvenido, 
+                                    <asp:Label ID="lblUserWelcome" runat="server" CssClass="text-light fw-bold" Style="font-size: 0.9rem;"></asp:Label>
+                                </span>                                
+                            </div>
+
+                            <a runat="server"
+                                href="~/ConfiguracionUsuarioSinPermiso.aspx"
+                                class="btn btn-outline-light btn-sm border-0"
+                                title="Configuración de cuenta"
+                                aria-label="Configuración de cuenta">
+                                <i class="bi bi-gear-fill"></i>
+                            </a>
+                        </div>
                     </div>
 
                 </div>

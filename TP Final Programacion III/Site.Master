@@ -80,11 +80,25 @@
                     </div>
 
                     <!-- Contenido inferior -->
-                    <div class="text-end border-top border-secondary pt-3">
-                        <span class="text-muted small me-1" style="font-size: 0.8rem;">Bienvenido,</span>
-                        <asp:Label ID="lblUserWelcome" runat="server" CssClass="text-light fw-bold" Style="font-size: 0.9rem;"></asp:Label>
+                    <div class="border-top border-secondary pt-3">
+                        <div class="d-flex align-items-center justify-content-between gap-2">
+
+                            <span class="text-muted small me-1" style="font-size: 0.8rem;">Bienvenido, 
+                                <asp:Label ID="lblUserWelcome" runat="server" CssClass="text-light fw-bold" Style="font-size: 0.9rem;"></asp:Label>
+
+                            </span>
+                            
+
+                            <a runat="server"
+                                href="~/ConfiguracionUsuarioConPermiso.aspx"
+                                class="btn btn-outline-light btn-sm border-0"
+                                title="Configuración de cuenta"
+                                aria-label="Configuración de cuenta">
+                                <i class="bi bi-gear-fill"></i>
+                            </a>
+
+                        </div>
                     </div>
-                    
 
                 </div>
             </aside>
@@ -108,48 +122,48 @@
                     </div>
 
                     <div>
-                        <asp:Button ID="btnUserNav" Text="text" runat="server" CssClass="btn btn-primary" OnClick="btnUserNav_Click" style="border-radius: 50%;"/>                        
-                                             
-                            <asp:Panel ID="pnlUserNav" runat="server" CssClass="card card-body position-absolute end-0 mt-2 mx-1 shadow" style="width: 250px; z-index: 1050;">                                 
-                                <div class="card-body p-4">
-                                    <div class="d-flex align-items-center mb-3">
-                                        <div>
-                                            <h6 class="mb-0 fw-bold text-dark">
-                                                <asp:Label ID="lblName_nav" runat="server" Text=""></asp:Label>
-                                            </h6>
-                                            <h6 class="mb-0 text-muted">
-                                                <asp:Label ID="lblEmpresa" runat="server"  Text=""></asp:Label>
-                                            </h6>
-                                            <small class="text-muted">Sesión activa</small>
-                                        </div>
+                        <asp:Button ID="btnUserNav" Text="text" runat="server" CssClass="btn btn-primary" OnClick="btnUserNav_Click" Style="border-radius: 50%;" />
+
+                        <asp:Panel ID="pnlUserNav" runat="server" CssClass="card card-body position-absolute end-0 mt-2 mx-1 shadow" Style="width: 250px; z-index: 1050;">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div>
+                                        <h6 class="mb-0 fw-bold text-dark">
+                                            <asp:Label ID="lblName_nav" runat="server" Text=""></asp:Label>
+                                        </h6>
+                                        <h6 class="mb-0 text-muted">
+                                            <asp:Label ID="lblEmpresa" runat="server" Text=""></asp:Label>
+                                        </h6>
+                                        <small class="text-muted">Sesión activa</small>
                                     </div>
-
-                                    <hr class="text-muted opacity-25 my-3" />
-
-                                    <div class="mb-2">
-                                        <span class="text-uppercase text-muted fw-semibold d-block" style="font-size: 0.75rem; letter-spacing: 0.5px;">Rol</span>
-                                        <span class="text-dark fw-medium fs-6">
-                                            <asp:Literal ID="txtRol" runat="server"></asp:Literal>
-                                        </span>
-                                    </div>
-            
-                                    <div class="mb-3">
-                                        <span class="text-uppercase text-muted fw-semibold d-block" style="font-size: 0.75rem; letter-spacing: 0.5px;">Seniority</span>
-                                        <span class="text-dark fw-medium fs-6">
-                                            <asp:Literal ID="txtSenority" runat="server"></asp:Literal>
-                                        </span>
-                                    </div>
-
-                                    <hr class="text-muted opacity-25 mb-3" />
-
-                                    <div class="d-grid">
-                                        <asp:LinkButton ID="btnLogOut" runat="server" OnClick="btnLogOut_Click" CssClass="btn btn-outline-danger btn-sm d-flex align-items-center justify-content-center gap-2" style="border-radius: 8px;">
-                                            <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
-                                        </asp:LinkButton>
-                                    </div>
-
                                 </div>
-                            </asp:Panel>
+
+                                <hr class="text-muted opacity-25 my-3" />
+
+                                <div class="mb-2">
+                                    <span class="text-uppercase text-muted fw-semibold d-block" style="font-size: 0.75rem; letter-spacing: 0.5px;">Rol</span>
+                                    <span class="text-dark fw-medium fs-6">
+                                        <asp:Literal ID="txtRol" runat="server"></asp:Literal>
+                                    </span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <span class="text-uppercase text-muted fw-semibold d-block" style="font-size: 0.75rem; letter-spacing: 0.5px;">Seniority</span>
+                                    <span class="text-dark fw-medium fs-6">
+                                        <asp:Literal ID="txtSenority" runat="server"></asp:Literal>
+                                    </span>
+                                </div>
+
+                                <hr class="text-muted opacity-25 mb-3" />
+
+                                <div class="d-grid">
+                                    <asp:LinkButton ID="btnLogOut" runat="server" OnClick="btnLogOut_Click" CssClass="btn btn-outline-danger btn-sm d-flex align-items-center justify-content-center gap-2" Style="border-radius: 8px;">
+                                            <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                                    </asp:LinkButton>
+                                </div>
+
+                            </div>
+                        </asp:Panel>
                     </div>
 
                 </div>

@@ -19,6 +19,12 @@ namespace TP_Final_Programacion_III
                 Context.ApplicationInstance.CompleteRequest();
                 return;
             }
+            if (!Seguridad.EsAdmin(Session["usuario"]) || !Seguridad.PuedeEscribir(Session["usuario"]))
+            {
+                Response.Redirect("UsuarioDefault.aspx", true);
+                Context.ApplicationInstance.CompleteRequest();
+                return;
+            }
         }
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -42,8 +48,6 @@ namespace TP_Final_Programacion_III
                 lblName_nav.Text = usuario.Nombre+" "+usuario.Apellido;
                 lblEmpresa.Text = usuario.Empresa.Nombre;
                 txtRol.Text = usuario.Area.Nombre;
-                //txtSenority.Text = (usuario.Seniority != null) ? "No asignado" : usuario.Seniority.Nombre;
-
                 pnlUserNav.Visible = false;
             }
         }
