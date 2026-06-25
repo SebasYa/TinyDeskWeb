@@ -25,14 +25,11 @@ namespace TP_Final_Programacion_III
 
                     if (usuario == null)
                     {
-                        MostrarError("No se pudieron cargar los datos del usuario.");
+                        MostrarError("No se pudieron cargar tus datos.");
                         return;
                     }
 
-                    Session["usuario"] = usuario;
-
                     lblIniciales.Text = ObtenerIniciales(usuario.Nombre, usuario.Apellido);
-
                     lblNombre.Text = usuario.Nombre;
                     lblApellido.Text = usuario.Apellido;
                     lblNombreUsuario.Text = usuario.NombreUsuario;
@@ -44,9 +41,8 @@ namespace TP_Final_Programacion_III
                 catch (Exception ex)
                 {
                     Session["error"] = ex.ToString();
-
                     MostrarError("Ocurrió un error al cargar la configuración.");
-                }                
+                }
             }
         }
         protected void btnPerfil_Click(object sender, EventArgs e)
@@ -68,20 +64,14 @@ namespace TP_Final_Programacion_III
         private void MostrarSeccion(string seccion)
         {
             pnlPerfil.Visible = seccion == "perfil";
-
             pnlInformacionLaboral.Visible = seccion == "laboral";
-
             pnlSeguridad.Visible = seccion == "seguridad";
-
             pnlPreferencias.Visible = seccion == "preferencias";
 
 
             btnPerfil.CssClass = ObtenerClaseNavegacion(seccion == "perfil");
-
             btnInformacionLaboral.CssClass = ObtenerClaseNavegacion(seccion == "laboral");
-
             btnSeguridad.CssClass = ObtenerClaseNavegacion(seccion == "seguridad");
-
             btnPreferencias.CssClass = ObtenerClaseNavegacion(seccion == "preferencias");
         }
         private string ObtenerClaseNavegacion(bool activo)
@@ -90,10 +80,12 @@ namespace TP_Final_Programacion_III
         }
         private void CargarInformacionLaboral(Usuario usuario)
         {
-            lblEmpresa.Text = usuario.Empresa != null ? usuario.Empresa.Nombre : "Error: no se pudo mostrar la empresa.";
+            lblEmpresa.Text = usuario.Empresa.Nombre;
             lblArea.Text = usuario.Area.Nombre;
             lblPuesto.Text = usuario.Puesto.Nombre;
             lblSeniority.Text = usuario.Seniority != null ? usuario.Seniority.Nombre : "No asignado";
+            lblEstadoCuenta.Text = "Cuenta activa";
+            lblEstadoCuenta.CssClass = "badge rounded-pill bg-success-subtle text-success";
 
             if(usuario.EsAdmin && usuario.PermisoEscritura)
             {
@@ -104,34 +96,17 @@ namespace TP_Final_Programacion_III
                 lblTipoAccesoSecundario.Text = "Gestión habilitada";
                 lblTipoAccesoSecundario.CssClass = "badge rounded-pill bg-info-subtle text-success";
             }
-            if (usuario.EsAdmin)
+            else if(usuario.EsAdmin)
             {
                 lblTipoAcceso.Text = "Administrador";
                 lblTipoAcceso.CssClass = "badge rounded-pill bg-primary-subtle text-primary";
                 lblTipoAccesoSecundario.Visible = true;
             }
-            else if (usuario.PermisoEscritura)
+            else if(usuario.PermisoEscritura)
             {
                 lblTipoAcceso.Text = "Gestión habilitada";
                 lblTipoAcceso.CssClass = "badge rounded-pill bg-info-subtle text-info";
                 lblTipoAccesoSecundario.Visible = true;
-            }
-            else
-            {
-                lblTipoAcceso.Text = "Solo lectura";
-                lblTipoAcceso.CssClass = "badge rounded-pill bg-secondary-subtle text-secondary";
-                lblTipoAccesoSecundario.Visible = true;
-            }
-
-            if (usuario.Activo)
-            {
-                lblEstadoCuenta.Text = "Cuenta activa";
-                lblEstadoCuenta.CssClass = "badge rounded-pill bg-success-subtle text-success";
-            }
-            else
-            {
-                lblEstadoCuenta.Text = "Cuenta inactiva";
-                lblEstadoCuenta.CssClass = "badge rounded-pill bg-danger-subtle text-danger";
             }
         }
         protected void btnActualizarPassword_Click(object sender, EventArgs e)
@@ -139,22 +114,22 @@ namespace TP_Final_Programacion_III
             MostrarSeccion("seguridad");
             litMensaje.Text = "";
             string passwordNueva = txtPasswordNueva.Text;
-            if (string.IsNullOrWhiteSpace(txtConfirmarPassword.Text) || string.IsNullOrWhiteSpace(txtPasswordActual.Text) || string.IsNullOrWhiteSpace(passwordNueva))
+            if(string.IsNullOrWhiteSpace(txtConfirmarPassword.Text) || string.IsNullOrWhiteSpace(txtPasswordActual.Text) || string.IsNullOrWhiteSpace(passwordNueva))
             {
                 MostrarError("Completá todos los campos.");
                 return;
             }
-            if (passwordNueva.Length < 8)
+            if(passwordNueva.Length < 8)
             {
                 MostrarError("La nueva contraseña debe tener al menos 8 caracteres.");
                 return;
             }
-            if (passwordNueva != txtConfirmarPassword.Text)
+            if(passwordNueva != txtConfirmarPassword.Text)
             {
                 MostrarError("Las nuevas contraseñas no coinciden.");
                 return;
             }
-            if (txtPasswordActual.Text == passwordNueva)
+            if(txtPasswordActual.Text == passwordNueva)
             {
                 MostrarError("La nueva contraseña debe ser diferente de la contraseña actual.");
                 return;
@@ -167,7 +142,7 @@ namespace TP_Final_Programacion_III
 
                 bool actualizado = negocio.CambiarPasswordUsuarioActivo(usuario, passwordNueva);
 
-                if (!actualizado)
+                if(!actualizado)
                 {
                     MostrarError("Hubo un error al intentar cambiar la contraseña.");
                     return;
@@ -188,7 +163,6 @@ namespace TP_Final_Programacion_III
         private string ObtenerIniciales(string nombre, string apellido)
         {
             string inicialNombre = "";
-
             string inicialApellido = "";
 
             if (!string.IsNullOrWhiteSpace(nombre))
