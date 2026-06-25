@@ -266,29 +266,29 @@ namespace negocio
                 if (idArea == 0)
                 {
                     datos.setearConsulta(@"SELECT U.Id, U.NombreUsuario, U.Email, U.Nombre, U.Apellido, U.EsAdmin, 
-                                              U.Activo, U.PermisoEscritura, U.EmailVerificado,
-                                              U.IdPuesto, P.Nombre AS NombrePuesto,
-                                              U.IdArea, A.Nombre AS NombreArea, U.IdEmpresa,
-                                              U.IdSeniority, S.Nombre AS NombreSeniority
-                                       FROM USUARIO U
-                                       INNER JOIN PUESTO P ON U.IdPuesto = P.Id
-                                       INNER JOIN AREA A ON U.IdArea = A.Id
-                                       LEFT JOIN SENIORITY S ON U.IdSeniority = S.Id
-                                       WHERE U.IdEmpresa = @IdEmpresa"
+                                                  U.Activo, U.PermisoEscritura, U.EmailVerificado,
+                                                  U.IdPuesto, P.Nombre AS NombrePuesto,
+                                                  U.IdArea, A.Nombre AS NombreArea, U.IdEmpresa,
+                                                  U.IdSeniority, S.Nombre AS NombreSeniority
+                                           FROM USUARIO U
+                                           INNER JOIN PUESTO P ON U.IdPuesto = P.Id
+                                           INNER JOIN AREA A ON U.IdArea = A.Id
+                                           LEFT JOIN SENIORITY S ON U.IdSeniority = S.Id
+                                           WHERE U.IdEmpresa = @IdEmpresa"
                     );
                 }
                 else
                 {
                     datos.setearConsulta(@"SELECT U.Id, U.NombreUsuario, U.Email, U.Nombre, U.Apellido, U.EsAdmin,
-                                              U.Activo, U.PermisoEscritura, U.EmailVerificado,
-                                              U.IdPuesto, P.Nombre AS NombrePuesto,
-                                              U.IdArea, A.Nombre AS NombreArea, U.IdEmpresa,
-                                              U.IdSeniority, S.Nombre AS NombreSeniority
-                                       FROM USUARIO U
-                                       INNER JOIN PUESTO P ON U.IdPuesto = P.Id
-                                       INNER JOIN AREA A ON U.IdArea = A.Id
-                                       LEFT JOIN SENIORITY S ON U.IdSeniority = S.Id
-                                       WHERE U.IdEmpresa = @IdEmpresa AND U.IdArea = @IdArea"
+                                                  U.Activo, U.PermisoEscritura, U.EmailVerificado,
+                                                  U.IdPuesto, P.Nombre AS NombrePuesto,
+                                                  U.IdArea, A.Nombre AS NombreArea, U.IdEmpresa,
+                                                  U.IdSeniority, S.Nombre AS NombreSeniority
+                                           FROM USUARIO U
+                                           INNER JOIN PUESTO P ON U.IdPuesto = P.Id
+                                           INNER JOIN AREA A ON U.IdArea = A.Id
+                                           LEFT JOIN SENIORITY S ON U.IdSeniority = S.Id
+                                           WHERE U.IdEmpresa = @IdEmpresa AND U.IdArea = @IdArea"
                     );
                     datos.setearParametro("@IdArea", idArea);
                 }
@@ -339,7 +339,6 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
-
         public void VerificarMail(Usuario usuario)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -425,7 +424,6 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
-
         public bool MailPendienteVerificacion(Usuario usuario)
         {
             AccesoDatos datos = new AccesoDatos();
