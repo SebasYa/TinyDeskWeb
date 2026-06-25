@@ -513,49 +513,12 @@ namespace TP_Final_Programacion_III
                 lblDetalleEstado.Text = sprint.Estado.Nombre;
                 lblDetalleEstado.CssClass += " " + GetClassEtiquetaEstado(sprint.Estado.Nombre);
 
-                // =======================================================
-                // MOCKUP DE TICKETS AJUSTADO A TU CLASE REAL
-                // =======================================================
-                List<Ticket> listaMockupTickets = new List<Ticket>();
-
-                // Ticket 1: Prioridad Alta y Estado Abierto
-                listaMockupTickets.Add(new Ticket
-                {
-                    Id = 1,
-                    Descripcion = "Error al generar reporte de facturación", // Lo usamos como título
-                    //Proyecto = sprint.Proyecto, // Reutiliza el proyecto del sprint actual
-                    Prioridad = new Prioridad { Nombre = "Alta" },
-                    Estado = new Estado { Nombre = "Abierto" },
-                    Usuario = new Usuario { Nombre = "Juan Pérez" },
-                    FechaInicio = DateTime.Now.AddDays(-5)
-                });
-
-                // Ticket 2: Prioridad Media y Estado En Progreso
-                listaMockupTickets.Add(new Ticket
-                {
-                    Id = 2,
-                    Descripcion = "No puedo iniciar sesión desde el celular",
-                    //Proyecto = sprint.Proyecto,
-                    Prioridad = new Prioridad { Nombre = "Media" },
-                    Estado = new Estado { Nombre = "En Progreso" },
-                    Usuario = new Usuario { Nombre = "María López" },
-                    FechaInicio = DateTime.Now.AddDays(-4)
-                });
-
-                // Ticket 3: Prioridad Baja y Estado Resuelto
-                listaMockupTickets.Add(new Ticket
-                {
-                    Id = 3,
-                    Descripcion = "Solicitud de nuevo acceso al módulo de auditoría",
-                    //Proyecto = sprint.Proyecto,
-                    Prioridad = new Prioridad { Nombre = "Baja" },
-                    Estado = new Estado { Nombre = "Resuelto" },
-                    Usuario = new Usuario { Nombre = "Pedro Gómez" },
-                    FechaInicio = DateTime.Now.AddDays(-2)
-                });
 
                 // 3. Enlazamos la lista falsa al GridView
-                dgvTicketsDelSprint.DataSource = listaMockupTickets;
+                TicketNegocio ticketNegocio = new TicketNegocio();
+                dgvTicketsDelSprint.DataSource = ticketNegocio.listarPorSprint(idSprint);
+
+                //dgvTicketsDelSprint.DataSource = listaMockupTickets;
                 dgvTicketsDelSprint.DataBind();
             }
         }

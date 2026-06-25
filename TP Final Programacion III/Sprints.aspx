@@ -347,7 +347,7 @@
                     <ItemTemplate>
                         <div class="d-flex align-items-center">
                             <i class="bi bi-person text-muted me-2"></i>
-                            <span class="text-dark fw-medium text-sm"><%# Eval("Usuario.Nombre") %></span>
+                            <span class="text-dark fw-medium text-sm"><%# string.Format("{0} {1}", Eval("Usuario.Nombre"), Eval("Usuario.Apellido")) %></span>
                         </div>
                     </ItemTemplate>
                 </asp:TemplateField>

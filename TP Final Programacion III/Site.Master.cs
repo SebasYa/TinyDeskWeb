@@ -19,12 +19,12 @@ namespace TP_Final_Programacion_III
                 Context.ApplicationInstance.CompleteRequest();
                 return;
             }
-            if (!Seguridad.EsAdmin(Session["usuario"]) || !Seguridad.PuedeEscribir(Session["usuario"]))
+            /*if (!Seguridad.EsAdmin(Session["usuario"]) || !Seguridad.PuedeEscribir(Session["usuario"]))
             {
                 Response.Redirect("UsuarioDefault.aspx", true);
                 Context.ApplicationInstance.CompleteRequest();
                 return;
-            }
+            }*/
         }
         protected void Page_Load(object sender, EventArgs e)
         {

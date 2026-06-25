@@ -436,5 +436,75 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
+
+        public List<Ticket> listarPorSprint(int idSprint)
+        {
+            List<Ticket> lista = new List<Ticket>();
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.setearConsulta(@"SELECT T.Id,T.FechaInicio, T.FechaEstimadaFin, T.FechaFin, T.Activo,T.Descripcion, 
+                                               P.Nombre AS NombreProyecto, P.Id AS IdProyecto,
+                                               E.Id AS IdEstado, E.Nombre AS NombreEstado, E.EsFinal, E.EsSistema,
+                                               A.Nombre AS NombreArea, A.Id AS IdArea, PRI.Nombre AS Prioridad, U.Nombre AS UsuarioNombre, U.Apellido AS UsuarioApellido
+                                        FROM TICKET T
+                                        INNER JOIN ESTADO E ON E.Id = T.IdEstado
+                                        INNER JOIN SPRINT S ON T.IdSprint = S.Id
+                                        INNER JOIN PROYECTO P ON S.IdProyecto = P.Id
+                                        INNER JOIN AREA A ON A.Id = S.IdArea
+                                        INNER JOIN USUARIO U ON U.Id = T.IdUsuario
+                                        INNER JOIN PRIORIDAD PRI ON P.Id = T.IdPrioridad
+                                        WHERE S.Id = @IdSprint
+                ");
+
+                datos.setearParametro("@IdSprint", idSprint);
+                datos.ejecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    Ticket ticket = new Ticket();
+                    ticket.Id = (int)datos.Lector["Id"];
+                    ticket.FechaInicio = (DateTime)datos.Lector["FechaInicio"];
+                    ticket.FechaEstimadaFin = (DateTime)datos.Lector["FechaEstimadaFin"];
+
+                    if (datos.Lector["FechaFin"] != DBNull.Value)
+                        ticket.FechaFin = (DateTime)datos.Lector["FechaFin"];
+
+                    ticket.Activo = (bool)datos.Lector["Activo"];
+                    ticket.Descripcion = (string)datos.Lector["Descripcion"];
+
+                    ticket.Sprint = new Sprint();
+                    ticket.Sprint.Proyecto = new Proyecto();
+                    ticket.Sprint.Proyecto.Id = (int)datos.Lector["IdProyecto"];
+                    ticket.Sprint.Proyecto.Nombre = (string)datos.Lector["NombreProyecto"];
+                    
+                    ticket.Estado = new Estado();
+                    ticket.Estado.Id = (int)datos.Lector["IdEstado"];
+                    ticket.Estado.Nombre = (string)datos.Lector["NombreEstado"];
+                    ticket.Estado.EsFinal = (bool)datos.Lector["EsFinal"];
+                    ticket.Estado.EsSistema = (bool)datos.Lector["EsSistema"];
+
+                    ticket.Sprint.Area = new Area();
+                    ticket.Sprint.Area.Id = (int)datos.Lector["IdArea"];
+                    ticket.Sprint.Area.Nombre = (string)datos.Lector["NombreArea"];
+
+                    ticket.Prioridad = new Prioridad();
+                    ticket.Prioridad.Nombre = (string)datos.Lector["Prioridad"];
+
+                    ticket.Usuario = new Usuario();
+                    ticket.Usuario.Nombre = (string)datos.Lector["UsuarioNombre"];
+                    ticket.Usuario.Apellido = (string)datos.Lector["UsuarioApellido"];
+
+                    lista.Add(ticket);
+                }
+
+                return lista;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
     }
 }
