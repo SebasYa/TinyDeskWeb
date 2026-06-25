@@ -85,17 +85,12 @@
 
                             <span class="text-muted small me-1" style="font-size: 0.8rem;">Bienvenido, 
                                 <asp:Label ID="lblUserWelcome" runat="server" CssClass="text-light fw-bold" Style="font-size: 0.9rem;"></asp:Label>
-
                             </span>
-                            
 
-                            <a runat="server"
-                                href="~/ConfiguracionUsuarioConPermiso.aspx"
-                                class="btn btn-outline-light btn-sm border-0"
-                                title="Configuración de cuenta"
-                                aria-label="Configuración de cuenta">
+
+                            <asp:LinkButton ID="btnConfiguracionUsuario" runat="server" CssClass="btn btn-outline-light btn-sm border-0" ToolTip="Configuración de cuenta" CausesValidation="false" OnClick="btnConfiguracionUsuario_Click">
                                 <i class="bi bi-gear-fill"></i>
-                            </a>
+                            </asp:LinkButton>
 
                         </div>
                     </div>

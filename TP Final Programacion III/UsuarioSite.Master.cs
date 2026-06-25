@@ -19,7 +19,6 @@ namespace TP_Final_Programacion_III
                 return;
             }
         }
-
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Seguridad.sessionActiva(Session["usuario"]))
@@ -37,6 +36,12 @@ namespace TP_Final_Programacion_III
                 Usuario usuario = (Usuario)Session["usuario"];
                 lblUserWelcome.Text = $"{usuario.Nombre}";
             }
+        }
+        protected void btnConfiguracionUsuario_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("ConfiguracionUsuarioSinPermiso.aspx", false);
+            Context.ApplicationInstance.CompleteRequest();
+            return;
         }
     }
 }

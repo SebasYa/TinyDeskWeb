@@ -51,23 +51,26 @@ namespace TP_Final_Programacion_III
                 pnlUserNav.Visible = false;
             }
         }
-
         private string firstLetter_usuario(string usuario) 
         {
             string firstLetter = usuario.Substring(0, 1).ToUpper();
             return firstLetter;
         }
-
         protected void btnUserNav_Click(object sender, EventArgs e)
         {
             pnlUserNav.Visible = !pnlUserNav.Visible;
 
         }
-
         protected void btnLogOut_Click(object sender, EventArgs e)
         {
             Session.Abandon();
             Response.Redirect("Login.aspx", true);
+        }
+        protected void btnConfiguracionUsuario_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("ConfiguracionUsuarioConPermiso.aspx", false);
+            Context.ApplicationInstance.CompleteRequest();
+            return;
         }
     }
 }

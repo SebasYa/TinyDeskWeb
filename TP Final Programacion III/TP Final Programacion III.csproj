@@ -99,6 +99,8 @@
   <ItemGroup>
     <Content Include="About.aspx" />
     <Content Include="Administracion.aspx" />
+    <Content Include="ConfiguracionUsuarioConPermiso.aspx" />
+    <Content Include="ConfiguracionUsuarioSinPermiso.aspx" />
     <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
@@ -213,6 +215,20 @@
       <DependentUpon>About.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="ConfiguracionUsuarioConPermiso.aspx.cs">
+      <DependentUpon>ConfiguracionUsuarioConPermiso.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ConfiguracionUsuarioConPermiso.aspx.designer.cs">
+      <DependentUpon>ConfiguracionUsuarioConPermiso.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ConfiguracionUsuarioSinPermiso.aspx.cs">
+      <DependentUpon>ConfiguracionUsuarioSinPermiso.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ConfiguracionUsuarioSinPermiso.aspx.designer.cs">
+      <DependentUpon>ConfiguracionUsuarioSinPermiso.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Contact.aspx.cs">
       <DependentUpon>Contact.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
