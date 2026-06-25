@@ -34,7 +34,13 @@ namespace TP_Final_Programacion_III
             if (!IsPostBack)
             {
                 Usuario usuario = (Usuario)Session["usuario"];
-                lblUserWelcome.Text = $"{usuario.Nombre}";
+                lblUserWelcome.Text = usuario.Nombre;
+                btnUserNav.Text = usuario.Nombre.Substring(0, 1).ToUpper();
+                lblName_nav.Text = usuario.Nombre + " " + usuario.Apellido;
+                lblEmpresa.Text = usuario.Empresa.Nombre;
+                txtRol.Text = usuario.Area.Nombre;
+                txtSenority.Text = usuario.Seniority != null ? usuario.Seniority.Nombre : "No asignado";
+                pnlUserNav.Visible = false;
             }
         }
         protected void btnConfiguracionUsuario_Click(object sender, EventArgs e)
@@ -42,6 +48,23 @@ namespace TP_Final_Programacion_III
             Response.Redirect("ConfiguracionUsuarioSinPermiso.aspx", false);
             Context.ApplicationInstance.CompleteRequest();
             return;
+        }
+        protected void btnUserNav_Click(object sender, EventArgs e)
+        {
+            if (pnlUserNav.Visible)
+            {
+                pnlUserNav.Visible = false;
+            }
+            else
+            {
+                pnlUserNav.Visible = true;
+            }
+        }
+        protected void btnLogOut_Click(object sender, EventArgs e)
+        {
+            Session.Abandon();
+            Response.Redirect("Login.aspx", true);
+            Context.ApplicationInstance.CompleteRequest();
         }
     }
 }

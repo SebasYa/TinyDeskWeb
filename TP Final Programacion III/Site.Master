@@ -117,7 +117,14 @@
                     </div>
 
                     <div>
-                        <asp:Button ID="btnUserNav" Text="text" runat="server" CssClass="btn btn-primary" OnClick="btnUserNav_Click" Style="border-radius: 50%;" />
+                        <asp:Button
+                            ID="btnUserNav"
+                            runat="server"
+                            Text=""
+                            CssClass="btn btn-primary"
+                            Style="width: 32px; height: 32px; min-width: 32px; max-width: 32px; padding: 0; border-radius: 50% !important; line-height: 1;"
+                            CausesValidation="false"
+                            OnClick="btnUserNav_Click" />
 
                         <asp:Panel ID="pnlUserNav" runat="server" CssClass="card card-body position-absolute end-0 mt-2 mx-1 shadow" Style="width: 250px; z-index: 1050;">
                             <div class="card-body p-4">
