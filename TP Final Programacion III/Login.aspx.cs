@@ -13,19 +13,14 @@ namespace TP_Final_Programacion_III
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            /*if (Session["usuario"] != null && ( Seguridad.EsAdmin(Session["usuario"]) || Seguridad.PuedeEscribir(Session["usuario"])) )
+            if (Session["usuario"] != null && ( Seguridad.EsAdmin(Session["usuario"]) || Seguridad.PuedeEscribir(Session["usuario"])) )
             {
                 Response.Redirect("Default.aspx", false);
                 return;
             }
-            if (Session["usuario"] != null && (!Seguridad.EsAdmin(Session["usuario"]) || !Seguridad.PuedeEscribir(Session["usuario"])))
+            if (Session["usuario"] != null && (!Seguridad.EsAdmin(Session["usuario"]) && !Seguridad.PuedeEscribir(Session["usuario"])))
             {
                 Response.Redirect("UsuarioDefault.aspx", false);
-                return;
-            }*/
-            if (Session["usuario"] != null && (Seguridad.EsAdmin(Session["usuario"])))
-            {
-                Response.Redirect("Default.aspx", false);
                 return;
             }
             lblErrorUsuario.Visible = false;
