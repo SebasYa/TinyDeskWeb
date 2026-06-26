@@ -1,10 +1,11 @@
+using dominio;
+using negocio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using dominio;
-using negocio;
 
 namespace negocio
 {
@@ -257,13 +258,13 @@ namespace negocio
             }
         }
 
-        public List<Usuario> listar(int idEmpresa, int idArea = 0)
+        public List<Usuario> listar(int idEmpresa, int idArea = 0, string filtro = "")
         {
             AccesoDatos datos = new AccesoDatos();
             List<Usuario> lista = new List<Usuario>();
             try
             {
-                if (idArea == 0)
+                if (idArea == 0 && filtro == "")
                 {
                     datos.setearConsulta(@"SELECT U.Id, U.NombreUsuario, U.Email, U.Nombre, U.Apellido, U.EsAdmin, 
                                                   U.Activo, U.PermisoEscritura, U.EmailVerificado,
@@ -274,8 +275,25 @@ namespace negocio
                                            INNER JOIN PUESTO P ON U.IdPuesto = P.Id
                                            INNER JOIN AREA A ON U.IdArea = A.Id
                                            LEFT JOIN SENIORITY S ON U.IdSeniority = S.Id
-                                           WHERE U.IdEmpresa = @IdEmpresa"
+                                           WHERE U.IdEmpresa = @IdEmpresa
+                                           ORDER BY U.Activo DESC, U.Apellido ASC, U.Nombre ASC"
                     );
+                }
+                else if(idArea != 0)
+                {
+                    datos.setearConsulta(@"SELECT U.Id, U.NombreUsuario, U.Email, U.Nombre, U.Apellido, U.EsAdmin,
+                                                  U.Activo, U.PermisoEscritura, U.EmailVerificado,
+                                                  U.IdPuesto, P.Nombre AS NombrePuesto,
+                                                  U.IdArea, A.Nombre AS NombreArea, U.IdEmpresa,
+                                                  U.IdSeniority, S.Nombre AS NombreSeniority
+                                           FROM USUARIO U
+                                           INNER JOIN PUESTO P ON U.IdPuesto = P.Id
+                                           INNER JOIN AREA A ON U.IdArea = A.Id
+                                           LEFT JOIN SENIORITY S ON U.IdSeniority = S.Id
+                                           WHERE U.IdEmpresa = @IdEmpresa AND U.IdArea = @IdArea
+                                           ORDER BY U.Activo DESC, U.Apellido ASC, U.Nombre ASC"
+                    );
+                    datos.setearParametro("@IdArea", idArea);
                 }
                 else
                 {
@@ -288,10 +306,18 @@ namespace negocio
                                            INNER JOIN PUESTO P ON U.IdPuesto = P.Id
                                            INNER JOIN AREA A ON U.IdArea = A.Id
                                            LEFT JOIN SENIORITY S ON U.IdSeniority = S.Id
-                                           WHERE U.IdEmpresa = @IdEmpresa AND U.IdArea = @IdArea"
-                    );
-                    datos.setearParametro("@IdArea", idArea);
+                                           WHERE U.IdEmpresa = @IdEmpresa
+                                           AND (U.Apellido LIKE @FiltroLike
+                                                OR U.Nombre LIKE @FiltroLike
+                                                OR U.NombreUsuario LIKE @FiltroLike
+                                                OR U.Email LIKE @FiltroLike
+                                                OR A.Nombre LIKE @FiltroLike
+                                                OR P.Nombre LIKE @FiltroLike
+                                                OR S.Nombre LIKE @FiltroLike)
+                                           ORDER BY U.Activo DESC, U.Apellido ASC, U.Nombre ASC");
+                    datos.setearParametro("@FiltroLike", "%" + filtro + "%");
                 }
+
                 datos.setearParametro("@IdEmpresa", idEmpresa);
                 datos.ejecutarLectura();
 

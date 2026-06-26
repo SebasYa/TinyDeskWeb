@@ -7,12 +7,82 @@
             <a href="CrearUsuario.aspx" class="btn btn-success d-flex align-items-center gap-2 shadow-sm">Crear Usuario
             </a>
         </div>
+        <asp:Panel ID="pnlFiltroSimple" runat="server" CssClass="card border-0 shadow-sm mb-3" DefaultButton="btnBuscarUsuario">
+            <div class="card-body">
+                <div class="row g-3 align-items-end">
+
+                    <div class="col-12 col-lg-7">
+                        <label for="txtFiltroSimple" class="form-label fw-semibold">
+                            Buscar usuario
+                        </label>
+
+                        <div class="input-group">
+                            <span class="input-group-text bg-white">
+                                <i class="bi bi-search text-muted"></i>
+                            </span>
+
+                            <asp:TextBox
+                                ID="txtFiltroSimple"
+                                runat="server"
+                                CssClass="form-control"
+                                placeholder="Buscar..." />
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-2">
+                        <div class="form-check form-switch ps-5 fs-6 mb-2">
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                id="chkFiltroAvanzado"
+                                runat="server"
+                                clientidmode="Static"
+                                onserverchange="chkFiltroAvanzado_ServerChange"
+                                onchange="this.form.submit();" />
+
+                            <label class="form-check-label fw-semibold ps-2" for="chkFiltroAvanzado">
+                                Filtro avanzado
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-3 d-flex gap-2 justify-content-lg-end">
+                        <asp:Button
+                            ID="btnBuscarUsuario"
+                            runat="server"
+                            Text="Buscar"
+                            CssClass="btn btn-primary px-4"
+                            OnClick="btnBuscarUsuario_Click" />
+
+                        <asp:Button
+                            ID="btnLimpiarFiltro"
+                            runat="server"
+                            Text="Limpiar"
+                            CssClass="btn btn-outline-secondary px-4"
+                            OnClick="btnLimpiarFiltro_Click" />
+                    </div>
+
+                </div>
+            </div>
+        </asp:Panel>
+
+        <asp:Panel ID="pnlFiltroAvanzado" runat="server" Visible="false" CssClass="card border-0 shadow-sm mb-3">
+            <div class="card-body">
+                <h5 class="text-primary border-bottom pb-2 mb-3">
+                    <i class="bi bi-funnel-fill me-2"></i>Filtro avanzado
+                </h5>
+
+                <p class="text-muted mb-0">
+                    Próximamente filtros avanzados.
+                </p>
+            </div>
+        </asp:Panel>
 
         <asp:GridView ID="dgvUsuarios" runat="server"
             AutoGenerateColumns="False"
             DataKeyNames="Id"
             AllowPaging="true"
-            PageSize="8"
+            PageSize="10"
             OnSelectedIndexChanged="dgvUsuarios_SelectedIndexChanged"
             OnPageIndexChanging="dgvUsuarios_PageIndexChanging"
             CssClass="table table-striped table-bordered shadow-sm">

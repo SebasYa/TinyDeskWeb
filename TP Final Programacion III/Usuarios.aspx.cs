@@ -96,5 +96,51 @@ namespace TP_Final_Programacion_III
                 Response.Redirect("Usuarios.aspx", false);
             }
         }
+        protected void btnBuscarUsuario_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
+                UsuarioNegocio negocio = new UsuarioNegocio();
+                List<Usuario> lista = negocio.listar(idEmpresa, 0, txtFiltroSimple.Text);
+
+                Session["listaUsuarios"] = lista;
+                dgvUsuarios.PageIndex = 0;
+                dgvUsuarios.DataSource = lista;
+                dgvUsuarios.DataBind();
+
+                pnlFiltroAvanzado.Visible = chkFiltroAvanzado.Checked;
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                Response.Redirect("Usuarios.aspx", false);
+            }
+        }
+        protected void btnLimpiarFiltro_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                txtFiltroSimple.Text = "";
+                int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
+                UsuarioNegocio negocio = new UsuarioNegocio();
+                List<Usuario> lista = negocio.listar(idEmpresa);
+
+                Session["listaUsuarios"] = lista;
+                dgvUsuarios.PageIndex = 0;
+                dgvUsuarios.DataSource = lista;
+                dgvUsuarios.DataBind();
+                pnlFiltroAvanzado.Visible = chkFiltroAvanzado.Checked;
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                Response.Redirect("Usuarios.aspx", false);
+            }
+        }
+        protected void chkFiltroAvanzado_ServerChange(object sender, EventArgs e)
+        {
+            pnlFiltroAvanzado.Visible = chkFiltroAvanzado.Checked;
+        }
     }
 }
