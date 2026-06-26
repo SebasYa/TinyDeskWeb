@@ -85,7 +85,117 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
+        public List<Usuario> listarAvanzado(int idEmpresa, int idArea, int idPuesto, int idSeniority, int estado, string permiso)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            List<Usuario> lista = new List<Usuario>();
 
+            try
+            {
+                string consulta = @"SELECT U.Id, U.NombreUsuario, U.Email, U.Nombre, U.Apellido, U.EsAdmin,
+                                           U.Activo, U.PermisoEscritura, U.EmailVerificado,
+                                           U.IdPuesto, P.Nombre AS NombrePuesto,
+                                           U.IdArea, A.Nombre AS NombreArea, U.IdEmpresa,
+                                           U.IdSeniority, S.Nombre AS NombreSeniority
+                                    FROM USUARIO U
+                                    INNER JOIN PUESTO P ON U.IdPuesto = P.Id
+                                    INNER JOIN AREA A ON U.IdArea = A.Id
+                                    LEFT JOIN SENIORITY S ON U.IdSeniority = S.Id
+                                    WHERE U.IdEmpresa = @IdEmpresa";
+
+                if (idArea != 0)
+                {
+                    consulta += " AND U.IdArea = @IdArea";
+                    datos.setearParametro("@IdArea", idArea);
+                }
+
+                if (idPuesto != 0)
+                {
+                    consulta += " AND U.IdPuesto = @IdPuesto";
+                    datos.setearParametro("@IdPuesto", idPuesto);
+                }
+
+                if (idSeniority > 0)
+                {
+                    consulta += " AND U.IdSeniority = @IdSeniority";
+                    datos.setearParametro("@IdSeniority", idSeniority);
+                }
+                else if(idSeniority == -1)
+                {
+                    consulta += " AND U.IdSeniority IS NULL";
+                }
+
+                if (estado != -1)
+                {
+                    consulta += " AND U.Activo = @Estado";
+                    datos.setearParametro("@Estado", estado);
+                }
+
+                if (permiso == "admin")
+                {
+                    consulta += " AND U.EsAdmin = 1";
+                }
+                else if (permiso == "gestion")
+                {
+                    consulta += " AND U.PermisoEscritura = 1";
+                }
+                else if (permiso == "lectura")
+                {
+                    consulta += " AND U.EsAdmin = 0 AND U.PermisoEscritura = 0";
+                }
+
+                consulta += " ORDER BY U.Activo DESC, U.Apellido ASC, U.Nombre ASC";
+
+                datos.setearConsulta(consulta);
+                datos.setearParametro("@IdEmpresa", idEmpresa);
+                datos.ejecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    Usuario usuario = new Usuario();
+
+                    usuario.Id = (int)datos.Lector["Id"];
+                    usuario.NombreUsuario = (string)datos.Lector["NombreUsuario"];
+                    usuario.Email = (string)datos.Lector["Email"];
+                    usuario.Nombre = (string)datos.Lector["Nombre"];
+                    usuario.Apellido = (string)datos.Lector["Apellido"];
+                    usuario.Activo = (bool)datos.Lector["Activo"];
+                    usuario.PermisoEscritura = (bool)datos.Lector["PermisoEscritura"];
+                    usuario.EsAdmin = (bool)datos.Lector["EsAdmin"];
+                    usuario.EmailVerificado = (bool)datos.Lector["EmailVerificado"];
+
+                    usuario.Puesto = new Puesto();
+                    usuario.Puesto.Id = (int)datos.Lector["IdPuesto"];
+                    usuario.Puesto.Nombre = (string)datos.Lector["NombrePuesto"];
+
+                    usuario.Area = new Area();
+                    usuario.Area.Id = (int)datos.Lector["IdArea"];
+                    usuario.Area.Nombre = (string)datos.Lector["NombreArea"];
+
+                    usuario.Empresa = new Empresa();
+                    usuario.Empresa.Id = (int)datos.Lector["IdEmpresa"];
+
+                    if (datos.Lector["IdSeniority"] != DBNull.Value)
+                    {
+                        usuario.Seniority = new Seniority();
+                        usuario.Seniority.Id = (int)datos.Lector["IdSeniority"];
+                        usuario.Seniority.Nombre = (string)datos.Lector["NombreSeniority"];
+                    }
+
+                    lista.Add(usuario);
+                }
+
+                return lista;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
         public int RegistrarEmpresaYOwner(string nombreEmpresa, string nombreUsuario, string password, string nombre, string apellido, string email)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -214,7 +324,6 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
-
         public bool Modificar(Usuario usuario)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -257,7 +366,6 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
-
         public List<Usuario> listar(int idEmpresa, int idArea = 0, string filtro = "")
         {
             AccesoDatos datos = new AccesoDatos();
@@ -279,7 +387,7 @@ namespace negocio
                                            ORDER BY U.Activo DESC, U.Apellido ASC, U.Nombre ASC"
                     );
                 }
-                else if(idArea != 0)
+                else if (idArea != 0)
                 {
                     datos.setearConsulta(@"SELECT U.Id, U.NombreUsuario, U.Email, U.Nombre, U.Apellido, U.EsAdmin,
                                                   U.Activo, U.PermisoEscritura, U.EmailVerificado,

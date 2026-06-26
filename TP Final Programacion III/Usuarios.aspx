@@ -72,9 +72,57 @@
                     <i class="bi bi-funnel-fill me-2"></i>Filtro avanzado
                 </h5>
 
-                <p class="text-muted mb-0">
-                    Próximamente filtros avanzados.
-                </p>
+                <div class="row g-3">
+                    <div class="col-12 col-md-4">
+                        <label for="ddlFiltroArea" class="form-label fw-semibold">Área</label>
+                        <asp:DropDownList ID="ddlFiltroArea" runat="server" CssClass="form-select"></asp:DropDownList>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label for="ddlFiltroPuesto" class="form-label fw-semibold">Puesto</label>
+                        <asp:DropDownList ID="ddlFiltroPuesto" runat="server" CssClass="form-select"></asp:DropDownList>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label for="ddlFiltroSeniority" class="form-label fw-semibold">Seniority</label>
+                        <asp:DropDownList ID="ddlFiltroSeniority" runat="server" CssClass="form-select"></asp:DropDownList>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label for="ddlFiltroEstado" class="form-label fw-semibold">Estado</label>
+                        <asp:DropDownList ID="ddlFiltroEstado" runat="server" CssClass="form-select">
+                            <asp:ListItem Text="Todos" Value="-1" />
+                            <asp:ListItem Text="Activos" Value="1" />
+                            <asp:ListItem Text="Inactivos" Value="0" />
+                        </asp:DropDownList>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label for="ddlFiltroPermiso" class="form-label fw-semibold">Permiso</label>
+                        <asp:DropDownList ID="ddlFiltroPermiso" runat="server" CssClass="form-select">
+                            <asp:ListItem Text="Todos" Value="" />
+                            <asp:ListItem Text="Administrador" Value="admin" />
+                            <asp:ListItem Text="Gestión habilitada" Value="gestion" />
+                            <asp:ListItem Text="Solo lectura" Value="lectura" />
+                        </asp:DropDownList>
+                    </div>
+
+                    <div class="col-12 col-md-4 d-flex align-items-end gap-2 justify-content-md-end">
+                        <asp:Button
+                            ID="btnAplicarFiltroAvanzado"
+                            runat="server"
+                            Text="Aplicar"
+                            CssClass="btn btn-primary px-4"
+                            OnClick="btnAplicarFiltroAvanzado_Click" />
+
+                        <asp:Button
+                            ID="btnLimpiarFiltroAvanzado"
+                            runat="server"
+                            Text="Limpiar"
+                            CssClass="btn btn-outline-secondary px-4"
+                            OnClick="btnLimpiarFiltroAvanzado_Click" />
+                    </div>
+                </div>
             </div>
         </asp:Panel>
 
@@ -107,6 +155,17 @@
                 <asp:TemplateField HeaderText="Seniority">
                     <ItemTemplate>
                         <%# Eval("Seniority.Nombre") %>
+                    </ItemTemplate>
+                </asp:TemplateField>
+
+                <asp:TemplateField HeaderText="Permiso">
+                    <ItemTemplate>
+                        <asp:Literal
+                            ID="litPermisoUsuario"
+                            runat="server"
+                            Mode="PassThrough"
+                            Text='<%# ObtenerIconoPermiso(Eval("EsAdmin"), Eval("PermisoEscritura")) %>'>
+                        </asp:Literal>
                     </ItemTemplate>
                 </asp:TemplateField>
 
