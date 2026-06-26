@@ -25,11 +25,6 @@ namespace TP_Final_Programacion_III
                     lblSprintsEnCurso.Text = sprintNegocio.ContarEnCurso(idEmpresa).ToString();
                     lblTicketsAbiertos.Text = ticketNegocio.ContarAbiertos(idEmpresa).ToString();
 
-                    CargarCombosProyecto(idEmpresa);
-                    CargarCombosSprint(idEmpresa);
-                    CargarCombosTicket(idEmpresa);
-                    lblTicketsAbiertos.Text = ticketNegocio.ContarAbiertos(idEmpresa).ToString();
-
                     int ticketsUsuariosDesactivados = ticketNegocio.ContarAsignadosUsuariosDesactivados(idEmpresa);
                     if (ticketsUsuariosDesactivados > 0)
                     {
@@ -170,7 +165,6 @@ namespace TP_Final_Programacion_III
             try
             {
                 // Creacion del ticket
-
                 TicketNegocio ticketNegocio = new TicketNegocio();
                 Ticket nuevoTicket = new Ticket();
 
@@ -231,7 +225,6 @@ namespace TP_Final_Programacion_III
                 lblTicketsAbiertos.Text = ticketNegocio.ContarAbiertos(userLogueado.Empresa.Id).ToString();
 
                 //Limpiar Campos
-                CargarCombosTicket(userLogueado.Empresa.Id);
                 LimpiarCamposTicket();
             }
             catch (Exception ex)
@@ -342,37 +335,28 @@ namespace TP_Final_Programacion_III
                 listaUsuarios = listaUsuarios.FindAll(x => x.Activo && x.EmailVerificado);
 
                 List<Usuario> usuariosFiltrados = listaUsuarios;
-
                 if (!string.IsNullOrWhiteSpace(idAreaSeleccionada))
                     usuariosFiltrados = usuariosFiltrados.FindAll(x => x.Area.Id == int.Parse(idAreaSeleccionada));
-
                 if (!string.IsNullOrWhiteSpace(idPuestoSeleccionado))
                     usuariosFiltrados = usuariosFiltrados.FindAll(x => x.Puesto.Id == int.Parse(idPuestoSeleccionado));
-
                 if (!string.IsNullOrWhiteSpace(idSenioritySeleccionado))
                     usuariosFiltrados = usuariosFiltrados.FindAll(x => x.Seniority != null && x.Seniority.Id == int.Parse(idSenioritySeleccionado));
 
                 List<Usuario> usuariosParaAreas = listaUsuarios;
-
                 if (!string.IsNullOrWhiteSpace(idPuestoSeleccionado))
                     usuariosParaAreas = usuariosParaAreas.FindAll(x => x.Puesto.Id == int.Parse(idPuestoSeleccionado));
-
                 if (!string.IsNullOrWhiteSpace(idSenioritySeleccionado))
                     usuariosParaAreas = usuariosParaAreas.FindAll(x => x.Seniority != null && x.Seniority.Id == int.Parse(idSenioritySeleccionado));
 
                 List<Usuario> usuariosParaPuestos = listaUsuarios;
-
                 if (!string.IsNullOrWhiteSpace(idAreaSeleccionada))
                     usuariosParaPuestos = usuariosParaPuestos.FindAll(x => x.Area.Id == int.Parse(idAreaSeleccionada));
-
                 if (!string.IsNullOrWhiteSpace(idSenioritySeleccionado))
                     usuariosParaPuestos = usuariosParaPuestos.FindAll(x => x.Seniority != null && x.Seniority.Id == int.Parse(idSenioritySeleccionado));
 
                 List<Usuario> usuariosParaSeniorities = listaUsuarios;
-
                 if (!string.IsNullOrWhiteSpace(idAreaSeleccionada))
                     usuariosParaSeniorities = usuariosParaSeniorities.FindAll(x => x.Area.Id == int.Parse(idAreaSeleccionada));
-
                 if (!string.IsNullOrWhiteSpace(idPuestoSeleccionado))
                     usuariosParaSeniorities = usuariosParaSeniorities.FindAll(x => x.Puesto.Id == int.Parse(idPuestoSeleccionado));
 
@@ -428,6 +412,45 @@ namespace TP_Final_Programacion_III
             {
                 Session.Add("error", ex.ToString());
             }
+        }
+        protected void btnAbrirProyectoModal_Click(object sender, EventArgs e)
+        {
+            int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
+            CargarCombosProyecto(idEmpresa);
+
+            ScriptManager.RegisterStartupScript(
+                this,
+                GetType(),
+                "abrirProyectoModal",
+                "window.addEventListener('load', function() { new bootstrap.Modal(document.getElementById('proyectoModal')).show(); });",
+                true
+            );
+        }
+        protected void btnAbrirSprintModal_Click(object sender, EventArgs e)
+        {
+            int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
+            CargarCombosSprint(idEmpresa);
+
+            ScriptManager.RegisterStartupScript(
+                this,
+                GetType(),
+                "abrirSprintModal",
+                "window.addEventListener('load', function() { new bootstrap.Modal(document.getElementById('sprintModal')).show(); });",
+                true
+            );
+        }
+        protected void btnAbrirTicketModal_Click(object sender, EventArgs e)
+        {
+            int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
+            CargarCombosTicket(idEmpresa);
+
+            ScriptManager.RegisterStartupScript(
+                this,
+                GetType(),
+                "abrirTicketModal",
+                "window.addEventListener('load', function() { new bootstrap.Modal(document.getElementById('ticketModal')).show(); });",
+                true
+            );
         }
         private void LimpiarCamposTicket()
         {

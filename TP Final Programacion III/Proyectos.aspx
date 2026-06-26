@@ -101,41 +101,96 @@
         </asp:GridView>
     </asp:Panel>
 
-    <asp:Panel ID="pnlListadoProyectos" runat="server">
+    <asp:Panel ID="pnlListadoProyectos" runat="server" CssClass="container mt-4">
 
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
-            <div class="d-flex flex-wrap gap-2">
-                <asp:Button ID="btnFiltroActivos" runat="server"
-                    Text="Activos"
-                    CssClass="btn btn-primary"
-                    OnClick="btnFiltroActivos_Click" />
-
-                <asp:Button ID="btnFiltroFinalizados" runat="server"
-                    Text="Finalizados"
-                    CssClass="btn btn-outline-secondary"
-                    OnClick="btnFiltroFinalizados_Click" />
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+            <div>
+                <h1 class="h2 text-dark fw-bold mb-1">Proyectos</h1>
+                <p class="text-muted mb-0">Gestioná los proyectos de la empresa y revisá su avance.</p>
             </div>
-            <button type="button" class="btn btn-primary shadow-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#proyectoModal">
-                <i class="bi bi-plus-circle"></i>Nuevo Proyecto
+
+            <button type="button" class="btn btn-primary shadow-sm d-flex align-items-center gap-2"
+                data-bs-toggle="modal" data-bs-target="#proyectoModal">
+                <i class="bi bi-plus-circle"></i>
+                Nuevo Proyecto
             </button>
         </div>
 
-        <div class="row">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div>
+                    <h5 class="fw-semibold mb-1">Estado de los proyectos</h5>
+                    <small class="text-muted">Alterná entre proyectos activos y proyectos finalizados.</small>
+                </div>
+
+                <div class="d-flex flex-wrap gap-2">
+                    <asp:Button ID="btnFiltroActivos" runat="server"
+                        Text="Activos"
+                        CssClass="btn btn-primary"
+                        OnClick="btnFiltroActivos_Click" />
+
+                    <asp:Button ID="btnFiltroFinalizados" runat="server"
+                        Text="Finalizados"
+                        CssClass="btn btn-outline-secondary"
+                        OnClick="btnFiltroFinalizados_Click" />
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3">
             <asp:Repeater ID="repProyectos" runat="server" OnItemDataBound="repProyectos_ItemDataBound">
                 <ItemTemplate>
-                    <div class="col-md-4">
-                        <a class="card text-decoration-none text-dark mb-3 shadow-sm"
+                    <div class="col-12 col-md-6 col-xl-4">
+                        <a class="card h-100 border-0 shadow-sm text-decoration-none text-dark"
                             href='<%# "Proyectos.aspx?id=" + Eval("Id") %>'>
 
-                            <div class="card-body">
-                                <h5 class="card-title"><%# Eval("Nombre") %></h5>
-                                <p class="card-text"><%# Eval("Descripcion") %></p>
-                                <p>Estado: <%# Eval("Estado.Nombre") %></p>
-                                <p>Inicio: <%# Eval("FechaInicio", "{0:dd/MM/yyyy}") %></p>
-                                <p>Final Esperado: <%# Eval("FechaEstimadaFin", "{0:dd/MM/yyyy}") %></p>
-                                <asp:Label ID="lblFechaFin" runat="server" CssClass="d-block" Visible="false"></asp:Label>
-                            </div>
+                            <div class="card-body d-flex flex-column">
 
+                                <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+                                    <div class="pe-2">
+                                        <h5 class="card-title fw-bold mb-1">
+                                            <%# Eval("Nombre") %>
+                                        </h5>
+
+                                        <small class="text-muted">
+                                            <i class="bi bi-folder2-open me-1"></i>Proyecto
+                                        </small>
+                                    </div>
+
+                                    <asp:Literal
+                                        ID="litEstadoProyecto"
+                                        runat="server"
+                                        Mode="PassThrough"
+                                        Text='<%# ObtenerIconoEstadoProyecto(Eval("Estado.Nombre")) %>'>
+                                    </asp:Literal>
+                                </div>
+
+                                <p class="card-text text-muted small mb-4">
+                                    <%# Eval("Descripcion") %>
+                                </p>
+
+                                <div class="mt-auto">
+                                    <div class="d-flex align-items-center text-muted small mb-2">
+                                        <i class="bi bi-calendar-event me-2"></i>
+                                        <span>Inicio: <%# Eval("FechaInicio", "{0:dd/MM/yyyy}") %></span>
+                                    </div>
+
+                                    <div class="d-flex align-items-center text-muted small mb-2">
+                                        <i class="bi bi-calendar-check me-2"></i>
+                                        <span>Fin estimado: <%# Eval("FechaEstimadaFin", "{0:dd/MM/yyyy}") %></span>
+                                    </div>
+
+                                    <asp:Literal ID="litFechaFin" runat="server" Visible="false"></asp:Literal>
+
+                                    <div class="d-flex justify-content-between align-items-center border-top pt-3 mt-3">
+                                        <span class="small text-primary fw-semibold">Ver proyecto
+                                        </span>
+
+                                        <i class="bi bi-arrow-right-circle text-primary fs-5"></i>
+                                    </div>
+                                </div>
+
+                            </div>
                         </a>
                     </div>
                 </ItemTemplate>

@@ -224,12 +224,16 @@ namespace TP_Final_Programacion_III
             {
                 Proyecto proyecto = (Proyecto)e.Item.DataItem;
 
-                Label lblFechaFin = (Label)e.Item.FindControl("lblFechaFin");
+                Literal litFechaFin = (Literal)e.Item.FindControl("litFechaFin");
 
-                if (lblFechaFin != null && proyecto.FechaFin.HasValue)
+                if (litFechaFin != null && proyecto.FechaFin.HasValue)
                 {
-                    lblFechaFin.Text = $"Fecha Fin: {proyecto.FechaFin.Value.ToString("dd/MM/yyyy")}";
-                    lblFechaFin.Visible = true;
+                    litFechaFin.Text = "<div class='d-flex align-items-center text-muted small mb-2'>" +
+                                       "<i class='bi bi-calendar-x me-2'></i>" +
+                                       "<span>Finalizado: " + proyecto.FechaFin.Value.ToString("dd/MM/yyyy") + "</span>" +
+                                       "</div>";
+
+                    litFechaFin.Visible = true;
                 }
             }
         }
@@ -308,6 +312,36 @@ namespace TP_Final_Programacion_III
 
             Usuario userLogueado = (Usuario)Session["usuario"];
             CargarListadoProyectos(userLogueado.Empresa.Id);
+        }
+        public string ObtenerIconoEstadoProyecto(object estadoObj)
+        {
+            string estado = estadoObj != null ? estadoObj.ToString() : "";
+            string estadoMayuscula = estado.ToUpper();
+
+            if (estadoMayuscula == "FINALIZADO")
+            {
+                return "<span class='badge rounded-pill bg-danger-subtle text-danger'>" +
+                       "<i class='bi bi-check-circle-fill me-1'></i>" + estado +
+                       "</span>";
+            }
+
+            if (estadoMayuscula == "PENDIENTE")
+            {
+                return "<span class='badge rounded-pill bg-warning-subtle text-warning'>" +
+                       "<i class='bi bi-clock-fill me-1'></i>" + estado +
+                       "</span>";
+            }
+
+            if (estadoMayuscula == "EN PROGRESO")
+            {
+                return "<span class='badge rounded-pill bg-primary-subtle text-primary'>" +
+                       "<i class='bi bi-play-circle-fill me-1'></i>" + estado +
+                       "</span>";
+            }
+
+            return "<span class='badge rounded-pill bg-info-subtle text-info'>" +
+                   "<i class='bi bi-tag-fill me-1'></i>" + estado +
+                   "</span>";
         }
     }
 }

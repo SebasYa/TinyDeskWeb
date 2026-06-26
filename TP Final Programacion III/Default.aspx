@@ -28,17 +28,27 @@
         <div class="row align-items-center mb-4">
             <div class="col-12 col-md-auto">
                 <div class="d-flex flex-wrap gap-2">
-                    <button type="button" class="btn btn-primary shadow-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#proyectoModal">
+                    <asp:LinkButton ID="btnAbrirProyectoModal" runat="server"
+                        CssClass="btn btn-primary shadow-sm d-flex align-items-center gap-2"
+                        CausesValidation="false"
+                        OnClick="btnAbrirProyectoModal_Click">
                         <i class="bi bi-plus-circle"></i>Nuevo Proyecto
-                    </button>
+                    </asp:LinkButton>
 
-                    <button type="button" class="btn btn-primary shadow-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#sprintModal">
+                    <asp:LinkButton ID="btnAbrirSprintModal" runat="server"
+                        CssClass="btn btn-primary shadow-sm d-flex align-items-center gap-2"
+                        CausesValidation="false"
+                        OnClick="btnAbrirSprintModal_Click">
                         <i class="bi bi-plus-circle"></i>Crear Sprint
-                    </button>
+                    </asp:LinkButton>
 
-                    <button type="button" class="btn btn-primary shadow-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#ticketModal">
+                    <asp:LinkButton ID="btnAbrirTicketModal" runat="server"
+                        CssClass="btn btn-primary shadow-sm d-flex align-items-center gap-2"
+                        CausesValidation="false"
+                        OnClick="btnAbrirTicketModal_Click">
                         <i class="bi bi-plus-circle"></i>Nuevo Ticket
-                    </button>
+                    </asp:LinkButton>
+
                 </div>
             </div>
         </div>
