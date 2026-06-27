@@ -44,13 +44,7 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
-        /*
-         ListarPorEntidad(string entidad, int entidadId): Este es el más importante. Lo usarías en la pantalla de "Detalle de Ticket" para mostrar un historial específico de ese ítem.
 
-         ListarPorUsuario(int usuarioId): Útil si quieres ver la actividad reciente de un miembro del equipo.
-
-         ListarRecientes(int limite): Para un dashboard de administración que muestre los últimos 10 cambios realizados en todo el sistema.
-         */
         public List<Auditoria> ListarPorEntidad(string entidad, int entidadId)
         {
             List<Auditoria> lista = new List<Auditoria>();
@@ -82,9 +76,9 @@ namespace negocio
                     aux.EntidadId = (int)datos.Lector["EntidadId"];
                     aux.Accion = (string)datos.Lector["Accion"];
                     aux.CampoModificado = (string)datos.Lector["CampoModificado"];
-                    aux.ValorAnterior = (string)datos.Lector["ValorAnterior"];
-                    aux.ValorNuevo = (string)datos.Lector["ValorNuevo"];
-                    aux.Descripcion = (string)datos.Lector["Descripcion"];
+                    aux.ValorAnterior = datos.Lector["ValorAnterior"] != DBNull.Value ? (string)datos.Lector["ValorAnterior"] : null;
+                    aux.ValorNuevo = datos.Lector["ValorNuevo"] != DBNull.Value ? (string)datos.Lector["ValorNuevo"] : null;
+                    aux.Descripcion = datos.Lector["Descripcion"] != DBNull.Value ? (string)datos.Lector["Descripcion"] : null;
                     aux.Fecha = (DateTime)datos.Lector["Fecha"];
                     lista.Add(aux);
                 }
@@ -129,9 +123,9 @@ namespace negocio
                     aux.EntidadId = (int)datos.Lector["EntidadId"];
                     aux.Accion = (string)datos.Lector["Accion"];
                     aux.CampoModificado = (string)datos.Lector["CampoModificado"];
-                    aux.ValorAnterior = (string)datos.Lector["ValorAnterior"];
-                    aux.ValorNuevo = (string)datos.Lector["ValorNuevo"];
-                    aux.Descripcion = (string)datos.Lector["Descripcion"];
+                    aux.ValorAnterior = datos.Lector["ValorAnterior"] != DBNull.Value ? (string)datos.Lector["ValorAnterior"] : null;
+                    aux.ValorNuevo = datos.Lector["ValorNuevo"] != DBNull.Value ? (string)datos.Lector["ValorNuevo"] : null;
+                    aux.Descripcion = datos.Lector["Descripcion"] != DBNull.Value ? (string)datos.Lector["Descripcion"] : null;
                     aux.Fecha = (DateTime)datos.Lector["Fecha"];
 
                     lista.Add(aux);
