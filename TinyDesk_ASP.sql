@@ -137,6 +137,23 @@ CREATE TABLE IMAGEN_USUARIO (
 )
 GO
 
+-- CREACIÓN TABLA AUDITORIA
+CREATE TABLE Auditoria (
+    IdAuditoria INT IDENTITY(1,1) PRIMARY KEY,
+    UsuarioId INT NOT NULL,
+    Entidad VARCHAR(50) NOT NULL, -- 'Proyecto', 'Sprint', 'Ticket'
+    EntidadId INT NOT NULL,       -- ID del objeto afectado
+    Accion VARCHAR(10) NOT NULL,  -- 'INSERT', 'UPDATE', 'DELETE'
+    CampoModificado VARCHAR(100), -- Nombre de la propiedad o campo
+    ValorAnterior NVARCHAR(MAX),
+    ValorNuevo NVARCHAR(MAX),
+    Descripcion NVARCHAR(500),    -- Justificación del cambio
+    Fecha DATETIME DEFAULT GETDATE(),
+
+    FOREIGN KEY (UsuarioId) REFERENCES USUARIO(Id)
+)
+GO
+
 /*-------------------------------------------------------------------------------
 2.1. -- Quitar Constrains a las tablas y agrega restricciones de columnas conjuntas
 ---------------------------------------------------------------------------------*/
