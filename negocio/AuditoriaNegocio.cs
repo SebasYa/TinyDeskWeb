@@ -44,61 +44,51 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
+        /*
+         ListarPorEntidad(string entidad, int entidadId): Este es el más importante. Lo usarías en la pantalla de "Detalle de Ticket" para mostrar un historial específico de ese ítem.
 
-        public List<Sprint> listar(int idEmpresa)
+         ListarPorUsuario(int usuarioId): Útil si quieres ver la actividad reciente de un miembro del equipo.
+
+         ListarRecientes(int limite): Para un dashboard de administración que muestre los últimos 10 cambios realizados en todo el sistema.
+         */
+        public List<Auditoria> ListarPorEntidad(string entidad, int entidadId)
         {
-            List<Sprint> lista = new List<Sprint>();
+            List<Auditoria> lista = new List<Auditoria>();
             AccesoDatos datos = new AccesoDatos();
             try
             {
                 datos.setearConsulta(@"
-                    SELECT S.Id, S.NumeroSprint, S.FechaInicio, S.FechaEstimadaFin, S.FechaFin, S.Activo, 
-                           P.Nombre AS NombreProyecto,P.Id AS IdProyecto, E.Id AS IdEstado, E.Nombre AS NombreEstado, 
-                           E.EsFinal, E.EsSistema, A.Nombre AS NombreArea, A.Id AS IdArea,
-                           CASE 
-                                WHEN E.EsFinal = 1 THEN 100
-                                WHEN GETDATE() < S.FechaInicio THEN 0
-                                WHEN GETDATE() > S.FechaEstimadaFin THEN 100
-                                ELSE (DATEDIFF(DAY, S.FechaInicio, GETDATE()) * 100) / NULLIF(DATEDIFF(DAY, S.FechaInicio, S.FechaEstimadaFin), 0)
-                           END AS Progreso
-                    FROM SPRINT S
-                    INNER JOIN ESTADO E ON E.Id = S.IdEstado
-                    INNER JOIN PROYECTO P ON P.Id = S.IdProyecto
-                    INNER JOIN AREA A ON A.Id = S.IdArea
-                    WHERE P.IdEmpresa = @IdEmpresa  AND S.Activo = 1
-                ");
-                datos.setearParametro("@IdEmpresa", idEmpresa);
+                    SELECT A.IdAuditoria, A.UsuarioId, U.Nombre, U.Apellido, A.Entidad, A.EntidadId, A.Accion, A.CampoModificado, 
+                           A.ValorAnterior, A.ValorNuevo, A.Descripcion, A.Fecha 
+                    FROM Auditoria A
+                    INNER JOIN USUARIO U ON A.UsuarioId == U.Id
+                    WHERE Entidad = @Entidad AND EntidadId = @EntidadId 
+                    ORDER BY Fecha DESC"); 
+
+                datos.setearParametro("@Entidad", entidad);
+                datos.setearParametro("@EntidadId", entidadId);
                 datos.ejecutarLectura();
 
                 while (datos.Lector.Read())
                 {
-                    Sprint aux = new Sprint();
-                    aux.Id = (int)datos.Lector["Id"];
-                    aux.NumeroSprint = (int)datos.Lector["NumeroSprint"];
-                    aux.FechaInicio = (DateTime)datos.Lector["FechaInicio"];
-                    aux.FechaEstimadaFin = (DateTime)datos.Lector["FechaEstimadaFin"];
-                    if (datos.Lector["FechaFin"] != DBNull.Value)
-                    {
-                        aux.FechaFin = (DateTime)datos.Lector["FechaFin"];
-                    }
-                    aux.Activo = (bool)datos.Lector["Activo"];
-                    aux.Estado = new Estado();
-                    aux.Estado.Id = (int)datos.Lector["IdEstado"];
-                    aux.Estado.Nombre = (string)datos.Lector["NombreEstado"];
-                    aux.Estado.EsFinal = (bool)datos.Lector["EsFinal"];
-                    aux.Estado.EsSistema = (bool)datos.Lector["EsSistema"];
-                    aux.Proyecto = new Proyecto();
-                    aux.Proyecto.Id = (int)datos.Lector["IdProyecto"];
-                    aux.Proyecto.Nombre = (string)datos.Lector["NombreProyecto"];
-                    aux.Area = new Area();
-                    aux.Area.Id = (int)datos.Lector["IdArea"];
-                    aux.Area.Nombre = (string)datos.Lector["NombreArea"];
-                    aux.Progreso = (int)datos.Lector["Progreso"];
+                    Auditoria aux = new Auditoria();
 
+                    aux.IdAuditoria = (int)datos.Lector["IdAuditoria"];
+                    aux.Usuario = new Usuario();
+                    aux.Usuario.Id = (int)datos.Lector["UsuarioId"];
+                    aux.Usuario.Nombre = (string)datos.Lector["Nombre"];
+                    aux.Usuario.Apellido = (string)datos.Lector["Apellido"];
+                    aux.Entidad = (string)datos.Lector["Entidad"];
+                    aux.EntidadId = (int)datos.Lector["EntidadId"];
+                    aux.Accion = (string)datos.Lector["Accion"];
+                    aux.CampoModificado = (string)datos.Lector["CampoModificado"];
+                    aux.ValorAnterior = (string)datos.Lector["ValorAnterior"];
+                    aux.ValorNuevo = (string)datos.Lector["ValorNuevo"];
+                    aux.Descripcion = (string)datos.Lector["Descripcion"];
+                    aux.Fecha = (DateTime)datos.Lector["Fecha"];
                     lista.Add(aux);
                 }
                 return lista;
-
             }
             catch (Exception ex)
             {
@@ -107,6 +97,101 @@ namespace negocio
             finally
             {
                 datos.cerrarConexion();
+            }
+        }
+
+        public List<Auditoria> ListarPorUsuario(int usuarioId)
+        {
+            List<Auditoria> lista = new List<Auditoria>();
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta(@"
+                        SELECT A.IdAuditoria, A.UsuarioId, U.Nombre, U.Apellido, A.Entidad, A.EntidadId, 
+                               A.Accion, A.CampoModificado, A.ValorAnterior, A.ValorNuevo, A.Descripcion, A.Fecha 
+                        FROM Auditoria A
+                        INNER JOIN USUARIO U ON A.UsuarioId = U.Id
+                        WHERE A.UsuarioId = @UsuarioId 
+                        ORDER BY Fecha DESC");
+
+                datos.setearParametro("@UsuarioId", usuarioId);
+                datos.ejecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    Auditoria aux = new Auditoria();
+                    aux.IdAuditoria = (int)datos.Lector["IdAuditoria"];
+                    aux.Usuario = new Usuario();
+                    aux.Usuario.Id = (int)datos.Lector["UsuarioId"];
+                    aux.Usuario.Nombre = (string)datos.Lector["Nombre"];
+                    aux.Usuario.Apellido = (string)datos.Lector["Apellido"];                   
+                    aux.Entidad = (string)datos.Lector["Entidad"];
+                    aux.EntidadId = (int)datos.Lector["EntidadId"];
+                    aux.Accion = (string)datos.Lector["Accion"];
+                    aux.CampoModificado = (string)datos.Lector["CampoModificado"];
+                    aux.ValorAnterior = (string)datos.Lector["ValorAnterior"];
+                    aux.ValorNuevo = (string)datos.Lector["ValorNuevo"];
+                    aux.Descripcion = (string)datos.Lector["Descripcion"];
+                    aux.Fecha = (DateTime)datos.Lector["Fecha"];
+
+                    lista.Add(aux);
+                }
+                return lista;
+            }
+            catch (Exception ex) 
+            { 
+                throw ex; 
+            }
+            finally 
+            { 
+                datos.cerrarConexion(); 
+            }
+        }
+
+        public List<Auditoria> ListarRecientes(int cantidad)
+        {
+            List<Auditoria> lista = new List<Auditoria>();
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta(@"
+                        SELECT TOP (@Cantidad) A.IdAuditoria, A.UsuarioId, U.Nombre, U.Apellido, A.Entidad, A.EntidadId, 
+                               A.Accion, A.CampoModificado, A.ValorAnterior, A.ValorNuevo, A.Descripcion, A.Fecha 
+                        FROM Auditoria A
+                        INNER JOIN USUARIO U ON A.UsuarioId = U.Id
+                        ORDER BY A.Fecha DESC");
+
+                datos.setearParametro("@Cantidad", cantidad);
+                datos.ejecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    Auditoria aux = new Auditoria();
+                    aux.IdAuditoria = (int)datos.Lector["IdAuditoria"];
+                    aux.Usuario = new Usuario();
+                    aux.Usuario.Id = (int)datos.Lector["UsuarioId"];
+                    aux.Usuario.Nombre = (string)datos.Lector["Nombre"];
+                    aux.Usuario.Apellido = (string)datos.Lector["Apellido"];
+                    aux.Entidad = (string)datos.Lector["Entidad"];
+                    aux.EntidadId = (int)datos.Lector["EntidadId"];
+                    aux.Accion = (string)datos.Lector["Accion"];
+                    aux.CampoModificado = (string)datos.Lector["CampoModificado"];
+                    aux.ValorAnterior = (string)datos.Lector["ValorAnterior"];
+                    aux.ValorNuevo = (string)datos.Lector["ValorNuevo"];
+                    aux.Descripcion = (string)datos.Lector["Descripcion"];
+                    aux.Fecha = (DateTime)datos.Lector["Fecha"];
+
+                    lista.Add(aux);
+                }
+                return lista;
+            }
+            catch (Exception ex) 
+            { 
+                throw ex; 
+            }
+            finally 
+            {
+                datos.cerrarConexion(); 
             }
         }
 
