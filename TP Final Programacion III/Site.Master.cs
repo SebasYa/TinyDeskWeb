@@ -15,13 +15,13 @@ namespace TP_Final_Programacion_III
         {
             if (!Seguridad.sessionActiva(Session["usuario"]))
             {
-                Response.Redirect("Login.aspx", true);
+                Response.Redirect("Login.aspx", false);
                 Context.ApplicationInstance.CompleteRequest();
                 return;
             }
             if (!Seguridad.EsAdmin(Session["usuario"]) && !Seguridad.PuedeEscribir(Session["usuario"]))
             {
-                Response.Redirect("UsuarioDefault.aspx", true);
+                Response.Redirect("UsuarioDefault.aspx", false);
                 Context.ApplicationInstance.CompleteRequest();
                 return;
             }
@@ -45,6 +45,17 @@ namespace TP_Final_Programacion_III
                 usuario = (Usuario)Session["usuario"];
                 lblUserWelcome.Text = $"{usuario.Nombre}";
                 btnUserNav.Text = firstLetter_usuario(usuario.Nombre);
+
+                string rutaImagen = Session["imagenUsuario"] as string;
+                if (!string.IsNullOrEmpty(rutaImagen))
+                {
+                    btnUserNav.Text = "";
+                    btnUserNav.Style["background-image"] = "url('" + rutaImagen + "')";
+                    btnUserNav.Style["background-size"] = "cover";
+                    btnUserNav.Style["background-position"] = "center";
+                    btnUserNav.Style["background-repeat"] = "no-repeat";
+                }
+
                 lblName_nav.Text = usuario.Nombre+" "+usuario.Apellido;
                 lblEmpresa.Text = usuario.Empresa.Nombre;
                 txtRol.Text = usuario.Area.Nombre;
@@ -64,7 +75,7 @@ namespace TP_Final_Programacion_III
         protected void btnLogOut_Click(object sender, EventArgs e)
         {
             Session.Abandon();
-            Response.Redirect("Login.aspx", true);
+            Response.Redirect("Login.aspx", false);
         }
         protected void btnConfiguracionUsuario_Click(object sender, EventArgs e)
         {

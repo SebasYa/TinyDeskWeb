@@ -399,3 +399,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Imágenes de perfil generadas por usuarios
+/TP Final Programacion III/Images/perfil-*.jpg

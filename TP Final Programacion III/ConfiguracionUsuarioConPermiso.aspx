@@ -72,7 +72,7 @@
                         OnClick="btnPreferencias_Click">
 
                         <i class="bi bi-sliders me-2"></i>
-                        Preferencias
+                        Imagen de Perfil
                     </asp:LinkButton>
 
                 </div>
@@ -91,12 +91,17 @@
                         <div class="card-header bg-white p-4">
                             <div class="d-flex align-items-center gap-3">
 
-                                <div class="config-avatar">
+                                <asp:Panel
+                                    ID="pnlAvatarPerfil"
+                                    runat="server"
+                                    CssClass="config-avatar">
+
                                     <asp:Label
                                         ID="lblIniciales"
                                         runat="server">
                                     </asp:Label>
-                                </div>
+
+                                </asp:Panel>
 
                                 <div>
                                     <h2 class="h5 fw-bold mb-1">Mi perfil
@@ -543,49 +548,71 @@
                     <div class="card border-0 shadow-sm config-card">
 
                         <div class="card-header bg-white p-4">
-                            <h2 class="h5 fw-bold mb-1">Preferencias
+                            <h2 class="h5 fw-bold mb-1">Imagen de perfil
                             </h2>
 
                             <p class="text-muted mb-0">
-                                Configuraciones personales disponibles próximamente.
+                                Elegí la imagen que se mostrará en tu cuenta.
                             </p>
                         </div>
 
                         <div class="card-body p-4 border-top">
 
-                            <div class="preference-item">
-                                <div>
-                                    <div class="fw-semibold">
-                                        Notificaciones de tickets
-                                    </div>
+                            <div class="row align-items-center g-4">
 
-                                    <div class="small text-muted">
-                                        Recibir un correo cuando se te asigne un ticket.
-                                    </div>
-                                </div>
+                                <div class="col-12 col-md-auto">
+                                    <div style="width: 180px; height: 180px;">
 
-                                <span class="badge bg-secondary-subtle text-secondary">Próximamente
-                                </span>
-                            </div>
+                                        <asp:Image
+                                            ID="imgPerfilActual"
+                                            runat="server"
+                                            ImageUrl="https://efectocolibri.com/wp-content/uploads/2021/01/placeholder.png"
+                                            AlternateText="Imagen de perfil"
+                                            Width="180px"
+                                            Height="180px"
+                                            Style="display: block; object-fit: cover; object-position: center center; border-radius: 50%; border: 4px solid #e9ecef; background-color: #f8f9fa;" />
 
-                            <div class="preference-item">
-                                <div>
-                                    <div class="fw-semibold">
-                                        Avisos de vencimiento
-                                    </div>
-
-                                    <div class="small text-muted">
-                                        Recibir alertas sobre tickets próximos a vencer.
                                     </div>
                                 </div>
 
-                                <span class="badge bg-secondary-subtle text-secondary">Próximamente
-                                </span>
+                                <div class="col-12 col-md">
+
+                                    <label class="form-label fw-semibold">
+                                        Seleccionar imagen
+                                    </label>
+
+                                    <asp:FileUpload
+                                        ID="fuImagenPerfil"
+                                        runat="server"
+                                        CssClass="form-control"
+                                        Style="width: 500px; max-width: 100%;"
+                                        accept="image/jpeg,image/png"
+                                        onchange="previsualizarImagen(this);" />
+
+                                    <div class="form-text mt-2">
+                                        Formatos admitidos: JPG o PNG.
+                                    </div>
+
+                                    <div class="mt-4">
+                                        <asp:Button
+                                            ID="btnGuardarImagenPerfil"
+                                            runat="server"
+                                            Text="Guardar imagen"
+                                            CssClass="btn btn-primary"
+                                            CausesValidation="false"
+                                            OnClick="btnGuardarImagenPerfil_Click" />
+                                    </div>
+
+                                </div>
+
                             </div>
 
                         </div>
+
                     </div>
+
                 </asp:Panel>
+
             </div>
         </div>
     </div>
@@ -627,6 +654,8 @@
             flex-shrink: 0;
             font-size: 1.4rem;
             font-weight: 700;
+            overflow: hidden;
+            position: relative;
         }
 
         .config-label {
@@ -699,5 +728,17 @@
             }
         }
     </style>
+
+    <script>
+        function previsualizarImagen(input) {
+            if (!input.files || !input.files[0]) return;
+
+            const imagen = document.getElementById(
+            '<%= imgPerfilActual.ClientID %>'
+            );
+
+            imagen.src = URL.createObjectURL(input.files[0]);
+        }
+    </script>
 
 </asp:Content>

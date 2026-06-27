@@ -13,6 +13,8 @@ namespace TP_Final_Programacion_III
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!Seguridad.sessionActiva(Session["usuario"])) return;
+
             if (!IsPostBack)
             {
                 try

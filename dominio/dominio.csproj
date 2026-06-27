@@ -45,6 +45,7 @@
     <Compile Include="CandidatoAsignacionIA .cs" />
     <Compile Include="Empresa.cs" />
     <Compile Include="Estado.cs" />
+    <Compile Include="ImagenUsuario.cs" />
     <Compile Include="Prioridad.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Proyecto.cs" />

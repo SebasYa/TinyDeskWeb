@@ -13,7 +13,7 @@ namespace TP_Final_Programacion_III
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["usuario"] != null && ( Seguridad.EsAdmin(Session["usuario"]) || Seguridad.PuedeEscribir(Session["usuario"])) )
+            if (Session["usuario"] != null && (Seguridad.EsAdmin(Session["usuario"]) || Seguridad.PuedeEscribir(Session["usuario"])))
             {
                 Response.Redirect("Default.aspx", false);
                 return;
@@ -50,6 +50,18 @@ namespace TP_Final_Programacion_III
                 if (negocio.Login(usuario))
                 {
                     Session.Add("usuario", usuario);
+                    ImagenUsuarioNegocio imagenNegocio = new ImagenUsuarioNegocio();
+                    ImagenUsuario imagenUsuario = imagenNegocio.BuscarPorIdUsuario(usuario.Id);
+
+                    if (imagenUsuario != null)
+                    {
+                        Session["imagenUsuario"] = ResolveUrl("~/Images/" + imagenUsuario.ImagenURL);
+                    }
+                    else
+                    {
+                        Session.Remove("imagenUsuario");
+                    }
+
                     txtNombreUsuario.Text = "";
                     txtPassword.Text = "";
                     if (Seguridad.EsAdmin(Session["usuario"]) || Seguridad.PuedeEscribir(Session["usuario"]))
@@ -122,6 +134,17 @@ namespace TP_Final_Programacion_III
                 if (negocio.Login(usuario))
                 {
                     Session.Add("usuario", usuario);
+                    ImagenUsuarioNegocio imagenNegocio = new ImagenUsuarioNegocio();
+                    ImagenUsuario imagenUsuario = imagenNegocio.BuscarPorIdUsuario(usuario.Id);
+
+                    if (imagenUsuario != null)
+                    {
+                        Session["imagenUsuario"] = ResolveUrl("~/Images/" + imagenUsuario.ImagenURL);
+                    }
+                    else
+                    {
+                        Session.Remove("imagenUsuario");
+                    }
                     Response.Redirect("Default.aspx", false);
                     txtNombreUsuario.Text = "";
                     txtPassword.Text = "";

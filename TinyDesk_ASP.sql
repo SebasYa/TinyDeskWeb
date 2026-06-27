@@ -128,6 +128,15 @@ CREATE TABLE TICKET (
 )
 GO
 
+--  CREACIÓN TABLA IMAGEN USUARIO
+CREATE TABLE IMAGEN_USUARIO (
+    IdUsuario INT PRIMARY KEY,
+    Imagen VARCHAR(200) NOT NULL,
+
+    CONSTRAINT FK_Imagen_Usuario FOREIGN KEY (IdUsuario) REFERENCES Usuario(Id)
+)
+GO
+
 /*-------------------------------------------------------------------------------
 2.1. -- Quitar Constrains a las tablas y agrega restricciones de columnas conjuntas
 ---------------------------------------------------------------------------------*/

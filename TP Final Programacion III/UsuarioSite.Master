@@ -107,7 +107,7 @@
                             runat="server"
                             Text=""
                             CssClass="btn btn-primary"
-                            Style="width: 32px; height: 32px; min-width: 32px; max-width: 32px; padding: 0; border-radius: 50% !important; line-height: 1;"
+                            Style="width: 44px; height: 44px; min-width: 44px; max-width: 44px; padding: 0; border-radius: 50% !important; line-height: 1; font-size: 1.1rem;"
                             CausesValidation="false"
                             OnClick="btnUserNav_Click" />
                         <asp:Panel ID="pnlUserNav" runat="server" CssClass="card card-body position-absolute end-0 mt-2 mx-1 shadow" Style="width: 250px; z-index: 1050;">

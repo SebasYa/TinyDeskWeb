@@ -33,6 +33,23 @@ namespace TP_Final_Programacion_III
                     lblNombreUsuario.Text = usuario.NombreUsuario;
                     lblEmail.Text = usuario.Email;
 
+                    string rutaImagen = Session["imagenUsuario"] as string;
+                    if (!string.IsNullOrEmpty(rutaImagen))
+                    {
+                        pnlAvatarPerfil.Style["background-image"] = "url('" + rutaImagen + "')";
+                        pnlAvatarPerfil.Style["background-size"] = "cover";
+                        pnlAvatarPerfil.Style["background-position"] = "center";
+                        pnlAvatarPerfil.Style["background-repeat"] = "no-repeat";
+
+                        lblIniciales.Visible = false;
+                        imgPerfilActual.ImageUrl = rutaImagen;
+                    }
+                    else
+                    {
+                        pnlAvatarPerfil.Style.Remove("background-image");
+                        lblIniciales.Visible = true;
+                    }
+
                     CargarInformacionLaboral(usuario);
                     MostrarSeccion("perfil");
                 }
@@ -73,12 +90,10 @@ namespace TP_Final_Programacion_III
             btnSeguridad.CssClass =  ObtenerClaseNavegacion(seccion == "seguridad");
             btnPreferencias.CssClass = ObtenerClaseNavegacion(seccion == "preferencias");
         }
-
         private string ObtenerClaseNavegacion(bool activo)
         {
             return activo ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action";
         }
-
         private void CargarInformacionLaboral(Usuario usuario)
         {
             lblEmpresa.Text = usuario.Empresa.Nombre;
@@ -147,6 +162,58 @@ namespace TP_Final_Programacion_III
             {
                 Session["error"] = ex.ToString();
                 MostrarError("Ocurrió un error al actualizar la contraseña.");
+            }
+        }
+        protected void btnGuardarImagenPerfil_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!fuImagenPerfil.HasFile)
+                {
+                    MostrarError("Selecciona una imagen para poder guardarla.");
+                    return;
+                }
+
+                ImagenUsuarioNegocio negocio = new ImagenUsuarioNegocio();
+                ImagenUsuario imagenUsuario = new ImagenUsuario();
+                imagenUsuario.IdUsuario = ((Usuario)Session["usuario"]).Id;
+
+                //Escribir img si se cargo algo
+                if (fuImagenPerfil.PostedFile.FileName != "")
+                {
+                    string ruta = Server.MapPath("./Images/");
+                    fuImagenPerfil.PostedFile.SaveAs(ruta + "perfil-" + imagenUsuario.IdUsuario + ".jpg");
+                    imagenUsuario.ImagenURL = "perfil-" + imagenUsuario.IdUsuario + ".jpg";
+
+                    //Guardar datos
+                    negocio.Guardar(imagenUsuario);
+
+                    //Leer img
+                    string rutaImagen = ResolveUrl("~/Images/" + imagenUsuario.ImagenURL);
+                    Button botonUsuario = (Button)Master.FindControl("btnUserNav");
+
+                    botonUsuario.Text = "";
+                    botonUsuario.Style["background-image"] = "url('" + rutaImagen + "')";
+                    botonUsuario.Style["background-size"] = "cover";
+                    botonUsuario.Style["background-position"] = "center";
+                    botonUsuario.Style["background-repeat"] = "no-repeat";
+
+                    Session["imagenUsuario"] = rutaImagen;
+                    imgPerfilActual.ImageUrl = rutaImagen;
+
+                    pnlAvatarPerfil.Style["background-image"] = "url('" + rutaImagen + "')";
+                    pnlAvatarPerfil.Style["background-size"] = "cover";
+                    pnlAvatarPerfil.Style["background-position"] = "center";
+                    pnlAvatarPerfil.Style["background-repeat"] = "no-repeat";
+
+                    lblIniciales.Visible = false;
+                    MostrarExito("Imagen guardada exitosamente!");
+                }
+
+            }
+            catch
+            {
+                MostrarError("Hubo un problema al guardar tu imagen de perfil");
             }
         }
         private string ObtenerIniciales(string nombre, string apellido)
