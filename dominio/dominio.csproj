@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Area.cs" />
+    <Compile Include="Auditoria.cs" />
     <Compile Include="CandidatoAsignacionIA .cs" />
     <Compile Include="Empresa.cs" />
     <Compile Include="Estado.cs" />
