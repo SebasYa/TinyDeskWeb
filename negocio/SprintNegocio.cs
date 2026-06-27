@@ -186,8 +186,6 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
-
-
         public int ContarEnCurso(int idEmpresa)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -213,7 +211,6 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
-
         public int ObtenerSiguienteNumeroSprint(int idProyecto)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -240,14 +237,16 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
-        public List<Sprint> listarPorProyecto(int idProyecto, int idEmpresa)
+        public List<Sprint> listarPorProyecto(int idProyecto, int idEmpresa, int idUsuario = 0)
         {
             List<Sprint> lista = new List<Sprint>();
             AccesoDatos datos = new AccesoDatos();
 
             try
             {
-                datos.setearConsulta(@"SELECT S.Id, S.NumeroSprint, S.FechaInicio, S.FechaEstimadaFin, S.FechaFin, S.Activo, 
+                if (idUsuario == 0)
+                {
+                    datos.setearConsulta(@"SELECT S.Id, S.NumeroSprint, S.FechaInicio, S.FechaEstimadaFin, S.FechaFin, S.Activo, 
                                               P.Nombre AS NombreProyecto, P.Id AS IdProyecto,
                                               E.Id AS IdEstado, E.Nombre AS NombreEstado, E.EsFinal, E.EsSistema,
                                               A.Nombre AS NombreArea, A.Id AS IdArea
@@ -256,44 +255,110 @@ namespace negocio
                                        INNER JOIN PROYECTO P ON P.Id = S.IdProyecto
                                        INNER JOIN AREA A ON A.Id = S.IdArea
                                        WHERE P.Id = @IdProyecto
-                                         AND P.IdEmpresa = @IdEmpresa
+                                         AND P.IdEmpresa = @IdEmpresa");
+
+                    datos.setearParametro("@IdProyecto", idProyecto);
+                    datos.setearParametro("@IdEmpresa", idEmpresa);
+                    datos.ejecutarLectura();
+
+                    while (datos.Lector.Read())
+                    {
+                        Sprint sprint = new Sprint();
+                        sprint.Id = (int)datos.Lector["Id"];
+                        sprint.NumeroSprint = (int)datos.Lector["NumeroSprint"];
+                        sprint.FechaInicio = (DateTime)datos.Lector["FechaInicio"];
+                        sprint.FechaEstimadaFin = (DateTime)datos.Lector["FechaEstimadaFin"];
+
+                        if (datos.Lector["FechaFin"] != DBNull.Value)
+                            sprint.FechaFin = (DateTime)datos.Lector["FechaFin"];
+
+                        sprint.Activo = (bool)datos.Lector["Activo"];
+
+                        sprint.Proyecto = new Proyecto();
+                        sprint.Proyecto.Id = (int)datos.Lector["IdProyecto"];
+                        sprint.Proyecto.Nombre = (string)datos.Lector["NombreProyecto"];
+
+                        sprint.Estado = new Estado();
+                        sprint.Estado.Id = (int)datos.Lector["IdEstado"];
+                        sprint.Estado.Nombre = (string)datos.Lector["NombreEstado"];
+                        sprint.Estado.EsFinal = (bool)datos.Lector["EsFinal"];
+                        sprint.Estado.EsSistema = (bool)datos.Lector["EsSistema"];
+
+                        sprint.Area = new Area();
+                        sprint.Area.Id = (int)datos.Lector["IdArea"];
+                        sprint.Area.Nombre = (string)datos.Lector["NombreArea"];
+
+                        lista.Add(sprint);
+                    }
+                }
+                else
+                {
+                    datos.setearConsulta(@"SELECT DISTINCT
+                                                  S.Id,
+                                                  S.NumeroSprint,
+                                                  S.FechaInicio,
+                                                  S.FechaEstimadaFin,
+                                                  S.FechaFin,
+                                                  S.Activo,
+                                                  P.Nombre AS NombreProyecto,
+                                                  P.Id AS IdProyecto,
+                                                  E.Id AS IdEstado,
+                                                  E.Nombre AS NombreEstado,
+                                                  E.EsFinal,
+                                                  E.EsSistema,
+                                                  A.Nombre AS NombreArea,
+                                                  A.Id AS IdArea
+                                           FROM SPRINT S
+                                           INNER JOIN ESTADO E ON E.Id = S.IdEstado
+                                           INNER JOIN PROYECTO P ON P.Id = S.IdProyecto
+                                           INNER JOIN AREA A ON A.Id = S.IdArea
+                                           INNER JOIN TICKET T ON T.IdSprint = S.Id
+                                           WHERE S.IdProyecto = @IdProyecto
+                                             AND P.IdEmpresa = @IdEmpresa
+                                             AND T.IdUsuario = @IdUsuario
         ");
 
-                datos.setearParametro("@IdProyecto", idProyecto);
-                datos.setearParametro("@IdEmpresa", idEmpresa);
-                datos.ejecutarLectura();
+                    datos.setearParametro("@IdProyecto", idProyecto);
+                    datos.setearParametro("@IdEmpresa", idEmpresa);
+                    datos.setearParametro("@IdUsuario", idUsuario);
 
-                while (datos.Lector.Read())
-                {
-                    Sprint sprint = new Sprint();
-                    sprint.Id = (int)datos.Lector["Id"];
-                    sprint.NumeroSprint = (int)datos.Lector["NumeroSprint"];
-                    sprint.FechaInicio = (DateTime)datos.Lector["FechaInicio"];
-                    sprint.FechaEstimadaFin = (DateTime)datos.Lector["FechaEstimadaFin"];
+                    datos.ejecutarLectura();
 
-                    if (datos.Lector["FechaFin"] != DBNull.Value)
-                        sprint.FechaFin = (DateTime)datos.Lector["FechaFin"];
+                    while (datos.Lector.Read())
+                    {
+                        Sprint sprint = new Sprint();
+                        sprint.Id = (int)datos.Lector["Id"];
+                        sprint.NumeroSprint = (int)datos.Lector["NumeroSprint"];
+                        sprint.FechaInicio = (DateTime)datos.Lector["FechaInicio"];
+                        sprint.FechaEstimadaFin = (DateTime)datos.Lector["FechaEstimadaFin"];
 
-                    sprint.Activo = (bool)datos.Lector["Activo"];
+                        if (datos.Lector["FechaFin"] != DBNull.Value)
+                            sprint.FechaFin = (DateTime)datos.Lector["FechaFin"];
 
-                    sprint.Proyecto = new Proyecto();
-                    sprint.Proyecto.Id = (int)datos.Lector["IdProyecto"];
-                    sprint.Proyecto.Nombre = (string)datos.Lector["NombreProyecto"];
+                        sprint.Activo = (bool)datos.Lector["Activo"];
 
-                    sprint.Estado = new Estado();
-                    sprint.Estado.Id = (int)datos.Lector["IdEstado"];
-                    sprint.Estado.Nombre = (string)datos.Lector["NombreEstado"];
-                    sprint.Estado.EsFinal = (bool)datos.Lector["EsFinal"];
-                    sprint.Estado.EsSistema = (bool)datos.Lector["EsSistema"];
+                        sprint.Proyecto = new Proyecto();
+                        sprint.Proyecto.Id = (int)datos.Lector["IdProyecto"];
+                        sprint.Proyecto.Nombre = (string)datos.Lector["NombreProyecto"];
 
-                    sprint.Area = new Area();
-                    sprint.Area.Id = (int)datos.Lector["IdArea"];
-                    sprint.Area.Nombre = (string)datos.Lector["NombreArea"];
+                        sprint.Estado = new Estado();
+                        sprint.Estado.Id = (int)datos.Lector["IdEstado"];
+                        sprint.Estado.Nombre = (string)datos.Lector["NombreEstado"];
+                        sprint.Estado.EsFinal = (bool)datos.Lector["EsFinal"];
+                        sprint.Estado.EsSistema = (bool)datos.Lector["EsSistema"];
 
-                    lista.Add(sprint);
+                        sprint.Area = new Area();
+                        sprint.Area.Id = (int)datos.Lector["IdArea"];
+                        sprint.Area.Nombre = (string)datos.Lector["NombreArea"];
+
+                        lista.Add(sprint);
+                    }
                 }
-
                 return lista;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
             finally
             {

@@ -105,13 +105,22 @@ namespace TP_Final_Programacion_III
         protected global::System.Web.UI.WebControls.Label lblDetalleActivo;
 
         /// <summary>
-        /// Control dgvSprintsProyecto.
+        /// Control lvSprintsProyecto.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView dgvSprintsProyecto;
+        protected global::System.Web.UI.WebControls.ListView lvSprintsProyecto;
+
+        /// <summary>
+        /// Control dpSprintsProyecto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DataPager dpSprintsProyecto;
 
         /// <summary>
         /// Control pnlListadoProyectos.
@@ -141,13 +150,22 @@ namespace TP_Final_Programacion_III
         protected global::System.Web.UI.WebControls.Button btnFiltroFinalizados;
 
         /// <summary>
-        /// Control repProyectos.
+        /// Control lvProyectos.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater repProyectos;
+        protected global::System.Web.UI.WebControls.ListView lvProyectos;
+
+        /// <summary>
+        /// Control dpProyectos.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DataPager dpProyectos;
 
         /// <summary>
         /// Control lblModalProyectoTitulo.

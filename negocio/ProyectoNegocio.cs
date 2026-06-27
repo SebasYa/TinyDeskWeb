@@ -87,43 +87,89 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
-        public List<Proyecto> listar(int idEmpresa)
+        public List<Proyecto> listar(int idEmpresa, int idUsuario = 0)
         {
             List<Proyecto> lista = new List<Proyecto>();
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.setearConsulta(@"
-                    Select P.Id, P.Nombre, P.Descripcion, P.FechaInicio, P.FechaFin, P.FechaEstimadaFin, 
-                           P.Activo, E.Id AS IdEstado, E.Nombre AS NombreEstado, E.EsFinal, E.EsSistema
-                    FROM PROYECTO P
-                    INNER JOIN ESTADO E ON E.Id = P.IdEstado
-                    WHERE P.IdEmpresa = @IdEmpresa  
-                ");
-                datos.setearParametro("@IdEmpresa", idEmpresa);
-                datos.ejecutarLectura();
-
-                while (datos.Lector.Read())
+                if (idUsuario == 0)
                 {
-                    Proyecto proyecto = new Proyecto();
-                    proyecto.Id = (int)datos.Lector["Id"];
-                    proyecto.Nombre = (string)datos.Lector["Nombre"];
-                    proyecto.Descripcion = (string)datos.Lector["Descripcion"];
-                    proyecto.FechaInicio = (DateTime)datos.Lector["FechaInicio"];
-                    proyecto.FechaEstimadaFin = (DateTime)datos.Lector["FechaEstimadaFin"];
-                    if(datos.Lector["FechaFin"] != DBNull.Value)
-                    {
-                        proyecto.FechaFin = (DateTime)datos.Lector["FechaFin"];
-                    }
-                    proyecto.Activo = (bool)datos.Lector["Activo"];
-                    proyecto.Estado = new Estado();
-                    proyecto.Estado.Id = (int)datos.Lector["IdEstado"];
-                    proyecto.Estado.Nombre = (string)datos.Lector["NombreEstado"];
-                    proyecto.Estado.EsFinal = (bool)datos.Lector["EsFinal"];
-                    proyecto.Estado.EsSistema = (bool)datos.Lector["EsSistema"];
+                    datos.setearConsulta(@"Select P.Id, P.Nombre, P.Descripcion, P.FechaInicio, P.FechaFin, P.FechaEstimadaFin, 
+                                                  P.Activo, E.Id AS IdEstado, E.Nombre AS NombreEstado, E.EsFinal, E.EsSistema
+                                           FROM PROYECTO P
+                                           INNER JOIN ESTADO E ON E.Id = P.IdEstado
+                                           WHERE P.IdEmpresa = @IdEmpresa"
+                    );
+                    datos.setearParametro("@IdEmpresa", idEmpresa);
+                    datos.ejecutarLectura();
 
-                    lista.Add(proyecto);
+                    while (datos.Lector.Read())
+                    {
+                        Proyecto proyecto = new Proyecto();
+                        proyecto.Id = (int)datos.Lector["Id"];
+                        proyecto.Nombre = (string)datos.Lector["Nombre"];
+                        proyecto.Descripcion = (string)datos.Lector["Descripcion"];
+                        proyecto.FechaInicio = (DateTime)datos.Lector["FechaInicio"];
+                        proyecto.FechaEstimadaFin = (DateTime)datos.Lector["FechaEstimadaFin"];
+                        if (datos.Lector["FechaFin"] != DBNull.Value)
+                        {
+                            proyecto.FechaFin = (DateTime)datos.Lector["FechaFin"];
+                        }
+                        proyecto.Activo = (bool)datos.Lector["Activo"];
+                        proyecto.Estado = new Estado();
+                        proyecto.Estado.Id = (int)datos.Lector["IdEstado"];
+                        proyecto.Estado.Nombre = (string)datos.Lector["NombreEstado"];
+                        proyecto.Estado.EsFinal = (bool)datos.Lector["EsFinal"];
+                        proyecto.Estado.EsSistema = (bool)datos.Lector["EsSistema"];
+
+                        lista.Add(proyecto);
+                    }
                 }
+                else
+                {
+                    datos.setearConsulta(@"Select P.Id, P.Nombre, P.Descripcion, P.FechaInicio, P.FechaFin, P.FechaEstimadaFin, 
+                                                  P.Activo, E.Id AS IdEstado, E.Nombre AS NombreEstado, E.EsFinal, E.EsSistema
+                                           FROM PROYECTO P
+                                           INNER JOIN ESTADO E
+                                               ON E.Id = P.IdEstado
+                                           WHERE P.IdEmpresa = @IdEmpresa
+                                             AND EXISTS
+                                                       (SELECT 1
+                                                        FROM SPRINT S
+                                                        INNER JOIN TICKET T
+                                                            ON T.IdSprint = S.Id
+                                                        WHERE S.IdProyecto = P.Id
+                                                          AND T.IdUsuario = @IdUsuario
+                                                        )"
+                    );
+                    datos.setearParametro("@IdEmpresa", idEmpresa);
+                    datos.setearParametro("@IdUsuario", idUsuario);
+                    datos.ejecutarLectura();
+
+                    while (datos.Lector.Read())
+                    {
+                        Proyecto proyecto = new Proyecto();
+                        proyecto.Id = (int)datos.Lector["Id"];
+                        proyecto.Nombre = (string)datos.Lector["Nombre"];
+                        proyecto.Descripcion = (string)datos.Lector["Descripcion"];
+                        proyecto.FechaInicio = (DateTime)datos.Lector["FechaInicio"];
+                        proyecto.FechaEstimadaFin = (DateTime)datos.Lector["FechaEstimadaFin"];
+                        if (datos.Lector["FechaFin"] != DBNull.Value)
+                        {
+                            proyecto.FechaFin = (DateTime)datos.Lector["FechaFin"];
+                        }
+                        proyecto.Activo = (bool)datos.Lector["Activo"];
+                        proyecto.Estado = new Estado();
+                        proyecto.Estado.Id = (int)datos.Lector["IdEstado"];
+                        proyecto.Estado.Nombre = (string)datos.Lector["NombreEstado"];
+                        proyecto.Estado.EsFinal = (bool)datos.Lector["EsFinal"];
+                        proyecto.Estado.EsSistema = (bool)datos.Lector["EsSistema"];
+
+                        lista.Add(proyecto);
+                    }
+                }
+
                 return lista;
 
             }

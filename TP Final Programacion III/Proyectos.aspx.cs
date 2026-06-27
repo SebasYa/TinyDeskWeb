@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Web.UI.WebControls;
-using dominio;
+﻿using dominio;
 using negocio;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.UI.WebControls;
 
 namespace TP_Final_Programacion_III
 {
@@ -64,8 +65,9 @@ namespace TP_Final_Programacion_III
                 btnFiltroFinalizados.CssClass = "btn btn-outline-secondary";
             }
 
-            repProyectos.DataSource = lista;
-            repProyectos.DataBind();
+            lvProyectos.DataSource = lista;
+            lvProyectos.DataBind();
+            dpProyectos.Visible = lista.Count > dpProyectos.PageSize;
 
             lblModalProyectoTitulo.Text = "Nuevo Proyecto";
             btnGuardarProyecto.Text = "Guardar Proyecto";
@@ -77,6 +79,12 @@ namespace TP_Final_Programacion_III
 
             ProyectoNegocio proyectoNegocio = new ProyectoNegocio();
             Proyecto proyecto = proyectoNegocio.BuscarPorId(idProyecto, idEmpresa);
+            if (proyecto == null)
+            {
+                Response.Redirect("Proyectos.aspx", false);
+                Context.ApplicationInstance.CompleteRequest();
+                return;
+            }
 
             lblDetalleNombre.Text = proyecto.Nombre;
             lblDetalleEstado.Text = proyecto.Estado.Nombre;
@@ -84,7 +92,8 @@ namespace TP_Final_Programacion_III
             lblDetalleFechaInicio.Text = proyecto.FechaInicio.ToString("dd/MM/yyyy");
             lblDetalleFechaEstimadaFin.Text = proyecto.FechaEstimadaFin.ToString("dd/MM/yyyy");
             lblDetalleFechaFin.Text = proyecto.FechaFin.HasValue ? proyecto.FechaFin.Value.ToString("dd/MM/yyyy") : "-";
-            lblDetalleActivo.Text = proyecto.Activo ? "Sí" : "No";
+            lblDetalleActivo.Text = proyecto.Activo ? "Proyecto activo" : "Proyecto finalizado";
+            lblDetalleActivo.CssClass = proyecto.Activo ? "badge rounded-pill bg-success-subtle text-success" : "badge rounded-pill bg-secondary-subtle text-secondary";
             phFinalizarProyecto.Visible = proyecto.Activo;
             lblFinalizarProyectoNombre.Text = proyecto.Nombre;
             litFinalizarProyectoConfirmacion.Text = proyecto.Nombre.ToUpper();
@@ -107,8 +116,15 @@ namespace TP_Final_Programacion_III
             btnGuardarProyecto.Text = "Guardar Cambios";
 
             SprintNegocio sprintNegocio = new SprintNegocio();
-            dgvSprintsProyecto.DataSource = sprintNegocio.listarPorProyecto(idProyecto, idEmpresa);
-            dgvSprintsProyecto.DataBind();
+            List<Sprint> sprints = sprintNegocio.listarPorProyecto(idProyecto, idEmpresa).OrderByDescending(x => x.Activo)
+                                                                                         .ThenBy(x => x.FechaInicio)
+                                                                                         .ThenBy(x => x.FechaEstimadaFin)
+                                                                                         .ThenBy(x => x.NumeroSprint)
+                                                                                         .ToList();
+
+            lvSprintsProyecto.DataSource = sprints;
+            lvSprintsProyecto.DataBind();
+            dpSprintsProyecto.Visible = sprints.Count > dpSprintsProyecto.PageSize;
         }
         private void CargarEstadosProyecto(int idEmpresa)
         {
@@ -218,24 +234,40 @@ namespace TP_Final_Programacion_III
                 MostrarErrorProyecto("Ocurrió un error al guardar el proyecto.");
             }
         }
-        protected void repProyectos_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        protected void lvProyectos_ItemDataBound(object sender, ListViewItemEventArgs e)
         {
-            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            if (e.Item.ItemType == ListViewItemType.DataItem)
             {
-                Proyecto proyecto = (Proyecto)e.Item.DataItem;
+                ListViewDataItem item = (ListViewDataItem)e.Item;
+                Proyecto proyecto = (Proyecto)item.DataItem;
 
                 Literal litFechaFin = (Literal)e.Item.FindControl("litFechaFin");
 
                 if (litFechaFin != null && proyecto.FechaFin.HasValue)
                 {
-                    litFechaFin.Text = "<div class='d-flex align-items-center text-muted small mb-2'>" +
-                                       "<i class='bi bi-calendar-x me-2'></i>" +
-                                       "<span>Finalizado: " + proyecto.FechaFin.Value.ToString("dd/MM/yyyy") + "</span>" +
-                                       "</div>";
+                    litFechaFin.Text = "<div class='d-flex align-items-center text-muted small mb-2'>" + 
+                        "<i class='bi bi-calendar-x me-2'></i>" +
+                        "<span>Finalizado: " +
+                        proyecto.FechaFin.Value.ToString("dd/MM/yyyy") +
+                        "</span></div>";
 
                     litFechaFin.Visible = true;
                 }
             }
+        }
+        protected void lvProyectos_PagePropertiesChanging(object sender, PagePropertiesChangingEventArgs e)
+        {
+            dpProyectos.SetPageProperties(e.StartRowIndex, e.MaximumRows, false);
+
+            Usuario usuario = (Usuario)Session["usuario"];
+            CargarListadoProyectos(usuario.Empresa.Id);
+        }
+        protected void lvSprintsProyecto_PagePropertiesChanging(object sender, PagePropertiesChangingEventArgs e)
+        {
+            dpSprintsProyecto.SetPageProperties( e.StartRowIndex, e.MaximumRows, false);
+            int idProyecto = int.Parse(Request.QueryString["id"]);
+            Usuario usuario = (Usuario)Session["usuario"];
+            CargarDetalleProyecto(idProyecto, usuario.Empresa.Id);
         }
         private void MostrarErrorProyecto(string mensaje)
         {
@@ -250,11 +282,6 @@ namespace TP_Final_Programacion_III
                                     <strong>¡Éxito!</strong> {mensaje}
                                     <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                                 </div>";
-        }
-        protected void dgvSprintsProyecto_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            int idSprint = (int)dgvSprintsProyecto.SelectedDataKey.Value;
-            Response.Redirect("Sprints.aspx?id=" + idSprint, false);
         }
         protected void btnConfirmarFinalizarProyecto_Click(object sender, EventArgs e)
         {
@@ -301,17 +328,31 @@ namespace TP_Final_Programacion_III
         }
         protected void btnFiltroActivos_Click(object sender, EventArgs e)
         {
+            dpProyectos.SetPageProperties(0, 6, false);
             Session["FiltroProyectosFinalizados"] = false;
-
             Usuario userLogueado = (Usuario)Session["usuario"];
             CargarListadoProyectos(userLogueado.Empresa.Id);
         }
         protected void btnFiltroFinalizados_Click(object sender, EventArgs e)
         {
+            dpProyectos.SetPageProperties(0, 6, false);
             Session["FiltroProyectosFinalizados"] = true;
-
             Usuario userLogueado = (Usuario)Session["usuario"];
             CargarListadoProyectos(userLogueado.Empresa.Id);
+        }
+        protected void btnVerProyecto_Click(object sender, EventArgs e)
+        {
+            LinkButton boton = (LinkButton)sender;
+            int idProyecto = Convert.ToInt32(boton.CommandArgument);
+            Response.Redirect("Proyectos.aspx?id=" + idProyecto, false);
+            Context.ApplicationInstance.CompleteRequest();
+        }
+        protected void btnVerSprint_Click(object sender, EventArgs e)
+        {
+            LinkButton boton = (LinkButton)sender;
+            int idSprint = Convert.ToInt32(boton.CommandArgument);
+            Response.Redirect("Sprints.aspx?id=" + idSprint, false);
+            Context.ApplicationInstance.CompleteRequest();
         }
         public string ObtenerIconoEstadoProyecto(object estadoObj)
         {
