@@ -42,9 +42,23 @@
                 <div class="p-3 d-flex flex-column justify-content-between h-100" style="width: 220px;">
 
                     <div>
-                        <h4 class="mb-4 text-light">
-                            <i class="bi bi-kanban-fill mx-2"></i>TinyDesk
-                        </h4>
+                        <div class="d-flex align-items-center gap-2 px-2 pb-3 mb-3 mt-2 border-bottom border-secondary"
+                            style="height: 61px; box-sizing: border-box;">
+
+                            <span class="position-relative overflow-hidden flex-shrink-0"
+                                style="width: 44px; height: 44px;">
+
+                                <img runat="server"
+                                    src="~/Images/LogoTD.png"
+                                    alt="Logo TinyDesk"
+                                    style="position: absolute; width: 62px; height: 62px; max-width: none; top: 50%; left: 50%; transform: translate(-50%, -50%);" />
+                            </span>
+
+                            <span class="text-light fw-bold fs-4"
+                                style="line-height: 1.2;">TinyDesk
+                            </span>
+
+                        </div>
 
                         <ul class="nav flex-column">
                             <li class="nav-item mb-2 sideBar">

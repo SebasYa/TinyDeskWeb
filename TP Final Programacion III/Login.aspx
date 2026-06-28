@@ -38,7 +38,12 @@
 
                     <div class="card shadow-sm">
                         <div class="card-body p-4">
-
+                            <div class="text-center">
+                                <img runat="server"
+                                    src="~/Images/LogoTD.png"
+                                    alt="Logo TinyDesk"
+                                    style="width: 120px; height: 120px; object-fit: contain; display: block; margin: 0 auto -22px;" />
+                            </div>
                             <h2 class="mb-1 text-center">Iniciar Sesión</h2>
                             <p class="text-muted text-center mb-4">Ingrese las credenciales para continuar</p>
 
