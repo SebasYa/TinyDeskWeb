@@ -328,6 +328,7 @@ namespace TP_Final_Programacion_III
 
                 SprintNegocio sprintNegocio = new SprintNegocio();
                 Sprint editarSprint = new Sprint();
+                AuditoriaService auditoriaService = new AuditoriaService();
                 Usuario userLogueado = (Usuario)Session["usuario"];
 
                 editarSprint.Id = (int)Session["IdSprintEditar"];
@@ -377,6 +378,20 @@ namespace TP_Final_Programacion_III
                 editarSprint.Proyecto = new Proyecto();
                 editarSprint.Proyecto.Id = int.Parse(ddlEditProyecto.SelectedValue);
                 editarSprint.Activo = true;
+
+                string motivo = txtMotivoCambio.Text;
+
+                if (original.FechaInicio.Date != editarSprint.FechaInicio.Date)
+                    auditoriaService.Registrar(userLogueado.Id, "Sprint", editarSprint.Id, "UPDATE",
+                        "FechaInicio", original.FechaInicio.ToString(), editarSprint.FechaInicio.ToString(), motivo);
+
+                if (original.FechaEstimadaFin.Date != editarSprint.FechaEstimadaFin.Date)
+                    auditoriaService.Registrar(userLogueado.Id, "Sprint", editarSprint.Id, "UPDATE",
+                        "FechaEstimadaFin", original.FechaEstimadaFin.ToString(), editarSprint.FechaEstimadaFin.ToString(), motivo);
+
+                if (original.Estado.Id != editarSprint.Estado.Id)
+                    auditoriaService.Registrar(userLogueado.Id, "Sprint", editarSprint.Id, "UPDATE",
+                        "Estado", original.Estado.Nombre, editarSprint.Estado.Id.ToString(), motivo);
 
                 sprintNegocio.Modificar(editarSprint);
 

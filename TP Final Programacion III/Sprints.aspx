@@ -239,6 +239,13 @@
                                       Debes elegir un Area
                                     </div>
                                 </div>
+                                <div class="col-12">
+                                    <label for="txtMotivoCambio" class="form-label fw-semibold">Motivo del cambio (Obligatorio)</label>
+                                    <asp:TextBox ID="txtMotivoCambio" runat="server" CssClass="form-control w-100" TextMode="MultiLine" Rows="2" placeholder="Explique por qué realiza esta modificación..."></asp:TextBox>
+                                    <div class="invalid-feedback">
+                                        Por favor, ingrese un motivo para realizar el cambio.
+                                    </div>
+                                </div>
 
                             </asp:Panel>
                         </div>
