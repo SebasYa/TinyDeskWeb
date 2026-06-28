@@ -14,6 +14,12 @@
                 <div class="col-12 col-sm-10 col-md-6 col-lg-5">
                     <div class="card shadow-sm">
                         <div class="card-body p-4">
+                            <div class="text-center">
+                                <img runat="server"
+                                    src="~/Images/LogoTD.png"
+                                    alt="Logo TinyDesk"
+                                    style="width: 120px; height: 120px; object-fit: contain; display: block; margin: -28px auto -22px;" />
+                            </div>
                             <h2 class="mb-3 text-center">Crear contraseña</h2>
 
                             <asp:Label ID="lblMensaje" runat="server" CssClass="d-block mb-3 text-center"></asp:Label>
