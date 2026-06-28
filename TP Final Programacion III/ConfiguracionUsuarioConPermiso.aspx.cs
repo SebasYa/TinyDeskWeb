@@ -153,30 +153,35 @@ namespace TP_Final_Programacion_III
                 Usuario usuario = (Usuario)Session["usuario"];
                 UsuarioNegocio negocio = new UsuarioNegocio();
                 bool passActCorrecta = negocio.VerificarPasswordActual(usuario.Id, passwordActual);
-
                 if (!passActCorrecta)
                 {
                     MostrarError("La contraseña actual es incorrecta.");
+                    txtPasswordActual.Text = "";
+                    txtPasswordNueva.Text = "";
+                    txtConfirmarPassword.Text = "";
                     return;
                 }
                 if (passwordActual == passwordNueva)
                 {
                     MostrarError("La nueva contraseña debe ser diferente de la contraseña actual.");
+                    txtPasswordNueva.Text = "";
+                    txtConfirmarPassword.Text = "";
                     return;
                 }
 
                 bool actualizado = negocio.CambiarPasswordUsuarioActivo(usuario, passwordNueva);
-
                 if(!actualizado)
                 {
                     MostrarError("Hubo un error al intentar cambiar la contraseña.");
+                    txtPasswordActual.Text = "";
+                    txtPasswordNueva.Text = "";
+                    txtConfirmarPassword.Text = "";
                     return;
                 }
 
                 txtPasswordActual.Text = "";
                 txtPasswordNueva.Text = "";
                 txtConfirmarPassword.Text = "";
-
                 MostrarExito("La contraseña se actualizó correctamente.");
             }
             catch (Exception ex)

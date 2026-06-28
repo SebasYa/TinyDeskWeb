@@ -78,6 +78,33 @@ namespace TP_Final_Programacion_III
         protected global::System.Web.UI.WebControls.Panel pnlUserNav;
 
         /// <summary>
+        /// Control lblEstadoUsuarioNav.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblEstadoUsuarioNav;
+
+        /// <summary>
+        /// Control imgUsuarioMenu.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Image imgUsuarioMenu;
+
+        /// <summary>
+        /// Control lblInicialUsuarioMenu.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblInicialUsuarioMenu;
+
+        /// <summary>
         /// Control lblName_nav.
         /// </summary>
         /// <remarks>
@@ -85,6 +112,15 @@ namespace TP_Final_Programacion_III
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblName_nav;
+
+        /// <summary>
+        /// Control lblNombreUsuarioNav.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNombreUsuarioNav;
 
         /// <summary>
         /// Control lblEmpresa.
@@ -103,15 +139,6 @@ namespace TP_Final_Programacion_III
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal txtRol;
-
-        /// <summary>
-        /// Control txtSenority.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal txtSenority;
 
         /// <summary>
         /// Control btnLogOut.
