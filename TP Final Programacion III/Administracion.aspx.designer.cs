@@ -96,13 +96,22 @@ namespace TP_Final_Programacion_III
         protected global::System.Web.UI.WebControls.Literal litCrearTexto;
 
         /// <summary>
-        /// Control dgvCatalogo.
+        /// Control lvCatalogo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView dgvCatalogo;
+        protected global::System.Web.UI.WebControls.ListView lvCatalogo;
+
+        /// <summary>
+        /// Control dpCatalogo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DataPager dpCatalogo;
 
         /// <summary>
         /// Control lblModalTitulo.

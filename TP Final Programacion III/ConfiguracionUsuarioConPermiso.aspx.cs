@@ -202,7 +202,7 @@ namespace TP_Final_Programacion_III
                     negocio.Guardar(imagenUsuario);
 
                     //Leer img
-                    string rutaImagen =  ResolveUrl("~/Images/" + imagenUsuario.ImagenURL);
+                    string rutaImagen =  ResolveUrl("~/Images/" + imagenUsuario.ImagenURL) + "?v=" + Guid.NewGuid();
                     Button botonUsuario = (Button)Master.FindControl("btnUserNav");
 
                     botonUsuario.Text = "";

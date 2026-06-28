@@ -43,7 +43,7 @@ namespace TP_Final_Programacion_III
             {
                 SetearTipoActual(TipoCatalogoAdmin.Area);
                 txtFiltro.Text = "";
-                dgvCatalogo.PageIndex = 0;
+                dpCatalogo.SetPageProperties(0, dpCatalogo.PageSize, false);
                 CargarAreas();
             }
             catch(Exception ex)
@@ -59,7 +59,7 @@ namespace TP_Final_Programacion_III
             {
                 SetearTipoActual(TipoCatalogoAdmin.Estado);
                 txtFiltro.Text = "";
-                dgvCatalogo.PageIndex = 0;
+                dpCatalogo.SetPageProperties(0, dpCatalogo.PageSize, false);
                 CargarEstados();
             }
             catch (Exception ex)
@@ -76,7 +76,7 @@ namespace TP_Final_Programacion_III
             {
                 SetearTipoActual(TipoCatalogoAdmin.Puesto);
                 txtFiltro.Text = "";
-                dgvCatalogo.PageIndex = 0;
+                dpCatalogo.SetPageProperties(0, dpCatalogo.PageSize, false);
                 CargarPuestos();
             }
             catch (Exception ex)
@@ -114,7 +114,7 @@ namespace TP_Final_Programacion_III
         {
             try
             {
-                dgvCatalogo.PageIndex = 0;
+                dpCatalogo.SetPageProperties(0, dpCatalogo.PageSize, false);
 
                 TipoCatalogoAdmin tipo = ObtenerTipoActual();
 
@@ -137,12 +137,11 @@ namespace TP_Final_Programacion_III
                 MostrarMensaje("danger", "Ocurrio un problemas al filtrar.");
             }
         }
-
-        protected void dgvCatalogo_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        protected void lvCatalogo_PagePropertiesChanging(object sender, PagePropertiesChangingEventArgs e)
         {
             try
             {
-                dgvCatalogo.PageIndex = e.NewPageIndex;
+                dpCatalogo.SetPageProperties(e.StartRowIndex, e.MaximumRows, false);
 
                 TipoCatalogoAdmin tipo = ObtenerTipoActual();
 
@@ -151,9 +150,11 @@ namespace TP_Final_Programacion_III
                     case TipoCatalogoAdmin.Area:
                         FiltrarAreas();
                         break;
+
                     case TipoCatalogoAdmin.Estado:
                         FiltrarEstados();
                         break;
+
                     case TipoCatalogoAdmin.Puesto:
                         FiltrarPuestos();
                         break;
@@ -162,11 +163,10 @@ namespace TP_Final_Programacion_III
             catch (Exception ex)
             {
                 Session.Add("error", ex.ToString());
-                MostrarMensaje("danger", "Ocurrio un error al cambiar de pagina.");
+                MostrarMensaje("danger", "Ocurrió un error al cambiar de página.");
             }
         }
-
-        protected void dgvCatalogo_RowCommand(object sender, GridViewCommandEventArgs e)
+        protected void lvCatalogo_ItemCommand(object sender, ListViewCommandEventArgs e)
         {
             try
             {
@@ -226,7 +226,6 @@ namespace TP_Final_Programacion_III
             }
             
         }
-
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
             try
@@ -312,7 +311,6 @@ namespace TP_Final_Programacion_III
                 AbrirModal("adminModal");
             }
         }
-
         protected void btnConfirmarEliminar_Click(object sender, EventArgs e)
         {
             try
@@ -376,7 +374,6 @@ namespace TP_Final_Programacion_III
                 MostrarMensaje("danger", ex.Message);
             }
         }
-
         private void CargarAreas()
         {
             Usuario usuario = (Usuario)Session["usuario"];
@@ -388,7 +385,6 @@ namespace TP_Final_Programacion_III
             ConfigurarPantalla();
             BindGrid(lista, lista.Count);
         }
-
         private void CargarEstados()
         {
             Usuario usuario = (Usuario)Session["usuario"];
@@ -400,7 +396,6 @@ namespace TP_Final_Programacion_III
             ConfigurarPantalla();
             BindGrid(lista, lista.Count);
         }
-
         private void CargarPuestos()
         {
             Usuario usuario = (Usuario)Session["usuario"];
@@ -412,7 +407,6 @@ namespace TP_Final_Programacion_III
             ConfigurarPantalla();
             BindGrid(lista, lista.Count);
         }
-
         private void FiltrarAreas()
         {
             List<Area> lista = (List<Area>)Session["listaAreasAdmin"];
@@ -421,7 +415,6 @@ namespace TP_Final_Programacion_III
             List<Area> filtrada = lista.FindAll(x => x.Nombre.ToUpper().Contains(filtro));
             BindGrid(filtrada, filtrada.Count);
         }
-
         private void FiltrarEstados()
         {
             List<Estado> lista = (List<Estado>)Session["listaEstadosAdmin"];
@@ -430,7 +423,6 @@ namespace TP_Final_Programacion_III
             List<Estado> filtrada = lista.FindAll(x => x.Nombre.ToUpper().Contains(filtro));
             BindGrid(filtrada, filtrada.Count);
         }
-
         private void FiltrarPuestos()
         {
             List<Puesto> lista = (List<Puesto>)Session["listaPuestosAdmin"];
@@ -439,16 +431,20 @@ namespace TP_Final_Programacion_III
             List<Puesto> filtrada = lista.FindAll(x => x.Nombre.ToUpper().Contains(filtro));
             BindGrid(filtrada, filtrada.Count);
         }
-
         private void BindGrid(object lista, int cantidad)
         {
-            dgvCatalogo.Columns[2].Visible = ObtenerTipoActual() == TipoCatalogoAdmin.Estado;
-            dgvCatalogo.DataSource = lista;
-            dgvCatalogo.DataBind();
+            lvCatalogo.DataSource = lista;
+            lvCatalogo.DataBind();
+            PlaceHolder encabezadoFinaliza = (PlaceHolder)lvCatalogo.FindControl("phFinalizaHeader");
 
+            if (encabezadoFinaliza != null)
+            {
+                encabezadoFinaliza.Visible =  MostrarColumnaFinaliza();
+            }
+
+            dpCatalogo.Visible = cantidad > dpCatalogo.PageSize;
             lblCantidad.Text = cantidad == 1 ? "1 registro" : cantidad + " registros";
         }
-
         private object ObtenerItemActual(int id)
         {
             TipoCatalogoAdmin tipo = ObtenerTipoActual();
@@ -470,7 +466,6 @@ namespace TP_Final_Programacion_III
 
             return null;
         }
-
         private void ConfigurarPantalla()
         {
             TipoCatalogoAdmin tipo = ObtenerTipoActual();
@@ -502,17 +497,14 @@ namespace TP_Final_Programacion_III
                     break;
             }
         }
-
         private TipoCatalogoAdmin ObtenerTipoActual()
         {
             return (TipoCatalogoAdmin)int.Parse(hfTipoActual.Value);
         }
-
         private void SetearTipoActual(TipoCatalogoAdmin tipo)
         {
             hfTipoActual.Value = ((int)tipo).ToString();
         }
-
         private string ObtenerNombreItem(object item)
         {
             if (item is Area)
@@ -526,7 +518,6 @@ namespace TP_Final_Programacion_III
 
             return "";
         }
-
         public bool PuedeEditarEliminar(object item)
         {
             if (item is Area)
@@ -540,12 +531,10 @@ namespace TP_Final_Programacion_III
 
             return false;
         }
-
         public string GetOrigenTexto(object item)
         {
             return PuedeEditarEliminar(item) ? "Empresa" : "Sistema";
         }
-
         public string GetOrigenClass(object item)
         {
             if (PuedeEditarEliminar(item))
@@ -553,7 +542,6 @@ namespace TP_Final_Programacion_III
 
             return "badge text-bg-secondary px-3 py-2 fw-semibold";
         }
-
         public string GetEstadoFinalTexto(object item)
         {
             if (item is Estado && ((Estado)item).EsFinal)
@@ -561,7 +549,6 @@ namespace TP_Final_Programacion_III
 
             return "No";
         }
-
         public string GetEstadoFinalClass(object item)
         {
             if (item is Estado && ((Estado)item).EsFinal)
@@ -569,7 +556,6 @@ namespace TP_Final_Programacion_III
 
             return "badge text-bg-light text-secondary px-3 py-2 fw-semibold border";
         }
-
         public string GetBotonAccionClass(object item, string accion)
         {
             if (!PuedeEditarEliminar(item))
@@ -580,12 +566,10 @@ namespace TP_Final_Programacion_III
 
             return "admin-action text-muted";
         }
-
         public string GetTipoTexto()
         {
             return GetNombreClases();
         }
-
         private string GetNombreClases()
         {
             TipoCatalogoAdmin clase = ObtenerTipoActual();
@@ -601,7 +585,6 @@ namespace TP_Final_Programacion_III
                 default: return "Registro";
             }
         }
-
         private void LimpiarErroresModal()
         {
             lblErrorModal.Visible = false;
@@ -612,7 +595,6 @@ namespace TP_Final_Programacion_III
             lblErrorEliminar.Text = "";
             txtConfirmarEliminar.CssClass = "form-control";
         }
-
         private void MostrarMensaje(string tipo, string mensaje)
         {
             litMensaje.Text = $@"
@@ -621,7 +603,6 @@ namespace TP_Final_Programacion_III
                     <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
                 </div>";
         }
-
         private void AbrirModal(string idModal)
         {
             string script = $@"
@@ -632,6 +613,10 @@ namespace TP_Final_Programacion_III
                 }});";
 
             ScriptManager.RegisterStartupScript(this, GetType(), "AbrirModal" + idModal, script, true);
+        }
+        public bool MostrarColumnaFinaliza()
+        {
+            return ObtenerTipoActual() == TipoCatalogoAdmin.Estado;
         }
     }
 }

@@ -55,7 +55,7 @@ namespace TP_Final_Programacion_III
 
                     if (imagenUsuario != null)
                     {
-                        Session["imagenUsuario"] = ResolveUrl("~/Images/" + imagenUsuario.ImagenURL);
+                        Session["imagenUsuario"] = ResolveUrl("~/Images/" + imagenUsuario.ImagenURL) + "?v=" + Guid.NewGuid();
                     }
                     else
                     {
@@ -139,7 +139,7 @@ namespace TP_Final_Programacion_III
 
                     if (imagenUsuario != null)
                     {
-                        Session["imagenUsuario"] = ResolveUrl("~/Images/" + imagenUsuario.ImagenURL);
+                        Session["imagenUsuario"] = ResolveUrl("~/Images/" + imagenUsuario.ImagenURL) + "?v=" + Guid.NewGuid();
                     }
                     else
                     {

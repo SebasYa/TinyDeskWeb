@@ -76,63 +76,132 @@
             </div>
         </div>
 
-        <asp:GridView ID="dgvCatalogo" runat="server"
-            DataKeyNames="Id"
-            CssClass="table table-hover align-middle bg-white border-0 shadow-sm rounded mb-0"
-            AutoGenerateColumns="false"
-            AllowPaging="True"
-            PageSize="10"
-            GridLines="None"
-            OnRowCommand="dgvCatalogo_RowCommand"
-            OnPageIndexChanging="dgvCatalogo_PageIndexChanging">
+        <div class="table-responsive">
+            <asp:ListView
+                ID="lvCatalogo"
+                runat="server"
+                ItemPlaceholderID="itemPlaceholder"
+                OnItemCommand="lvCatalogo_ItemCommand"
+                OnPagePropertiesChanging="lvCatalogo_PagePropertiesChanging">
 
-            <HeaderStyle CssClass="table-light text-secondary fw-semibold border-bottom" />
+                <LayoutTemplate>
+                    <table class="table table-hover align-middle bg-white border-0 shadow-sm rounded mb-0">
+                        <thead class="table-light text-secondary fw-semibold border-bottom">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Origen</th>
 
-            <Columns>
-                <asp:TemplateField HeaderText="Nombre">
-                    <ItemTemplate>
-                        <div class="fw-bold text-dark"><%# Eval("Nombre") %></div>
-                        <small class="text-muted"><%# GetTipoTexto() %></small>
-                    </ItemTemplate>
-                </asp:TemplateField>
+                                <asp:PlaceHolder
+                                    ID="phFinalizaHeader"
+                                    runat="server">
 
-                <asp:TemplateField HeaderText="Origen">
-                    <ItemTemplate>
-                        <span class='<%# GetOrigenClass(Container.DataItem) %>'>
-                            <%# GetOrigenTexto(Container.DataItem) %>
-                        </span>
-                    </ItemTemplate>
-                </asp:TemplateField>
+                                    <th>Finaliza</th>
+                                </asp:PlaceHolder>
 
-                <asp:TemplateField HeaderText="Finaliza">
-                    <ItemTemplate>
-                        <span class='<%# GetEstadoFinalClass(Container.DataItem) %>'>
-                            <%# GetEstadoFinalTexto(Container.DataItem) %>
-                        </span>
-                    </ItemTemplate>
-                </asp:TemplateField>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
 
-                <asp:TemplateField HeaderText="Acciones">
-                    <ItemTemplate>
-                        <asp:LinkButton ID="btnEditar" runat="server"
-                            CommandName="EditarRegistro"
-                            CommandArgument='<%# Eval("Id") %>'
-                            Enabled='<%# PuedeEditarEliminar(Container.DataItem) %>'
-                            CssClass='<%# GetBotonAccionClass(Container.DataItem, "edit") %>'>
-                            <i class="bi bi-pencil"></i>
-                        </asp:LinkButton>
+                        <tbody>
+                            <asp:PlaceHolder
+                                ID="itemPlaceholder"
+                                runat="server" />
+                        </tbody>
+                    </table>
+                </LayoutTemplate>
 
-                        <asp:LinkButton ID="btnEliminar" runat="server"
-                            CommandName="EliminarRegistro"
-                            CommandArgument='<%# Eval("Id") %>'
-                            Enabled='<%# PuedeEditarEliminar(Container.DataItem) %>'
-                            CssClass='<%# GetBotonAccionClass(Container.DataItem, "delete") %>'>
-                            <i class="bi bi-trash"></i>
-                        </asp:LinkButton>
-                    </ItemTemplate>
-                </asp:TemplateField>
-            </Columns>
-        </asp:GridView>
+                <ItemTemplate>
+                    <tr>
+                        <td>
+                            <div class="fw-bold text-dark">
+                                <%# Eval("Nombre") %>
+                            </div>
+
+                            <small class="text-muted">
+                                <%# GetTipoTexto() %>
+                            </small>
+                        </td>
+
+                        <td>
+                            <span class='<%# GetOrigenClass(Container.DataItem) %>'>
+                                <%# GetOrigenTexto(Container.DataItem) %>
+                            </span>
+                        </td>
+
+                        <asp:PlaceHolder
+                            ID="phFinalizaItem"
+                            runat="server"
+                            Visible='<%# MostrarColumnaFinaliza() %>'>
+
+                            <td>
+                                <span class='<%# GetEstadoFinalClass(Container.DataItem) %>'>
+                                    <%# GetEstadoFinalTexto(Container.DataItem) %>
+                                </span>
+                            </td>
+                        </asp:PlaceHolder>
+
+                        <td>
+                            <asp:LinkButton
+                                ID="btnEditar"
+                                runat="server"
+                                CommandName="EditarRegistro"
+                                CommandArgument='<%# Eval("Id") %>'
+                                Enabled='<%# PuedeEditarEliminar(Container.DataItem) %>'
+                                CssClass='<%# GetBotonAccionClass(Container.DataItem, "edit") %>'>
+
+                        <i class="bi bi-pencil"></i>
+                            </asp:LinkButton>
+
+                            <asp:LinkButton
+                                ID="btnEliminar"
+                                runat="server"
+                                CommandName="EliminarRegistro"
+                                CommandArgument='<%# Eval("Id") %>'
+                                Enabled='<%# PuedeEditarEliminar(Container.DataItem) %>'
+                                CssClass='<%# GetBotonAccionClass(Container.DataItem, "delete") %>'>
+
+                        <i class="bi bi-trash"></i>
+                            </asp:LinkButton>
+                        </td>
+                    </tr>
+                </ItemTemplate>
+
+                <EmptyDataTemplate>
+                    <div class="alert alert-info">
+                        No hay registros para mostrar.
+                    </div>
+                </EmptyDataTemplate>
+
+            </asp:ListView>
+        </div>
+
+        <div class="d-flex justify-content-center mt-4">
+            <asp:DataPager
+                ID="dpCatalogo"
+                runat="server"
+                PagedControlID="lvCatalogo"
+                PageSize="10">
+
+                <Fields>
+                    <asp:NextPreviousPagerField
+                        ShowPreviousPageButton="true"
+                        ShowNextPageButton="false"
+                        PreviousPageText="Anterior"
+                        ButtonCssClass="btn btn-outline-secondary me-1" />
+
+                    <asp:NumericPagerField
+                        ButtonCount="5"
+                        NumericButtonCssClass="btn btn-outline-primary me-1"
+                        CurrentPageLabelCssClass="btn btn-primary me-1" />
+
+                    <asp:NextPreviousPagerField
+                        ShowPreviousPageButton="false"
+                        ShowNextPageButton="true"
+                        NextPageText="Siguiente"
+                        ButtonCssClass="btn btn-outline-secondary" />
+                </Fields>
+            </asp:DataPager>
+        </div>
     </div>
 
     <div class="modal fade" id="adminModal" tabindex="-1" aria-hidden="true">

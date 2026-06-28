@@ -27,8 +27,9 @@ namespace TP_Final_Programacion_III
                     UsuarioNegocio negocio = new UsuarioNegocio();
                     List<Usuario> lista = negocio.listar(idEmpresa);
                     Session["listaUsuarios"] = lista;
-                    dgvUsuarios.DataSource = lista;
-                    dgvUsuarios.DataBind();
+                    lvUsuarios.DataSource = lista;
+                    lvUsuarios.DataBind();
+                    dpUsuarios.Visible = lista.Count > dpUsuarios.PageSize;
                 }
                 catch (Exception ex)
                 {
@@ -70,32 +71,20 @@ namespace TP_Final_Programacion_III
                        "</span>";
             }
         }
-        protected void dgvUsuarios_PageIndexChanging(object obj, GridViewPageEventArgs e)
+        protected void lvUsuarios_PagePropertiesChanging(object sender, PagePropertiesChangingEventArgs e)
         {
-            try
-            {
-                dgvUsuarios.PageIndex = e.NewPageIndex;
-                dgvUsuarios.DataSource = Session["listaUsuarios"];
-                dgvUsuarios.DataBind();
-            }
-            catch (Exception ex)
-            {
-                Session.Add("error", ex.ToString());
-                Response.Redirect("Usuarios.aspx", false);
-            }
+            dpUsuarios.SetPageProperties(e.StartRowIndex, e.MaximumRows, false);
+            List<Usuario> lista = (List<Usuario>)Session["listaUsuarios"];
+            lvUsuarios.DataSource = lista;
+            lvUsuarios.DataBind();
+            dpUsuarios.Visible = lista.Count > dpUsuarios.PageSize;
         }
-        protected void dgvUsuarios_SelectedIndexChanged(object obj, EventArgs e)
+        protected void btnEditarUsuario_Click(object sender, EventArgs e)
         {
-            try
-            {
-                string id = dgvUsuarios.SelectedDataKey.Value.ToString();
-                Response.Redirect("CrearUsuario.aspx?id=" + id, false);
-            }
-            catch (Exception ex)
-            {
-                Session.Add("error", ex.ToString());
-                Response.Redirect("Usuarios.aspx", false);
-            }
+            LinkButton boton = (LinkButton)sender;
+            int idUsuario = Convert.ToInt32(boton.CommandArgument);
+            Response.Redirect("CrearUsuario.aspx?id=" + idUsuario, false);
+            Context.ApplicationInstance.CompleteRequest();
         }
         protected void btnBuscarUsuario_Click(object sender, EventArgs e)
         {
@@ -106,10 +95,10 @@ namespace TP_Final_Programacion_III
                 List<Usuario> lista = negocio.listar(idEmpresa, 0, txtFiltroSimple.Text);
 
                 Session["listaUsuarios"] = lista;
-                dgvUsuarios.PageIndex = 0;
-                dgvUsuarios.DataSource = lista;
-                dgvUsuarios.DataBind();
-
+                dpUsuarios.SetPageProperties(0, dpUsuarios.PageSize, false);
+                lvUsuarios.DataSource = lista;
+                lvUsuarios.DataBind();
+                dpUsuarios.Visible = lista.Count > dpUsuarios.PageSize;
                 pnlFiltroAvanzado.Visible = chkFiltroAvanzado.Checked;
             }
             catch (Exception ex)
@@ -128,9 +117,10 @@ namespace TP_Final_Programacion_III
                 List<Usuario> lista = negocio.listar(idEmpresa);
 
                 Session["listaUsuarios"] = lista;
-                dgvUsuarios.PageIndex = 0;
-                dgvUsuarios.DataSource = lista;
-                dgvUsuarios.DataBind();
+                dpUsuarios.SetPageProperties(0, dpUsuarios.PageSize, false);
+                lvUsuarios.DataSource = lista;
+                lvUsuarios.DataBind();
+                dpUsuarios.Visible = lista.Count > dpUsuarios.PageSize;
                 pnlFiltroAvanzado.Visible = chkFiltroAvanzado.Checked;
             }
             catch (Exception ex)
@@ -178,9 +168,10 @@ namespace TP_Final_Programacion_III
 
                 Session["listaUsuarios"] = lista;
 
-                dgvUsuarios.PageIndex = 0;
-                dgvUsuarios.DataSource = lista;
-                dgvUsuarios.DataBind();
+                dpUsuarios.SetPageProperties(0, dpUsuarios.PageSize, false);
+                lvUsuarios.DataSource = lista;
+                lvUsuarios.DataBind();
+                dpUsuarios.Visible = lista.Count > dpUsuarios.PageSize;
 
                 chkFiltroAvanzado.Checked = true;
                 pnlFiltroAvanzado.Visible = true;
@@ -210,9 +201,10 @@ namespace TP_Final_Programacion_III
 
                 Session["listaUsuarios"] = lista;
 
-                dgvUsuarios.PageIndex = 0;
-                dgvUsuarios.DataSource = lista;
-                dgvUsuarios.DataBind();
+                dpUsuarios.SetPageProperties(0, dpUsuarios.PageSize, false);
+                lvUsuarios.DataSource = lista;
+                lvUsuarios.DataBind();
+                dpUsuarios.Visible = lista.Count > dpUsuarios.PageSize;
 
                 chkFiltroAvanzado.Checked = true;
                 pnlFiltroAvanzado.Visible = true;

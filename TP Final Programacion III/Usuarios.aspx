@@ -126,76 +126,132 @@
             </div>
         </asp:Panel>
 
-        <asp:GridView ID="dgvUsuarios" runat="server"
-            AutoGenerateColumns="False"
-            DataKeyNames="Id"
-            AllowPaging="true"
-            PageSize="10"
-            OnSelectedIndexChanged="dgvUsuarios_SelectedIndexChanged"
-            OnPageIndexChanging="dgvUsuarios_PageIndexChanging"
-            CssClass="table table-striped table-bordered shadow-sm">
-            <Columns>
-                <asp:BoundField DataField="Apellido" HeaderText="Apellido" />
-                <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
-                <asp:BoundField DataField="NombreUsuario" HeaderText="Usuario" />
-                <asp:BoundField DataField="Email" HeaderText="Correo Electrónico" />
+        <div class="table-responsive">
+            <asp:ListView
+                ID="lvUsuarios"
+                runat="server"
+                ItemPlaceholderID="itemPlaceholder"
+                OnPagePropertiesChanging="lvUsuarios_PagePropertiesChanging">
 
-                <asp:TemplateField HeaderText="Área">
-                    <ItemTemplate>
-                        <%# Eval("Area.Nombre") %>
-                    </ItemTemplate>
-                </asp:TemplateField>
+                <LayoutTemplate>
+                    <table class="table table-striped table-bordered shadow-sm align-middle">
+                        <thead>
+                            <tr>
+                                <th>Apellido</th>
+                                <th>Nombre</th>
+                                <th>Usuario</th>
+                                <th>Correo Electrónico</th>
+                                <th>Área</th>
+                                <th>Puesto</th>
+                                <th>Seniority</th>
+                                <th>Permiso</th>
+                                <th>Activo</th>
+                                <th>Invitación</th>
+                                <th>Editar</th>
+                            </tr>
+                        </thead>
 
-                <asp:TemplateField HeaderText="Puesto">
-                    <ItemTemplate>
-                        <%# Eval("Puesto.Nombre") %>
-                    </ItemTemplate>
-                </asp:TemplateField>
+                        <tbody>
+                            <asp:PlaceHolder
+                                ID="itemPlaceholder"
+                                runat="server" />
+                        </tbody>
+                    </table>
+                </LayoutTemplate>
 
-                <asp:TemplateField HeaderText="Seniority">
-                    <ItemTemplate>
-                        <%# Eval("Seniority.Nombre") %>
-                    </ItemTemplate>
-                </asp:TemplateField>
+                <ItemTemplate>
+                    <tr>
+                        <td><%# Eval("Apellido") %></td>
 
-                <asp:TemplateField HeaderText="Permiso">
-                    <ItemTemplate>
-                        <asp:Literal
-                            ID="litPermisoUsuario"
-                            runat="server"
-                            Mode="PassThrough"
-                            Text='<%# ObtenerIconoPermiso(Eval("EsAdmin"), Eval("PermisoEscritura")) %>'>
-                        </asp:Literal>
-                    </ItemTemplate>
-                </asp:TemplateField>
+                        <td><%# Eval("Nombre") %></td>
 
-                <asp:TemplateField HeaderText="Activo">
-                    <ItemTemplate>
-                        <span class='<%# (bool)Eval("Activo") ? "text-success" : "text-danger" %>'
-                            title='<%# (bool)Eval("Activo") ? "Usuario activo" : "Usuario inactivo" %>'>
-                            <i class='<%# (bool)Eval("Activo") ? "bi bi-check-circle-fill" : "bi bi-x-circle-fill" %>'></i>
-                        </span>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="Invitación">
-                    <ItemTemplate>
-                        <asp:Literal ID="litInvitacion" runat="server"
-                            Mode="PassThrough"
-                            Text='<%# ObtenerIconoInvitacion(Eval("Id"), Eval("EmailVerificado")) %>'>
-                        </asp:Literal>
-                    </ItemTemplate>
-                </asp:TemplateField>
+                        <td><%# Eval("NombreUsuario") %></td>
 
-                <asp:TemplateField HeaderText="Editar">
-                    <ItemTemplate>
-                        <asp:LinkButton ID="btnEditarUsuario" runat="server" CommandName="Select"
-                            CssClass="btn btn-link text-muted p-0 lh-1">
-                            <i class="bi bi-pencil me-2 text-muted"></i>
-                        </asp:LinkButton>
-                    </ItemTemplate>
-                </asp:TemplateField>
+                        <td><%# Eval("Email") %></td>
 
-            </Columns>
-        </asp:GridView>
+                        <td><%# Eval("Area.Nombre") %></td>
+
+                        <td><%# Eval("Puesto.Nombre") %></td>
+
+                        <td><%# Eval("Seniority.Nombre") %></td>
+
+                        <td>
+                            <asp:Literal
+                                ID="litPermisoUsuario"
+                                runat="server"
+                                Mode="PassThrough"
+                                Text='<%# ObtenerIconoPermiso(Eval("EsAdmin"), Eval("PermisoEscritura")) %>'>
+                            </asp:Literal>
+                        </td>
+
+                        <td>
+                            <span
+                                class='<%# (bool)Eval("Activo") ? "text-success" : "text-danger" %>'
+                                title='<%# (bool)Eval("Activo") ? "Usuario activo" : "Usuario inactivo" %>'>
+
+                                <i class='<%# (bool)Eval("Activo") ? "bi bi-check-circle-fill" : "bi bi-x-circle-fill" %>'></i>
+                            </span>
+                        </td>
+
+                        <td>
+                            <asp:Literal
+                                ID="litInvitacion"
+                                runat="server"
+                                Mode="PassThrough"
+                                Text='<%# ObtenerIconoInvitacion(Eval("Id"), Eval("EmailVerificado")) %>'>
+                            </asp:Literal>
+                        </td>
+
+                        <td>
+                            <asp:LinkButton
+                                ID="btnEditarUsuario"
+                                runat="server"
+                                CssClass="btn btn-link text-muted p-0 lh-1"
+                                CommandArgument='<%# Eval("Id") %>'
+                                CausesValidation="false"
+                                OnClick="btnEditarUsuario_Click">
+
+                        <i class="bi bi-pencil text-muted"></i>
+                            </asp:LinkButton>
+                        </td>
+                    </tr>
+                </ItemTemplate>
+
+                <EmptyDataTemplate>
+                    <div class="alert alert-info">
+                        No hay usuarios para mostrar.
+                    </div>
+                </EmptyDataTemplate>
+
+            </asp:ListView>
+        </div>
+
+        <div class="d-flex justify-content-center mt-4">
+            <asp:DataPager
+                ID="dpUsuarios"
+                runat="server"
+                PagedControlID="lvUsuarios"
+                PageSize="10">
+
+                <Fields>
+                    <asp:NextPreviousPagerField
+                        ShowPreviousPageButton="true"
+                        ShowNextPageButton="false"
+                        PreviousPageText="Anterior"
+                        ButtonCssClass="btn btn-outline-secondary me-1" />
+
+                    <asp:NumericPagerField
+                        ButtonCount="5"
+                        NumericButtonCssClass="btn btn-outline-primary me-1"
+                        CurrentPageLabelCssClass="btn btn-primary me-1" />
+
+                    <asp:NextPreviousPagerField
+                        ShowPreviousPageButton="false"
+                        ShowNextPageButton="true"
+                        NextPageText="Siguiente"
+                        ButtonCssClass="btn btn-outline-secondary" />
+                </Fields>
+            </asp:DataPager>
+        </div>
     </div>
 </asp:Content>
