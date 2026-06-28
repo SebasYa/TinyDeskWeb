@@ -688,5 +688,25 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
+        public bool VerificarPasswordActual(int idUsuario, string passwordActual)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.setearConsulta(@"SELECT COUNT(1)
+                                       FROM USUARIO
+                                       WHERE Id = @Id
+                                         AND PasswordHash = @PasswordActual"
+                );
+                datos.setearParametro("@Id", idUsuario);
+                datos.setearParametro("@PasswordActual", passwordActual);
+                return datos.ejecutarScalar() > 0;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
     }
 }

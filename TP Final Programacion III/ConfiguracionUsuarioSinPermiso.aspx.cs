@@ -115,8 +115,9 @@ namespace TP_Final_Programacion_III
             MostrarSeccion("seguridad");
             litMensaje.Text = "";
             string passwordNueva = txtPasswordNueva.Text;
+            string passwordActual = txtPasswordActual.Text;
 
-            if (string.IsNullOrWhiteSpace(txtPasswordActual.Text) || string.IsNullOrWhiteSpace(passwordNueva) || string.IsNullOrWhiteSpace(txtConfirmarPassword.Text))
+            if (string.IsNullOrWhiteSpace(passwordActual) || string.IsNullOrWhiteSpace(passwordNueva) || string.IsNullOrWhiteSpace(txtConfirmarPassword.Text))
             {
                 MostrarError("Completá todos los campos.");
                 return;
@@ -130,13 +131,7 @@ namespace TP_Final_Programacion_III
 
             if (passwordNueva != txtConfirmarPassword.Text)
             {
-                MostrarError("Las nuevas contraseñas no coinciden.");
-                return;
-            }
-
-            if (txtPasswordActual.Text == passwordNueva)
-            {
-                MostrarError("La nueva contraseña debe ser diferente de la contraseña actual.");
+                MostrarError("La confirmación de la contraseña no coincide.");
                 return;
             }
 
@@ -144,11 +139,24 @@ namespace TP_Final_Programacion_III
             {
                 Usuario usuario = (Usuario)Session["usuario"];
                 UsuarioNegocio negocio = new UsuarioNegocio();
+                bool passActCorrecta = negocio.VerificarPasswordActual(usuario.Id, passwordActual);
+
+                if (!passActCorrecta)
+                {
+                    MostrarError("La contraseña actual es incorrecta.");
+                    return;
+                }
+                if (passwordActual == passwordNueva)
+                {
+                    MostrarError("La nueva contraseña debe ser diferente de la contraseña actual.");
+                    return;
+                }
+
                 bool actualizado = negocio.CambiarPasswordUsuarioActivo(usuario, passwordNueva);
 
                 if (!actualizado)
                 {
-                    MostrarError("La contraseña actual es incorrecta.");
+                    MostrarError("Hubo un error al intentar cambiar la contraseña.");
                     return;
                 }
 

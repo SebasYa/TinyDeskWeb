@@ -131,7 +131,8 @@ namespace TP_Final_Programacion_III
             MostrarSeccion("seguridad");
             litMensaje.Text = "";
             string passwordNueva = txtPasswordNueva.Text;
-            if(string.IsNullOrWhiteSpace(txtConfirmarPassword.Text) || string.IsNullOrWhiteSpace(txtPasswordActual.Text) || string.IsNullOrWhiteSpace(passwordNueva))
+            string passwordActual = txtPasswordActual.Text;
+            if (string.IsNullOrWhiteSpace(txtConfirmarPassword.Text) || string.IsNullOrWhiteSpace(passwordActual) || string.IsNullOrWhiteSpace(passwordNueva))
             {
                 MostrarError("Completá todos los campos.");
                 return;
@@ -143,12 +144,7 @@ namespace TP_Final_Programacion_III
             }
             if(passwordNueva != txtConfirmarPassword.Text)
             {
-                MostrarError("Las nuevas contraseñas no coinciden.");
-                return;
-            }
-            if(txtPasswordActual.Text == passwordNueva)
-            {
-                MostrarError("La nueva contraseña debe ser diferente de la contraseña actual.");
+                MostrarError("La confirmación de la contraseña no coincide.");
                 return;
             }
 
@@ -156,6 +152,18 @@ namespace TP_Final_Programacion_III
             {
                 Usuario usuario = (Usuario)Session["usuario"];
                 UsuarioNegocio negocio = new UsuarioNegocio();
+                bool passActCorrecta = negocio.VerificarPasswordActual(usuario.Id, passwordActual);
+
+                if (!passActCorrecta)
+                {
+                    MostrarError("La contraseña actual es incorrecta.");
+                    return;
+                }
+                if (passwordActual == passwordNueva)
+                {
+                    MostrarError("La nueva contraseña debe ser diferente de la contraseña actual.");
+                    return;
+                }
 
                 bool actualizado = negocio.CambiarPasswordUsuarioActivo(usuario, passwordNueva);
 
