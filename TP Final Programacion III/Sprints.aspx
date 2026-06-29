@@ -94,6 +94,7 @@
             OnSelectedIndexChanged="dgvSprints_SelectedIndexChanged"
             OnPageIndexChanging="dgvSprints_PageIndexChanging"
             OnRowCommand="dgvSprints_RowCommand"
+            OnRowCreated="dgvSprints_RowCreated"
             AllowPaging="True" PageSize="10" GridLines="None">
     
             <HeaderStyle CssClass="table-light text-secondary fw-semibold border-bottom" />
@@ -170,6 +171,12 @@
                  </asp:TemplateField>
 
             </Columns>
+            <PagerSettings 
+                Mode="NumericFirstLast" 
+                FirstPageText="Primero" 
+                LastPageText="Último" 
+                NextPageText="Sig" 
+                PreviousPageText="Ant" />
         </asp:GridView>
 
         <!--  ARRANCA MODAL EDITAR SPRINT -->
@@ -314,6 +321,9 @@
             DataKeyNames="Id"
             CssClass="table table-hover align-middle mb-0"
             GridLines="None"
+            AllowPaging="true" 
+            PageSize="10"
+            OnPageIndexChanging="dgvTicketsDelSprint_PageIndexChanging"
             EmptyDataText="Este sprint todavía no tiene tickets asignados.">
 
             <HeaderStyle CssClass="table-light text-secondary fw-semibold border-bottom small" />

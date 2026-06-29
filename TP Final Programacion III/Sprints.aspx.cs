@@ -559,7 +559,55 @@ namespace TP_Final_Programacion_III
             }
         }
 
-     
+        protected void dgvTicketsDelSprint_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+
+            dgvTicketsDelSprint.PageIndex = e.NewPageIndex;
+
+            dgvTicketsDelSprint.DataSource = Session["listaSprints"];
+            dgvTicketsDelSprint.DataBind();
+        }
+
+        protected void dgvTicketsDelSprint_PageIndexChanging1(object sender, GridViewPageEventArgs e)
+        {
+           
+        }
+
+        protected void dgvSprints_RowCreated(object sender, GridViewRowEventArgs e)
+        {
+            // Verificamos si la fila creada es la del paginador
+            if (e.Row.RowType == DataControlRowType.Pager)
+            {
+                e.Row.Cells[0].Attributes.Add("class", "pagination-container");
+
+                if (e.Row.Cells[0].Controls.Count > 0)
+                {
+                    Table pagerTable = (Table)e.Row.Cells[0].Controls[0];
+
+                    pagerTable.Attributes.Add("class", "pagination pagination-sm justify-content-center my-3");
+
+                    foreach (TableCell cell in pagerTable.Rows[0].Cells)
+                    {
+                        foreach (Control ctrl in cell.Controls)
+                        {
+                            if (ctrl is LinkButton)
+                            {
+                                ((LinkButton)ctrl).CssClass = "page-link";
+                            }
+                            else if (ctrl is Label) // Este es el número de página actual
+                            {
+                                ((Label)ctrl).CssClass = "page-link active";
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        protected void dgvSprints_PageIndexChanging1(object sender, GridViewPageEventArgs e)
+        {
+
+        }
     }
 
 

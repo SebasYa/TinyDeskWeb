@@ -56,7 +56,7 @@ namespace negocio
             {
                 string consulta = @"UPDATE SPRINT SET 
                                         NumeroSprint = @NumeroSprint , 
-                                        FechaInicio = @FechaInicio,
+                                        --FechaInicio = @FechaInicio,
                                         FechaFin = @FechaFin, 
                                         FechaEstimadaFin = @FechaEstimadaFin, 
                                         Activo = @Activo, 
@@ -68,7 +68,7 @@ namespace negocio
                 datos.setearConsulta(consulta);
 
                 datos.setearParametro("@NumeroSprint", sprint.NumeroSprint);
-                datos.setearParametro("@FechaInicio", sprint.FechaInicio);
+                //datos.setearParametro("@FechaInicio", sprint.FechaInicio);
                 if (sprint.FechaFin.HasValue)
                 {
                     datos.setearParametro("@FechaFin", sprint.FechaFin.Value);
