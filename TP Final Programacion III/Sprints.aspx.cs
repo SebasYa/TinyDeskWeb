@@ -375,6 +375,7 @@ namespace TP_Final_Programacion_III
                 editarSprint.Area.Id = int.Parse(ddlEditArea.SelectedValue);
                 editarSprint.Estado = new Estado();
                 editarSprint.Estado.Id = int.Parse(ddlEditEstado.SelectedValue);
+                editarSprint.Estado.Nombre = ddlEditEstado.SelectedItem.Text;
                 editarSprint.Proyecto = new Proyecto();
                 editarSprint.Proyecto.Id = int.Parse(ddlEditProyecto.SelectedValue);
                 editarSprint.Activo = true;
@@ -435,6 +436,11 @@ namespace TP_Final_Programacion_III
                 Sprint original = listaSprints.Find(x => x.Id == eliminarSprint.Id);
 
                 eliminarSprint.Id = original.Id;
+
+                string motivo = txtMotivoCambio.Text;
+                string accion = "DELETE";
+
+                sprintNegocio.EliminarSprintConAuditoria(eliminarSprint, accion, userLogueado.Id, motivo);
 
                 sprintNegocio.Desactivar(eliminarSprint);
 

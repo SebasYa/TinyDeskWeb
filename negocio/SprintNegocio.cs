@@ -404,5 +404,35 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
+
+        public void EliminarSprintConAuditoria(Sprint eliminarSprint, string accion, int idUsuario, string motivo)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+
+                datos.iniciarTransaccion();
+
+                Desactivar(eliminarSprint);
+
+
+                AuditoriaService auditoriaService = new AuditoriaService();
+
+                auditoriaService.Registrar(idUsuario, "Sprint", eliminarSprint.Id, accion,
+                        "btn Eliminar", motivo);
+
+
+                datos.confirmarTransaccion(); // COMMIT
+            }
+            catch (Exception)
+            {
+                datos.cancelarTransaccion(); // ROLLBACK
+                throw;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
     }
 }
