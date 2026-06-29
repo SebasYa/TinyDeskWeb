@@ -380,20 +380,9 @@ namespace TP_Final_Programacion_III
                 editarSprint.Activo = true;
 
                 string motivo = txtMotivoCambio.Text;
+                string accion = "UPDATE";
 
-                if (original.FechaInicio.Date != editarSprint.FechaInicio.Date)
-                    auditoriaService.Registrar(userLogueado.Id, "Sprint", editarSprint.Id, "UPDATE",
-                        "FechaInicio", original.FechaInicio.ToString(), editarSprint.FechaInicio.ToString(), motivo);
-
-                if (original.FechaEstimadaFin.Date != editarSprint.FechaEstimadaFin.Date)
-                    auditoriaService.Registrar(userLogueado.Id, "Sprint", editarSprint.Id, "UPDATE",
-                        "FechaEstimadaFin", original.FechaEstimadaFin.ToString(), editarSprint.FechaEstimadaFin.ToString(), motivo);
-
-                if (original.Estado.Id != editarSprint.Estado.Id)
-                    auditoriaService.Registrar(userLogueado.Id, "Sprint", editarSprint.Id, "UPDATE",
-                        "Estado", original.Estado.Nombre, editarSprint.Estado.Id.ToString(), motivo);
-
-                sprintNegocio.Modificar(editarSprint);
+                sprintNegocio.ModificarSprintConAuditoria(editarSprint, original, accion, userLogueado.Id, motivo);
 
                 litMensaje.Text = @"
                 <div class='alert alert-success alert-dismissible fade show' role='alert'>

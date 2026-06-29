@@ -107,6 +107,8 @@ namespace negocio
 
         public void iniciarTransaccion()
         {
+            comando.Connection = conexion;
+            conexion.Open();
             transaccion = conexion.BeginTransaction();
             comando.Transaction = transaccion;
         }

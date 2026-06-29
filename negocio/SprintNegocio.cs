@@ -365,5 +365,44 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
+
+        public void ModificarSprintConAuditoria(Sprint editarSprint, Sprint original,string accion, int idUsuario, string motivo)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                
+                datos.iniciarTransaccion();
+
+                Modificar(editarSprint);
+                
+
+                AuditoriaService auditoriaService = new AuditoriaService();
+
+                if (original.FechaInicio.Date != editarSprint.FechaInicio.Date)
+                    auditoriaService.Registrar(idUsuario, "Sprint", editarSprint.Id, accion,
+                        "FechaInicio", original.FechaInicio.ToString(), editarSprint.FechaInicio.ToString(), motivo);
+
+                if (original.FechaEstimadaFin.Date != editarSprint.FechaEstimadaFin.Date)
+                    auditoriaService.Registrar(idUsuario, "Sprint", editarSprint.Id, accion,
+                        "FechaEstimadaFin", original.FechaEstimadaFin.ToString(), editarSprint.FechaEstimadaFin.ToString(), motivo);
+
+                if (original.Estado.Id != editarSprint.Estado.Id)
+                    auditoriaService.Registrar(idUsuario, "Sprint", editarSprint.Id, accion,
+                        "Estado", original.Estado.Nombre, editarSprint.Estado.Nombre, motivo);
+
+
+                datos.confirmarTransaccion(); // COMMIT
+            }
+            catch (Exception)
+            {
+                datos.cancelarTransaccion(); // ROLLBACK
+                throw;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
     }
 }
