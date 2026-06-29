@@ -42,10 +42,11 @@
                                 <img runat="server"
                                     src="~/Images/LogoTD.png"
                                     alt="Logo TinyDesk"
-                                    style="width: 120px; height: 120px; object-fit: contain; display: block; margin: -28px auto -22px;" />
+                                    style="width: 120px; height: 120px; object-fit: contain; display: block; margin: -30px auto -22px; transform: translateX(5px);" />
+                                <p class="text-muted text-center mb-0">TinyDesk</p>
                             </div>
-                            <h2 class="mb-1 text-center">Iniciar Sesión</h2>
-                            <p class="text-muted text-center mb-4">Ingrese las credenciales para continuar</p>
+                            <h2 class="mt-0 mb-1 text-center">Iniciar Sesión</h2>
+                            
 
                             <div class="mb-3">
                                 <label for="txtNombreUsuario" class="form-label">Usuario</label>

@@ -78,15 +78,7 @@ namespace TP_Final_Programacion_III
                             {
                                 ddlSeniority.SelectedValue = usuarioEditar.Seniority.Id.ToString();
                             }
-                            if (usuarioEditar.EmailVerificado)
-                            {
-                                pnlActivoUsuario.Visible = true;
-                                chkActivo.Checked = usuarioEditar.Activo;
-                            }
-                            else
-                            {
-                                pnlActivoUsuario.Visible = false;
-                            }
+                            ConfigRestriccionesOwner(usuarioEditar);
                             CargarEstadoInvitacion(usuarioEditar);
                         }
                     }
@@ -157,7 +149,7 @@ namespace TP_Final_Programacion_III
                         return;
                     }
                     nuevoUsuario.Activo = false;
-                    Usuario usuarioActual = negocio.BuscarPorId(nuevoUsuario.Id);
+                    Usuario usuarioActual = negocio.BuscarPorId(nuevoUsuario.Id);                    
                     if (usuarioActual != null && usuarioActual.EmailVerificado)
                     {
                         nuevoUsuario.Activo = chkActivo.Checked;
@@ -166,6 +158,18 @@ namespace TP_Final_Programacion_III
                             MostrarErrorFormulario("No podés desactivar tu propio usaurio");
                             return;
                         }
+                    }
+                    if (EsOwner(usuarioActual))
+                    {
+                        // Conservamos todos los datos laborales del Owner
+                        nuevoUsuario.Area = usuarioActual.Area;
+                        nuevoUsuario.Puesto = usuarioActual.Puesto;
+                        nuevoUsuario.Seniority = usuarioActual.Seniority;
+                        nuevoUsuario.PermisoEscritura = usuarioActual.PermisoEscritura;
+                        nuevoUsuario.EsAdmin = usuarioActual.EsAdmin;
+
+                        // Conservamos su estado actual
+                        nuevoUsuario.Activo = usuarioActual.Activo;
                     }
                     if (negocio.Modificar(nuevoUsuario))
                     {
@@ -315,6 +319,23 @@ namespace TP_Final_Programacion_III
             email.armarCorreo(usuario.Email, "Crea tu contraseña en TinyDesk", cuerpo);
 
             return email.enviarEmail();
+        }
+        private bool EsOwner(Usuario usuario)
+        {
+            if(usuario.Puesto.Nombre == "Owner")
+            {
+                return true;
+            }
+            return false;
+        }
+        private void ConfigRestriccionesOwner(Usuario usuario)
+        {
+            bool esOwner = EsOwner(usuario);
+
+            // Al Owner no se le modifica su asignación laboral
+            pnlAsignacionLaboral.Visible = !esOwner;
+            // Al Owner tampoco se lo puede desactivar
+            pnlActivoUsuario.Visible = !esOwner;
         }
     }
 }

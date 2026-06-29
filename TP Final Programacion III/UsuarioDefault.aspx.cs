@@ -46,8 +46,8 @@ namespace TP_Final_Programacion_III
             if (hora >= 6 && hora < 12) saludo = "Buen Día";
             else if (hora >= 12 && hora < 19) saludo = "Buenas Tardes";
             else saludo = "Buenas Noches";
-                lblBienvenida.Text = saludo + ": " + usuario.Nombre + " " + usuario.Apellido;
 
+            lblBienvenida.Text = saludo + ": " + usuario.Nombre + " " + usuario.Apellido;
             lblAreaUsuario.Text = usuario.Area.Nombre;
             lblRolUsuario.Text = usuario.Puesto.Nombre;
             lblSeniorityUsuario.Text = usuario.Seniority != null ? usuario.Seniority.Nombre : "-";
