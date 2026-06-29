@@ -379,6 +379,12 @@ namespace TP_Final_Programacion_III
                 editarSprint.Proyecto = new Proyecto();
                 editarSprint.Proyecto.Id = int.Parse(ddlEditProyecto.SelectedValue);
                 editarSprint.Activo = true;
+                
+                if (string.IsNullOrWhiteSpace(txtMotivoCambio.Text))
+                {
+                    MostrarErrorValidacion("Por favor, ingrese el motivo del cambio para poder continuar.");
+                    return;
+                }
 
                 string motivo = txtMotivoCambio.Text;
                 string accion = "UPDATE";

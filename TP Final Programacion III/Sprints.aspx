@@ -246,9 +246,15 @@
                                       Debes elegir un Area
                                     </div>
                                 </div>
-                                <div class="col-12">
-                                    <label for="txtMotivoCambio" class="form-label fw-semibold">Motivo del cambio (Obligatorio)</label>
-                                    <asp:TextBox ID="txtMotivoCambio" runat="server" CssClass="form-control w-100" TextMode="MultiLine" Rows="2" placeholder="Explique por qué realiza esta modificación..."></asp:TextBox>
+                                <div class="col-12 position-relative">
+                                    <label for="txtMotivoCambio" class="form-label fw-semibold">Motivo del cambio</label>
+    
+                                    <asp:TextBox ID="txtMotivoCambio" runat="server" 
+                                                 CssClass="form-control w-100" 
+                                                 TextMode="MultiLine" Rows="2" 
+                                                 placeholder="Explique por qué realiza esta modificación...">
+                                    </asp:TextBox>
+
                                     <div class="invalid-feedback">
                                         Por favor, ingrese un motivo para realizar el cambio.
                                     </div>
@@ -387,74 +393,68 @@
     function validarSprintModal() {
         let esValido = true;
 
-        //CAMPOS CREAR SPRINT
-        //const txtInicioCrear = document.getElementById('<%= txtFechaInicio.ClientID %>');
+        // --- 1. Obtención segura de elementos ---
+        // Usamos el operador || document.createElement('div') para evitar errores si el elemento no existe en la página actual
         const txtEstFinCrear = document.getElementById('<%= txtFechaEstimadaFin.ClientID %>');
+        const txtInicioCrear = document.getElementById('<%= txtFechaInicio.ClientID %>');
         const ddlProyectoCrear = document.getElementById('<%= ddlProyecto.ClientID %>');
         const ddlEstadoCrear = document.getElementById('<%= ddlEstado.ClientID %>');
         const ddlAreaCrear = document.getElementById('<%= ddlArea.ClientID %>');
 
-        //CAMPOS EDITAR SPRINT
         const txtInicio = document.getElementById('<%= txtEditFechaInicio.ClientID %>');
-        const txtEstFin = document.getElementById('<%= txtEditFechaEstimadaFin.ClientID %>');
-        const txtFinReal = document.getElementById('<%= txtEditFechaFin.ClientID %>');
-        const ddlProyecto = document.getElementById('<%= ddlEditProyecto.ClientID %>');
-        const ddlEstado = document.getElementById('<%= ddlEditEstado.ClientID %>');
-        const ddlArea = document.getElementById('<%= ddlEditArea.ClientID %>');
+    const txtEstFin = document.getElementById('<%= txtEditFechaEstimadaFin.ClientID %>');
+    const txtFinReal = document.getElementById('<%= txtEditFechaFin.ClientID %>');
+    const ddlProyecto = document.getElementById('<%= ddlEditProyecto.ClientID %>');
+    const ddlEstado = document.getElementById('<%= ddlEditEstado.ClientID %>');
+    const ddlArea = document.getElementById('<%= ddlEditArea.ClientID %>');
+        const txtDescripcionCambio = document.getElementById('<%= txtMotivoCambio.ClientID %>');
 
-        
+        // --- 2. Función auxiliar de validación ---
         function setValidacion(control, condicion) {
+            if (!control) return; // Si el control no existe en esta página, ignoramos
             if (condicion) {
                 control.classList.remove('is-invalid');
                 control.classList.add('is-valid');
             } else {
                 control.classList.remove('is-valid');
                 control.classList.add('is-invalid');
-                esValido = false; 
+                esValido = false;
             }
         }
 
-        // --- VALIDACIONES DE COMBOS (NOT NULL) ---
-        setValidacion(ddlProyectoCrear, ddlProyectoCrear.value !== "");
-        setValidacion(ddlEstadoCrear, ddlEstadoCrear.value !== "");
-        setValidacion(ddlAreaCrear, ddlAreaCrear.value !== "");
-        setValidacion(ddlProyecto, ddlProyecto.value !== "");
-        setValidacion(ddlEstado, ddlEstado.value !== "");
-        setValidacion(ddlArea, ddlArea.value !== "");
+        // --- 3. Validación de Combos (Solo si existen) ---
+        const combos = [ddlProyectoCrear, ddlEstadoCrear, ddlAreaCrear, ddlProyecto, ddlEstado, ddlArea];
+        combos.forEach(c => { if (c) setValidacion(c, c.value !== ""); });
 
-
-        // --- VALIDACIONES DE FECHAS (CHECK CONSTRAINTS) ---
-        // Obtener la fecha de hoy a las 00:00 (en formato local YYYY-MM-DD)
+        // --- 4. Validación de Fechas ---
         const hoyStr = new Date().toISOString().split('T')[0];
 
-        // Validar Fecha Inicio (Requerida y >= Hoy)
-        /*const hasInicio = txtInicio.value !== "";
-        let inicioValido = hasInicio && (txtInicio.value >= hoyStr);
-        setValidacion(txtInicio, inicioValido);*/
-        const hasInicioCrear = txtInicioCrear.value !== "";
-        let inicioValidoCrear = hasInicioCrear && (txtInicioCrear.value >= hoyStr);
-        setValidacion(txtInicioCrear, inicioValidoCrear);
-
-        // Validar Fecha Estimada Fin (Requerida y >= Fecha Inicio)
-        const hasEstFin = txtEstFin.value !== "";
-        let estFinValida = hasEstFin && hasInicio && (txtEstFin.value >= txtInicio.value);
-        setValidacion(txtEstFin, estFinValida);
-        const hasEstFinCrear = txtEstFinCrear.value !== "";
-        let estFinValidaCrear = hasEstFinCrear && hasInicioCrear && (txtEstFinCrear.value >= txtInicioCrear.value);
-        setValidacion(txtEstFinCrear, estFinValidaCrear);
-
-        // Validar Fecha Fin Real (Opcional, pero si tiene valor, debe ser >= Fecha Inicio)
-        if (txtFinReal.value !== "") {
-            let finRealValida = hasInicio && (txtFinReal.value >= txtInicio.value);
-            setValidacion(txtFinReal, finRealValida);
-        } else {
-            // Si está vacía, no tiene error (remueve marcas anteriores)
-            txtFinReal.classList.remove('is-invalid', 'is-valid');
+        // Validación Crear
+        if (txtInicioCrear && txtEstFinCrear) {
+            setValidacion(txtInicioCrear, txtInicioCrear.value !== "" && txtInicioCrear.value >= hoyStr);
+            setValidacion(txtEstFinCrear, txtEstFinCrear.value !== "" && txtEstFinCrear.value >= txtInicioCrear.value);
         }
-        alert("¿El formulario es válido? " + esValido);
-        return esValido;
-        // Retorna true (hace postback) o false (cancela postback y muestra errores)
+
+        // Validación Editar
+        if (txtInicio && txtEstFin) {
+            // Fecha Estimada Fin >= Fecha Inicio
+            setValidacion(txtEstFin, txtEstFin.value !== "" && txtEstFin.value >= txtInicio.value);
+
+            // Fecha Fin Real (Opcional)
+            if (txtFinReal && txtFinReal.value !== "") {
+                setValidacion(txtFinReal, txtFinReal.value >= txtInicio.value);
+            } else if (txtFinReal) {
+                txtFinReal.classList.remove('is-invalid', 'is-valid');
+            }
+        }
+
+        // --- 5. Validación Descripción Motivo ---
+        if (txtDescripcionCambio) {
+            const motivoValido = txtDescripcionCambio.value.trim().length >= 5;
+            setValidacion(txtDescripcionCambio, motivoValido);
+        }
+
         return esValido;
     }
-</script>
+    </script>
 </asp:Content>
