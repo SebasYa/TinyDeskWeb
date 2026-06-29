@@ -47,8 +47,10 @@ namespace TP_Final_Programacion_III
             List<Ticket> lista = ticketNegocio.ListarAsignadosUsuariosDesactivados(idEmpresa);
 
             Session["listaTicketsUsuariosDesactivados"] = lista;
-            dgvTickets.DataSource = lista;
-            dgvTickets.DataBind();
+            dpTickets.SetPageProperties(0, dpTickets.PageSize, false);
+            lvTickets.DataSource = lista;
+            lvTickets.DataBind();
+            dpTickets.Visible = lista.Count > dpTickets.PageSize;
 
             if (lista.Count == 0)
             {
@@ -61,11 +63,13 @@ namespace TP_Final_Programacion_III
                 litMensajeEstado.Text = "";
             }
         }
-        protected void dgvTickets_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        protected void lvTickets_PagePropertiesChanging(object sender, PagePropertiesChangingEventArgs e)
         {
-            dgvTickets.PageIndex = e.NewPageIndex;
-            dgvTickets.DataSource = Session["listaTicketsUsuariosDesactivados"];
-            dgvTickets.DataBind();
+            List<Ticket> lista = (List<Ticket>)Session["listaTicketsUsuariosDesactivados"];
+            dpTickets.SetPageProperties(e.StartRowIndex, e.MaximumRows, false);
+            lvTickets.DataSource = lista;
+            lvTickets.DataBind();
+            dpTickets.Visible = lista.Count > dpTickets.PageSize;
         }
         public string GetClassPrioridad(object prioridadNombre)
         {
@@ -91,11 +95,12 @@ namespace TP_Final_Programacion_III
 
             return "badge text-bg-dark px-3 py-2";
         }
-        protected void dgvTickets_SelectedIndexChanged(object sender, EventArgs e)
+        protected void btnReasignarTicket_Click(object sender, EventArgs e)
         {
             try
             {
-                int idTicket = (int)dgvTickets.SelectedDataKey.Value;
+                LinkButton boton = (LinkButton)sender;
+                int idTicket = Convert.ToInt32(boton.CommandArgument);
 
                 List<Ticket> listaTickets = (List<Ticket>)Session["listaTicketsUsuariosDesactivados"];
                 Ticket ticket = listaTickets.Find(x => x.Id == idTicket);
@@ -244,11 +249,7 @@ namespace TP_Final_Programacion_III
 
                 foreach (Ticket ticket in listaTickets)
                 {
-                    List<CandidatoAsignacionIA> candidatos = candidatoNegocio.ListarCandidatos(
-                        idEmpresa,
-                        ticket.Usuario.Area.Id,
-                        ticket.Usuario.Puesto.Id
-                    );
+                    List<CandidatoAsignacionIA> candidatos = candidatoNegocio.ListarCandidatos(idEmpresa, ticket.Usuario.Area.Id, ticket.Usuario.Puesto.Id);
 
                     int idUsuarioSugerido = candidatoNegocio.CalcularUsuarioSugerido(ticket.Prioridad.Nombre, candidatos);
                     CandidatoAsignacionIA usuarioSugerido = candidatos.Find(x => x.Id == idUsuarioSugerido);
@@ -268,8 +269,11 @@ namespace TP_Final_Programacion_III
 
                 Session["vistaPreviaAsignacionIA"] = vistaPrevia;
 
-                dgvVistaPreviaIA.DataSource = vistaPrevia;
-                dgvVistaPreviaIA.DataBind();
+                dpVistaPreviaIA.SetPageProperties(0, dpVistaPreviaIA.PageSize, false);
+                lvVistaPreviaIA.DataSource = vistaPrevia;
+                lvVistaPreviaIA.DataBind();
+                dpVistaPreviaIA.Visible = vistaPrevia.Count > dpVistaPreviaIA.PageSize;
+
                 RegistrarScriptMotivoIA();
 
                 string scriptOpen = @"document.addEventListener('DOMContentLoaded', function () {
@@ -287,13 +291,13 @@ namespace TP_Final_Programacion_III
                                           </div>";
             }
         }
-        protected void dgvVistaPreviaIA_RowDataBound(object sender, GridViewRowEventArgs e)
+        protected void lvVistaPreviaIA_ItemDataBound(object sender, ListViewItemEventArgs e)
         {
-            if (e.Row.RowType != DataControlRowType.DataRow) return;
+            if (e.Item.ItemType != ListViewItemType.DataItem) return;
 
-            VistaPreviaAsignacionIA item = (VistaPreviaAsignacionIA)e.Row.DataItem;
-            DropDownList ddlUsuarioIA = (DropDownList)e.Row.FindControl("ddlUsuarioIA");
-            Label lblMotivoIA = (Label)e.Row.FindControl("lblMotivoIA");
+            VistaPreviaAsignacionIA item = (VistaPreviaAsignacionIA)((ListViewDataItem)e.Item).DataItem;
+            DropDownList ddlUsuarioIA = (DropDownList)e.Item.FindControl("ddlUsuarioIA");
+            Label lblMotivoIA = (Label)e.Item.FindControl("lblMotivoIA");
 
             ddlUsuarioIA.DataSource = item.Candidatos.Select(x => new
             {
@@ -334,22 +338,17 @@ namespace TP_Final_Programacion_III
                 lblMotivoIA.Text = negocio.ObtenerMotivoSugerencia(candidatoSeleccionado);
             }
         }
-        protected void dgvVistaPreviaIA_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        protected void lvVistaPreviaIA_PagePropertiesChanging(object sender, PagePropertiesChangingEventArgs e)
         {
             GuardarSeleccionPaginaActualIA();
 
-            dgvVistaPreviaIA.PageIndex = e.NewPageIndex;
-            dgvVistaPreviaIA.DataSource = Session["vistaPreviaAsignacionIA"];
-            dgvVistaPreviaIA.DataBind();
+            dpVistaPreviaIA.SetPageProperties(e.StartRowIndex, e.MaximumRows, false);
+            List<VistaPreviaAsignacionIA> vistaPrevia = (List<VistaPreviaAsignacionIA>)Session["vistaPreviaAsignacionIA"];
+            lvVistaPreviaIA.DataSource = vistaPrevia;
+            lvVistaPreviaIA.DataBind();
+            dpVistaPreviaIA.Visible = vistaPrevia.Count > dpVistaPreviaIA.PageSize;
+
             RegistrarScriptMotivoIA();
-
-            string scriptOpen = @"document.addEventListener('DOMContentLoaded', function () {
-                                  var modalElement = document.getElementById('modalReasignarConIA');
-                                  var myModal = new bootstrap.Modal(modalElement);
-                                  myModal.show();
-                                  });";
-
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "OpenModalReasignarConIA", scriptOpen, true);
         }
         protected void btnConfirmarReasignacionIA_Click(object sender, EventArgs e)
         {
@@ -453,11 +452,12 @@ namespace TP_Final_Programacion_III
 
             if (vistaPrevia == null) return;
 
-            foreach (GridViewRow row in dgvVistaPreviaIA.Rows)
+            foreach (ListViewDataItem fila in lvVistaPreviaIA.Items)
             {
-                DropDownList ddlUsuarioIA = (DropDownList)row.FindControl("ddlUsuarioIA");
-                int idTicket = int.Parse(dgvVistaPreviaIA.DataKeys[row.RowIndex].Value.ToString());
+                HiddenField hfIdTicketIA = (HiddenField)fila.FindControl("hfIdTicketIA");
+                DropDownList ddlUsuarioIA = (DropDownList)fila.FindControl("ddlUsuarioIA");
 
+                int idTicket = Convert.ToInt32(hfIdTicketIA.Value);
                 VistaPreviaAsignacionIA item = vistaPrevia.Find(x => x.IdTicket == idTicket);
 
                 if (item != null)

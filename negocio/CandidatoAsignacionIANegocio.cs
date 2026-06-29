@@ -130,10 +130,11 @@ namespace negocio
             if (prioridad == "ALTA")
             {
                 sugerido = candidatos
+                    .Where(x => x.TicketsFinalizadosAlta > 0 && x.TicketsUrgentesAbiertos <= 2)
                     .OrderByDescending(x => PuntajePrioridadAlta(x))
                     .ThenBy(x => x.TicketsUrgentesAbiertos)
-                    .ThenByDescending(x => x.TicketsFinalizadosAlta)
                     .ThenBy(x => x.TicketsAbiertos)
+                    .ThenByDescending(x => x.TicketsFinalizadosAlta)
                     .ThenByDescending(x => x.TicketsFinalizados)
                     .FirstOrDefault();
             }
@@ -141,25 +142,27 @@ namespace negocio
             {
                 sugerido = candidatos
                     .OrderByDescending(x => PuntajePrioridadMedia(x))
-                    .ThenBy(x => x.TicketsAbiertos)
+                    .ThenByDescending(x => x.TicketsFinalizadosAlta)
                     .ThenByDescending(x => x.TicketsFinalizados)
+                    .ThenBy(x => x.TicketsAbiertos)
                     .FirstOrDefault();
             }
             else if (prioridad == "BAJA")
             {
                 sugerido = candidatos
                     .OrderByDescending(x => PuntajePrioridadBaja(x))
-                    .ThenBy(x => x.TicketsAbiertos)
+                    .ThenByDescending(x => x.TicketsFinalizadosAlta)
                     .ThenByDescending(x => x.TicketsFinalizados)
+                    .ThenBy(x => x.TicketsAbiertos)
                     .FirstOrDefault();
             }
 
             if (sugerido == null)
             {
                 sugerido = candidatos
-                    .OrderBy(x => x.TicketsAbiertos)
-                    .ThenByDescending(x => x.TicketsFinalizadosAlta)
+                    .OrderByDescending(x => x.TicketsFinalizadosAlta)
                     .ThenByDescending(x => x.TicketsFinalizados)
+                    .ThenBy(x => x.TicketsAbiertos)
                     .FirstOrDefault();
             }
 

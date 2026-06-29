@@ -13,84 +13,139 @@
             <asp:Button ID="btnReasignarConIA" runat="server" CssClass="btn btn-success" Text="Reasignar con IA" OnClick="btnReasignarConIA_Click" />
         </div>
 
-        <asp:GridView ID="dgvTickets" runat="server"
-            CssClass="table table-hover align-middle bg-white border-0 shadow-sm rounded mb-0"
-            AutoGenerateColumns="false"
-            DataKeyNames="Id"
-            AllowPaging="true"
-            PageSize="8"
-            GridLines="None"
-            OnPageIndexChanging="dgvTickets_PageIndexChanging"
-            OnSelectedIndexChanged="dgvTickets_SelectedIndexChanged">
+        <asp:ListView
+            ID="lvTickets"
+            runat="server"
+            ItemPlaceholderID="itemPlaceholder"
+            OnPagePropertiesChanging="lvTickets_PagePropertiesChanging">
 
-            <HeaderStyle CssClass="table-light text-secondary fw-semibold border-bottom" />
+            <LayoutTemplate>
+                <table class="table table-hover align-middle bg-white border-0 shadow-sm rounded mb-0">
+                    <thead class="table-light text-secondary fw-semibold border-bottom">
+                        <tr>
+                            <th>Ticket</th>
+                            <th>Usuario desactivado</th>
+                            <th>Area / Puesto</th>
+                            <th>Proyecto / Sprint</th>
+                            <th>Prioridad</th>
+                            <th>Estado</th>
+                            <th>Fechas</th>
+                            <th>Reasignar</th>
+                        </tr>
+                    </thead>
 
-            <Columns>
-                <asp:TemplateField HeaderText="Ticket">
-                    <ItemTemplate>
-                        <div class="fw-bold text-dark">#<%# Eval("Id") %></div>
-                    </ItemTemplate>
-                </asp:TemplateField>
+                    <tbody>
+                        <asp:PlaceHolder
+                            ID="itemPlaceholder"
+                            runat="server" />
+                    </tbody>
+                </table>
+            </LayoutTemplate>
 
-                <asp:TemplateField HeaderText="Usuario desactivado">
-                    <ItemTemplate>
-                        <div class="fw-semibold text-dark">
-                            <%# Eval("Usuario.Nombre") %> <%# Eval("Usuario.Apellido") %>
+            <ItemTemplate>
+                <tr>
+                    <td>
+                        <div class="fw-bold text-dark">
+                            #<%# Eval("Id") %>
                         </div>
-                        <small class="text-muted"><%# Eval("Usuario.Email") %></small>
-                    </ItemTemplate>
-                </asp:TemplateField>
+                    </td>
 
-                <asp:TemplateField HeaderText="Area / Puesto">
-                    <ItemTemplate>
+                    <td>
+                        <div class="fw-semibold text-dark">
+                            <%# Eval("Usuario.Nombre") %>
+                            <%# Eval("Usuario.Apellido") %>
+                        </div>
+
+                        <small class="text-muted">
+                            <%# Eval("Usuario.Email") %>
+                        </small>
+                    </td>
+
+                    <td>
                         <span class="badge bg-secondary-subtle text-secondary rounded-pill">
                             <%# Eval("Usuario.Area.Nombre") %>
                         </span>
-                        <div class="small text-muted mt-1"><%# Eval("Usuario.Puesto.Nombre") %> <%# Eval("Usuario.Seniority") != null ? Eval("Usuario.Seniority.Nombre") : "" %></div>
-                    </ItemTemplate>
-                </asp:TemplateField>
 
-                <asp:TemplateField HeaderText="Proyecto / Sprint">
-                    <ItemTemplate>
-                        <div class="fw-semibold"><%# Eval("Sprint.Proyecto.Nombre") %></div>
-                        <small class="text-muted">Sprint <%# Eval("Sprint.NumeroSprint") %></small>
-                    </ItemTemplate>
-                </asp:TemplateField>
+                        <div class="small text-muted mt-1">
+                            <%# Eval("Usuario.Puesto.Nombre") %>
+                            <%# Eval("Usuario.Seniority") != null
+                            ? Eval("Usuario.Seniority.Nombre")
+                            : "" %>
+                        </div>
+                    </td>
 
-                <asp:TemplateField HeaderText="Prioridad">
-                    <ItemTemplate>
+                    <td>
+                        <div class="fw-semibold">
+                            <%# Eval("Sprint.Proyecto.Nombre") %>
+                        </div>
+
+                        <small class="text-muted">Sprint <%# Eval("Sprint.NumeroSprint") %>
+                        </small>
+                    </td>
+
+                    <td>
                         <span class='<%# GetClassPrioridad(Eval("Prioridad.Nombre")) %>'>
                             <%# Eval("Prioridad.Nombre") %>
                         </span>
-                    </ItemTemplate>
-                </asp:TemplateField>
+                    </td>
 
-                <asp:TemplateField HeaderText="Estado">
-                    <ItemTemplate>
+                    <td>
                         <span class='<%# GetClassEstado(Eval("Estado.Nombre")) %>'>
                             <%# Eval("Estado.Nombre") %>
                         </span>
-                    </ItemTemplate>
-                </asp:TemplateField>
+                    </td>
 
-                <asp:TemplateField HeaderText="Fechas">
-                    <ItemTemplate>
+                    <td>
                         <div class="small">
-                            <%# Convert.ToDateTime(Eval("FechaInicio")).ToString("dd/MM/yyyy") %> -
-                            <%# Convert.ToDateTime(Eval("FechaEstimadaFin")).ToString("dd/MM/yyyy") %>
+                            <%# Convert.ToDateTime(Eval("FechaInicio")).ToString("dd/MM/yyyy") %>
+                    -
+                    <%# Convert.ToDateTime(Eval("FechaEstimadaFin")).ToString("dd/MM/yyyy") %>
                         </div>
-                    </ItemTemplate>
-                </asp:TemplateField>
+                    </td>
 
-                <asp:TemplateField HeaderText="Reasignar">
-                    <ItemTemplate>
-                        <asp:LinkButton ID="btnReasignarTicket" runat="server" CommandName="Select" CssClass="btn btn-sm btn-primary">
-                            Reasignar
+                    <td>
+                        <asp:LinkButton
+                            ID="btnReasignarTicket"
+                            runat="server"
+                            CssClass="btn btn-sm btn-primary"
+                            CommandArgument='<%# Eval("Id") %>'
+                            CausesValidation="false"
+                            OnClick="btnReasignarTicket_Click">
+
+                    Reasignar
                         </asp:LinkButton>
-                    </ItemTemplate>
-                </asp:TemplateField>
-            </Columns>
-        </asp:GridView>
+                    </td>
+                </tr>
+            </ItemTemplate>
+        </asp:ListView>
+
+        <div class="d-flex justify-content-center mt-4">
+            <asp:DataPager
+                ID="dpTickets"
+                runat="server"
+                PagedControlID="lvTickets"
+                PageSize="8">
+
+                <Fields>
+                    <asp:NextPreviousPagerField
+                        ShowPreviousPageButton="true"
+                        ShowNextPageButton="false"
+                        PreviousPageText="Anterior"
+                        ButtonCssClass="btn btn-outline-secondary me-1" />
+
+                    <asp:NumericPagerField
+                        ButtonCount="5"
+                        NumericButtonCssClass="btn btn-outline-primary me-1"
+                        CurrentPageLabelCssClass="btn btn-primary me-1" />
+
+                    <asp:NextPreviousPagerField
+                        ShowPreviousPageButton="false"
+                        ShowNextPageButton="true"
+                        NextPageText="Siguiente"
+                        ButtonCssClass="btn btn-outline-secondary" />
+                </Fields>
+            </asp:DataPager>
+        </div>
 
         <div class="modal fade" id="reasignarTicketModal" tabindex="-1" aria-labelledby="reasignarTicketModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -139,42 +194,111 @@
                     </div>
 
                     <div class="modal-body">
-                        <asp:GridView ID="dgvVistaPreviaIA" runat="server"
-                            CssClass="table table-hover align-middle"
-                            AutoGenerateColumns="false"
-                            GridLines="None"
-                            DataKeyNames="IdTicket"
-                            AllowPaging="true"
-                            PageSize="7"
-                            OnPageIndexChanging="dgvVistaPreviaIA_PageIndexChanging"
-                            OnRowDataBound="dgvVistaPreviaIA_RowDataBound">
+                        <asp:UpdatePanel
+                            ID="upVistaPreviaIA"
+                            runat="server"
+                            UpdateMode="Conditional">
 
-                            <Columns>
-                                <asp:BoundField DataField="IdTicket" HeaderText="Ticket" />
+                            <ContentTemplate>
+                                <asp:ListView
+                                    ID="lvVistaPreviaIA"
+                                    runat="server"
+                                    ItemPlaceholderID="itemPlaceholder"
+                                    OnItemDataBound="lvVistaPreviaIA_ItemDataBound"
+                                    OnPagePropertiesChanging="lvVistaPreviaIA_PagePropertiesChanging">
 
-                                <asp:TemplateField HeaderText="Prioridad">
+                                    <LayoutTemplate>
+                                        <table class="table table-hover align-middle">
+                                            <thead>
+                                                <tr>
+                                                    <th>Ticket</th>
+                                                    <th>Prioridad</th>
+                                                    <th>Usuario actual</th>
+                                                    <th>Usuario sugerido</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                <asp:PlaceHolder
+                                                    ID="itemPlaceholder"
+                                                    runat="server" />
+                                            </tbody>
+                                        </table>
+                                    </LayoutTemplate>
+
                                     <ItemTemplate>
-                                        <span class='<%# GetClassPrioridad(Eval("Prioridad")) %>'>
-                                            <%# Eval("Prioridad") %>
-                                        </span>
-                                    </ItemTemplate>
-                                </asp:TemplateField>
+                                        <tr>
+                                            <td>
+                                                <asp:HiddenField
+                                                    ID="hfIdTicketIA"
+                                                    runat="server"
+                                                    Value='<%# Eval("IdTicket") %>' />
 
-                                <asp:TemplateField HeaderText="Usuario actual">
-                                    <ItemTemplate>
-                                        <div class="fw-semibold"><%# Eval("UsuarioActual") %></div>
-                                        <small class="text-muted"><%# Eval("Area") %> | <%# Eval("Puesto") %></small>
-                                    </ItemTemplate>
-                                </asp:TemplateField>
+                                                <%# Eval("IdTicket") %>
+                                            </td>
 
-                                <asp:TemplateField HeaderText="Usuario sugerido">
-                                    <ItemTemplate>
-                                        <asp:DropDownList ID="ddlUsuarioIA" runat="server" CssClass="form-select ddl-usuario-ia"></asp:DropDownList>
-                                        <asp:Label ID="lblMotivoIA" runat="server" CssClass="small text-muted d-block mt-1 motivo-ia"></asp:Label>
+                                            <td>
+                                                <span class='<%# GetClassPrioridad(Eval("Prioridad")) %>'>
+                                                    <%# Eval("Prioridad") %>
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                <div class="fw-semibold">
+                                                    <%# Eval("UsuarioActual") %>
+                                                </div>
+
+                                                <small class="text-muted">
+                                                    <%# Eval("Area") %> | <%# Eval("Puesto") %>
+                                                </small>
+                                            </td>
+
+                                            <td>
+                                                <asp:DropDownList
+                                                    ID="ddlUsuarioIA"
+                                                    runat="server"
+                                                    CssClass="form-select ddl-usuario-ia">
+                                                </asp:DropDownList>
+
+                                                <asp:Label
+                                                    ID="lblMotivoIA"
+                                                    runat="server"
+                                                    CssClass="small text-muted d-block mt-1 motivo-ia">
+                                                </asp:Label>
+                                            </td>
+                                        </tr>
                                     </ItemTemplate>
-                                </asp:TemplateField>
-                            </Columns>
-                        </asp:GridView>
+                                </asp:ListView>
+
+                                <div class="d-flex justify-content-center mt-3">
+                                    <asp:DataPager
+                                        ID="dpVistaPreviaIA"
+                                        runat="server"
+                                        PagedControlID="lvVistaPreviaIA"
+                                        PageSize="7">
+
+                                        <Fields>
+                                            <asp:NextPreviousPagerField
+                                                ShowPreviousPageButton="true"
+                                                ShowNextPageButton="false"
+                                                PreviousPageText="Anterior"
+                                                ButtonCssClass="btn btn-outline-secondary me-1" />
+
+                                            <asp:NumericPagerField
+                                                ButtonCount="5"
+                                                NumericButtonCssClass="btn btn-outline-primary me-1"
+                                                CurrentPageLabelCssClass="btn btn-primary me-1" />
+
+                                            <asp:NextPreviousPagerField
+                                                ShowPreviousPageButton="false"
+                                                ShowNextPageButton="true"
+                                                NextPageText="Siguiente"
+                                                ButtonCssClass="btn btn-outline-secondary" />
+                                        </Fields>
+                                    </asp:DataPager>
+                                </div>
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
                     </div>
 
                     <div class="modal-footer bg-light">

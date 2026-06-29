@@ -42,13 +42,22 @@ namespace TP_Final_Programacion_III
         protected global::System.Web.UI.WebControls.Button btnReasignarConIA;
 
         /// <summary>
-        /// Control dgvTickets.
+        /// Control lvTickets.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView dgvTickets;
+        protected global::System.Web.UI.WebControls.ListView lvTickets;
+
+        /// <summary>
+        /// Control dpTickets.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DataPager dpTickets;
 
         /// <summary>
         /// Control lblTituloReasignar.
@@ -96,13 +105,31 @@ namespace TP_Final_Programacion_III
         protected global::System.Web.UI.WebControls.Button btnConfirmarReasignacion;
 
         /// <summary>
-        /// Control dgvVistaPreviaIA.
+        /// Control upVistaPreviaIA.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView dgvVistaPreviaIA;
+        protected global::System.Web.UI.UpdatePanel upVistaPreviaIA;
+
+        /// <summary>
+        /// Control lvVistaPreviaIA.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ListView lvVistaPreviaIA;
+
+        /// <summary>
+        /// Control dpVistaPreviaIA.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DataPager dpVistaPreviaIA;
 
         /// <summary>
         /// Control btnConfirmarReasignacionIA.
