@@ -367,7 +367,7 @@
         <asp:Panel
             ID="pnlFiltroProyectos"
             runat="server"
-            CssClass="card border-0 shadow-sm mb-4 mx-auto"
+            CssClass="card border-0 shadow-sm mb-5 mx-auto"
             Style="max-width: 1100px;"
             DefaultButton="btnBuscarProyecto">
 
@@ -422,33 +422,34 @@
                     </div>
 
                     <!-- ESTADO -->
-                    <div class="col-8 col-lg-4">
-                         <div class="w-100 ms-lg-auto" style="max-width: 280px;">
+                    <div class="col-12 col-lg-4">
+                        <div class="w-100 ms-lg-auto" style="max-width: 280px;">
 
                         <label class="form-label fw-semibold mb-2">
                             Estado de los proyectos
                         </label>
 
-                        <div class="row g-4">
+                            <div class="row g-4">
 
-                            <div class="col-4">
-                                <asp:Button
-                                    ID="btnFiltroActivos"
-                                    runat="server"
-                                    Text="Activos"
-                                    CssClass="btn btn-primary w-100"
-                                    OnClick="btnFiltroActivos_Click" />
+                                <div class="col-6">
+                                    <asp:Button
+                                        ID="btnFiltroActivos"
+                                        runat="server"
+                                        Text="Activos"
+                                        CssClass="btn btn-primary w-100"
+                                        OnClick="btnFiltroActivos_Click" />
+                                </div>
+
+                                <div class="col-6">
+                                    <asp:Button
+                                        ID="btnFiltroFinalizados"
+                                        runat="server"
+                                        Text="Finalizados"
+                                        CssClass="btn btn-outline-secondary w-100"
+                                        OnClick="btnFiltroFinalizados_Click" />
+                                </div>
+
                             </div>
-
-                            <div class="col-4">
-                                <asp:Button
-                                    ID="btnFiltroFinalizados"
-                                    runat="server"
-                                    Text="Finalizados"
-                                    CssClass="btn btn-outline-secondary w-100"
-                                    OnClick="btnFiltroFinalizados_Click" />
-                            </div>
-
                         </div>
                     </div>
 
@@ -458,7 +459,7 @@
 
         <asp:ListView ID="lvProyectos" runat="server" ItemPlaceholderID="itemPlaceholder" OnItemDataBound="lvProyectos_ItemDataBound" OnPagePropertiesChanging="lvProyectos_PagePropertiesChanging">
             <LayoutTemplate>
-                <div class="row g-3">
+                <div class="row g-4">
                     <asp:PlaceHolder
                         ID="itemPlaceholder"
                         runat="server" />

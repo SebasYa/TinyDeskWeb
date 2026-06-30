@@ -26,7 +26,9 @@
             background: rgba(255, 255, 255, .62);
         }
 
-        .app-footer-inner { min-height: 70px; }
+        .app-footer-inner {
+            min-height: 58px;
+        }
 
         .app-footer-logo {
             position: relative;
@@ -37,16 +39,16 @@
             overflow: visible;
         }
 
-        .app-footer-logo img {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 46px;
-            height: 46px;
-            max-width: none;
-            filter: drop-shadow(0 5px 5px rgba(9, 35, 47, .18));
-            transform: translate(-50%, -50%);
-        }
+            .app-footer-logo img {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 46px;
+                height: 46px;
+                max-width: none;
+                filter: drop-shadow(0 5px 5px rgba(9, 35, 47, .18));
+                transform: translate(-50%, -50%);
+            }
 
         .app-footer-copy,
         .app-footer-link {
@@ -54,8 +56,10 @@
             font-size: .75rem;
         }
 
-        .app-footer-link:hover,
-        .app-footer-link:focus { color: #09232f !important; }
+            .app-footer-link:hover,
+            .app-footer-link:focus {
+                color: #09232f !important;
+            }
 
         .app-shell {
             min-width: 0;
@@ -76,9 +80,9 @@
             overflow-y: auto;
         }
 
-        .app-sidebar.collapsing {
-            overflow: hidden;
-        }
+            .app-sidebar.collapsing {
+                overflow: hidden;
+            }
 
         .app-main {
             display: flex;
@@ -95,11 +99,16 @@
         }
 
         @media (max-width: 575.98px) {
-            .app-footer-inner { padding-top: 1rem; padding-bottom: 1rem; }
+            .app-footer-inner {
+                padding-top: .5rem;
+                padding-bottom: .5rem;
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .app-main { transition: none; }
+            .app-main {
+                transition: none;
+            }
         }
     </style>
 </head>
@@ -369,21 +378,21 @@
 
                         <nav class="d-flex align-items-center gap-3" aria-label="Navegación del pie de página">
 
-                        <asp:LinkButton ID="btnFooterAbout"
-                            runat="server"
-                            CausesValidation="false"
-                            OnClick="btnFooterAbout_Click"
-                            CssClass="btn btn-link text-decoration-none p-0 app-footer-link">
+                            <asp:LinkButton ID="btnFooterAbout"
+                                runat="server"
+                                CausesValidation="false"
+                                OnClick="btnFooterAbout_Click"
+                                CssClass="btn btn-link text-decoration-none p-0 app-footer-link">
                                 Acerca de
-                        </asp:LinkButton>
+                            </asp:LinkButton>
 
-                        <asp:LinkButton ID="btnFooterContacto"
-                            runat="server"
-                            CausesValidation="false"
-                            OnClick="btnFooterContacto_Click"
-                            CssClass="btn btn-link text-decoration-none p-0 app-footer-link">
+                            <asp:LinkButton ID="btnFooterContacto"
+                                runat="server"
+                                CausesValidation="false"
+                                OnClick="btnFooterContacto_Click"
+                                CssClass="btn btn-link text-decoration-none p-0 app-footer-link">
                                 Contacto
-                        </asp:LinkButton>
+                            </asp:LinkButton>
 
                         </nav>
 
@@ -400,7 +409,58 @@
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/Scripts/bootstrap.js") %>
     </asp:PlaceHolder>
-+    <script>
+    <script>
+        (function () {
+            "use strict";
+
+            var sidebar = document.getElementById("sidebarMenu");
+            var button = document.querySelector(
+                '[data-bs-target="#sidebarMenu"]'
+            );
+            var stateKey = "tinyDeskSidebarOpen";
+
+            if (!sidebar) return;
+
+            function saveState(isOpen) {
+                try {
+                    sessionStorage.setItem(
+                        stateKey,
+                        isOpen ? "true" : "false"
+                    );
+                } catch (error) {
+                }
+            }
+
+            function readState() {
+                try {
+                    return sessionStorage.getItem(stateKey);
+                } catch (error) {
+                    return null;
+                }
+            }
+
+            // Si nunca se guardó un estado, queda abierto por defecto.
+            var shouldBeOpen = readState() !== "false";
+
+            sidebar.classList.toggle("show", shouldBeOpen);
+
+            if (button) {
+                button.setAttribute(
+                    "aria-expanded",
+                    shouldBeOpen ? "true" : "false"
+                );
+            }
+
+            sidebar.addEventListener("show.bs.collapse", function () {
+                saveState(true);
+            });
+
+            sidebar.addEventListener("hide.bs.collapse", function () {
+                saveState(false);
+            });
+        }());
+    </script>
+    <script>
         (function () {
             "use strict";
 
@@ -412,7 +472,6 @@
                 try {
                     window.sessionStorage.setItem(stateKey, isOpen ? "true" : "false");
                 } catch (error) {
-                    // El menú sigue funcionando aunque el almacenamiento esté bloqueado.
                 }
             }
 
@@ -479,5 +538,6 @@
             });
         }());
     </script>
+
 </body>
 </html>
