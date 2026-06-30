@@ -531,7 +531,7 @@ namespace TP_Final_Programacion_III
             txtFechaInicioTicket.Enabled = false;
 
             CargarLista(ddlProyectoTicket, proyectoNegocio.listar(idEmpresa).FindAll(x => x.Activo), "Id", "Nombre", "Seleccione Proyecto...");
-            CargarLista(ddlEstadoTicket, estadoNegocio.listar(idEmpresa), "Id", "Nombre", "Seleccione Estado...");
+            CargarLista(ddlEstadoTicket, estadoNegocio.listar(idEmpresa).FindAll(x => !x.EsFinal), "Id", "Nombre", "Seleccione Estado...");
             CargarLista(ddlPrioridadTicket, prioridadNegocio.listar(), "Id", "Nombre", "Seleccione Prioridad...");
             CargarLista(ddlAreaTicket, areaNegocio.listar(idEmpresa), "Id", "Nombre", "Seleccione Área...");
             CargarLista(ddlPuestoTicket, puestoNegocio.listar(idEmpresa), "Id", "Nombre", "Seleccione Puesto...");
