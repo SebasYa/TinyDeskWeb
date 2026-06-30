@@ -16,6 +16,101 @@
     <webopt:BundleReference runat="server" Path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+    <style>
+        .app-footer {
+            margin: auto -1.5rem -1.5rem;
+            padding: 0;
+            flex-shrink: 0;
+            border-top: 1px solid rgba(9, 35, 47, .08);
+            background: rgba(255, 255, 255, .62);
+        }
+
+        .app-footer-inner {
+            min-height: 58px;
+        }
+
+        .app-footer-logo {
+            position: relative;
+            display: inline-flex;
+            width: 32px;
+            height: 32px;
+            flex: 0 0 32px;
+            overflow: visible;
+        }
+
+            .app-footer-logo img {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 46px;
+                height: 46px;
+                max-width: none;
+                filter: drop-shadow(0 5px 5px rgba(9, 35, 47, .18));
+                transform: translate(-50%, -50%);
+            }
+
+        .app-footer-copy,
+        .app-footer-link {
+            color: #75797e !important;
+            font-size: .75rem;
+        }
+
+            .app-footer-link:hover,
+            .app-footer-link:focus {
+                color: #09232f !important;
+            }
+
+        .app-shell {
+            min-width: 0;
+            min-height: 100vh;
+            min-height: 100dvh;
+        }
+
+        .app-sidebar {
+            position: fixed !important;
+            z-index: 1030;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            height: 100vh !important;
+            height: 100dvh !important;
+            align-self: flex-start;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+            .app-sidebar.collapsing {
+                overflow: hidden;
+            }
+
+        .app-main {
+            display: flex;
+            min-width: 0;
+            min-height: 100vh;
+            min-height: 100dvh;
+            flex-direction: column;
+            margin-left: 220px;
+            transition: margin-left .35s ease;
+        }
+
+        .app-sidebar:not(.show) + .app-main {
+            margin-left: 0;
+        }
+
+        @media (max-width: 575.98px) {
+            .app-footer-inner {
+                padding-top: .5rem;
+                padding-bottom: .5rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .app-main {
+                transition: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -36,9 +131,9 @@
             </Scripts>
         </asp:ScriptManager>
 
-        <div class="d-flex min-vh-100">
+        <div class="d-flex app-shell">
 
-            <aside id="sidebarMenu" class="collapse collapse-horizontal show bg-dark border-end" style="position: sticky; top: 0; height: 100vh;">
+            <aside id="sidebarMenu" class="collapse collapse-horizontal show bg-dark border-end app-sidebar">
                 <div class="p-3 d-flex flex-column justify-content-between h-100" style="width: 220px;">
 
                     <div>
@@ -106,7 +201,7 @@
                 </div>
             </aside>
 
-            <main class="flex-grow-1 p-4">
+            <main class="flex-grow-1 p-4 app-main">
 
                 <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
 
@@ -115,191 +210,194 @@
                         <h2 class="h4 text-dark mb-0 text-capitalize fw-bold"><%: Page.Title %></h2>
                     </div>
 
-                                        <div class="position-relative">
+                    <div class="position-relative">
 
-    <asp:Button
-        ID="btnUserNav"
-        runat="server"
-        Text=""
-        CssClass="btn btn-primary"
-        Style="width: 44px;
-               height: 44px;
-               min-width: 44px;
-               max-width: 44px;
-               padding: 0;
-               border-radius: 50% !important;
-               line-height: 1;
-               font-size: 1.1rem;"
-        CausesValidation="false"
-        OnClick="btnUserNav_Click" />
+                        <asp:Button
+                            ID="btnUserNav"
+                            runat="server"
+                            Text=""
+                            CssClass="btn btn-primary"
+                            Style="width: 44px; height: 44px; min-width: 44px; max-width: 44px; padding: 0; border-radius: 50% !important; line-height: 1; font-size: 1.1rem;"
+                            CausesValidation="false"
+                            OnClick="btnUserNav_Click" />
 
-    <asp:Panel
-        ID="pnlUserNav"
-        runat="server"
-        CssClass="card position-absolute end-0 mt-2 shadow border-0"
-        Style="width: 330px;
-               top: 100%;
-               z-index: 1050;
-               border-radius: 12px;">
+                        <asp:Panel
+                            ID="pnlUserNav"
+                            runat="server"
+                            CssClass="card position-absolute end-0 mt-2 shadow border-0"
+                            Style="width: 330px; top: 100%; z-index: 1050; border-radius: 12px;">
 
-        <div class="card-body p-3">
+                            <div class="card-body p-3">
 
-            <!-- TinyDesk y estado -->
-            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <!-- TinyDesk y estado -->
+                                <div class="d-flex justify-content-between align-items-center mb-3">
 
-                <!-- Isotipo con TinyDesk a su derecha -->
-                <div class="d-flex align-items-center gap-2">
+                                    <!-- Isotipo con TinyDesk a su derecha -->
+                                    <div class="d-flex align-items-center gap-2">
 
-                    <span class="position-relative overflow-hidden d-inline-block flex-shrink-0"
-                          style="width: 27px; height: 22px;">
+                                        <span class="position-relative overflow-hidden d-inline-block flex-shrink-0"
+                                            style="width: 27px; height: 22px;">
 
-                        <img runat="server"
-                             src="~/Images/LogoTD.png"
-                             alt="TinyDesk"
-                             style="position: absolute;
-                                    width: 38px;
-                                    height: 38px;
-                                    max-width: none;
-                                    top: 50%;
-                                    left: 50%;
-                                    transform: translate(-50%, -50%);" />
-                    </span>
+                                            <img runat="server"
+                                                src="~/Images/LogoTD.png"
+                                                alt="TinyDesk"
+                                                style="position: absolute; width: 38px; height: 38px; max-width: none; top: 50%; left: 50%; transform: translate(-50%, -50%);" />
+                                        </span>
 
-                    <span class="fw-bold text-dark">TinyDesk</span>
+                                        <span class="fw-bold text-dark">TinyDesk</span>
 
-                </div>
+                                    </div>
 
-                <!-- Píldora con isotipo y estado -->
-                <span class="rounded-pill d-inline-flex"
-                      style="padding: 1px;
-                             background: linear-gradient(90deg, #079de0, #19cf91);">
+                                    <!-- Píldora con isotipo y estado -->
+                                    <span class="rounded-pill d-inline-flex"
+                                        style="padding: 1px; background: linear-gradient(90deg, #079de0, #19cf91);">
 
-                    <span class="rounded-pill bg-white d-flex align-items-center gap-1 px-2 py-1"
-                          style="font-size: 0.75rem; color: #078fac;">
+                                        <span class="rounded-pill bg-white d-flex align-items-center gap-1 px-2 py-1"
+                                            style="font-size: 0.75rem; color: #078fac;">
 
-                        <span class="position-relative overflow-hidden d-inline-block flex-shrink-0"
-                              style="width: 17px; height: 14px;">
+                                            <span class="position-relative overflow-hidden d-inline-block flex-shrink-0"
+                                                style="width: 17px; height: 14px;">
 
-                            <img runat="server"
-                                 src="~/Images/LogoTD.png"
-                                 alt=""
-                                 style="position: absolute;
-                                        width: 28px;
-                                        height: 28px;
-                                        max-width: none;
-                                        top: 50%;
-                                        left: 50%;
-                                        transform: translate(-50%, -50%);" />
-                        </span>
+                                                <img runat="server"
+                                                    src="~/Images/LogoTD.png"
+                                                    alt=""
+                                                    style="position: absolute; width: 28px; height: 28px; max-width: none; top: 50%; left: 50%; transform: translate(-50%, -50%);" />
+                                            </span>
 
-                        <asp:Label
-                            ID="lblEstadoUsuarioNav"
-                            runat="server">
-                        </asp:Label>
+                                            <asp:Label
+                                                ID="lblEstadoUsuarioNav"
+                                                runat="server">
+                                            </asp:Label>
 
-                    </span>
+                                        </span>
 
-                </span>
+                                    </span>
 
-            </div>
+                                </div>
 
-            <!-- Imagen y datos -->
-            <div class="d-flex align-items-start gap-3">
+                                <!-- Imagen y datos -->
+                                <div class="d-flex align-items-start gap-3">
 
-                <div class="flex-shrink-0"
-                     style="width: 84px; height: 84px;">
+                                    <div class="flex-shrink-0"
+                                        style="width: 84px; height: 84px;">
 
-                    <asp:Image
-                        ID="imgUsuarioMenu"
-                        runat="server"
-                        Visible="false"
-                        CssClass="rounded-circle border border-2 border-light shadow-sm"
-                        Style="width: 84px;
-                               height: 84px;
-                               object-fit: cover;
-                               display: block;" />
+                                        <asp:Image
+                                            ID="imgUsuarioMenu"
+                                            runat="server"
+                                            Visible="false"
+                                            CssClass="rounded-circle border border-2 border-light shadow-sm"
+                                            Style="width: 84px; height: 84px; object-fit: cover; display: block;" />
 
-                    <asp:Label
-                        ID="lblInicialUsuarioMenu"
-                        runat="server"
-                        CssClass="rounded-circle text-white fw-bold d-flex align-items-center justify-content-center shadow-sm"
-                        Style="width: 84px;
-                               height: 84px;
-                               font-size: 1.7rem;
-                               background: linear-gradient(135deg, #079de0, #19cf91);">
-                    </asp:Label>
+                                        <asp:Label
+                                            ID="lblInicialUsuarioMenu"
+                                            runat="server"
+                                            CssClass="rounded-circle text-white fw-bold d-flex align-items-center justify-content-center shadow-sm"
+                                            Style="width: 84px; height: 84px; font-size: 1.7rem; background: linear-gradient(135deg, #079de0, #19cf91);">
+                                        </asp:Label>
 
-                </div>
+                                    </div>
 
-                <div class="flex-grow-1" style="min-width: 0;">
+                                    <div class="flex-grow-1" style="min-width: 0;">
 
-                    <div class="fw-bold text-dark text-truncate">
-                        <asp:Label
-                            ID="lblName_nav"
-                            runat="server">
-                        </asp:Label>
-                    </div>
+                                        <div class="fw-bold text-dark text-truncate">
+                                            <asp:Label
+                                                ID="lblName_nav"
+                                                runat="server">
+                                            </asp:Label>
+                                        </div>
 
-                    <div class="small text-muted mb-2 text-truncate">
-                        <asp:Label
-                            ID="lblNombreUsuarioNav"
-                            runat="server">
-                        </asp:Label>
-                    </div>
+                                        <div class="small text-muted mb-2 text-truncate">
+                                            <asp:Label
+                                                ID="lblNombreUsuarioNav"
+                                                runat="server">
+                                            </asp:Label>
+                                        </div>
 
-                    <div class="small text-dark text-truncate mb-1">
-                        <i class="bi bi-building me-1 text-muted"></i>
+                                        <div class="small text-dark text-truncate mb-1">
+                                            <i class="bi bi-building me-1 text-muted"></i>
 
-                        <asp:Label
-                            ID="lblEmpresa"
-                            runat="server">
-                        </asp:Label>
-                    </div>
+                                            <asp:Label
+                                                ID="lblEmpresa"
+                                                runat="server">
+                                            </asp:Label>
+                                        </div>
 
-                    <div class="small text-dark text-truncate">
-                        <i class="bi bi-briefcase me-1 text-muted"></i>
+                                        <div class="small text-dark text-truncate">
+                                            <i class="bi bi-briefcase me-1 text-muted"></i>
 
-                        <asp:Literal
-                            ID="txtRol"
-                            runat="server">
-                        </asp:Literal>
-                    </div>
+                                            <asp:Literal
+                                                ID="txtRol"
+                                                runat="server">
+                                            </asp:Literal>
+                                        </div>
 
-                </div>
+                                    </div>
 
-            </div>
+                                </div>
 
-            <hr class="text-muted opacity-25 my-3" />
+                                <hr class="text-muted opacity-25 my-3" />
 
-            <div class="d-grid">
-                <asp:LinkButton
-                    ID="btnLogOut"
-                    runat="server"
-                    OnClick="btnLogOut_Click"
-                    CssClass="btn btn-outline-danger btn-sm d-flex align-items-center justify-content-center gap-2"
-                    Style="border-radius: 8px;">
+                                <div class="d-grid">
+                                    <asp:LinkButton
+                                        ID="btnLogOut"
+                                        runat="server"
+                                        OnClick="btnLogOut_Click"
+                                        CssClass="btn btn-outline-danger btn-sm d-flex align-items-center justify-content-center gap-2"
+                                        Style="border-radius: 8px;">
 
                     <i class="bi bi-box-arrow-right"></i>
                     Cerrar sesión
 
-                </asp:LinkButton>
-            </div>
+                                    </asp:LinkButton>
+                                </div>
 
-        </div>
+                            </div>
 
-    </asp:Panel>
+                        </asp:Panel>
 
-</div>
+                    </div>
 
                 </div>
 
                 <asp:ContentPlaceHolder ID="MainContent" runat="server">
                 </asp:ContentPlaceHolder>
 
-                <hr />
+                <footer class="app-footer">
 
-                <footer>
-                    <p class="text-muted">&copy; <%: DateTime.Now.Year %> - TinyDesk</p>
+                    <div class="container app-footer-inner d-flex flex-column flex-sm-row align-items-center justify-content-between gap-2">
+
+                        <div class="d-flex align-items-center gap-2">
+
+                            <span class="app-footer-logo" aria-hidden="true">
+                                <img runat="server" src="~/Images/LogoTD.png" alt="" />
+                            </span>
+
+                            <span class="app-footer-copy">&copy; <%: DateTime.Now.Year %> TinyDesk</span>
+
+                        </div>
+
+                        <nav class="d-flex align-items-center gap-3" aria-label="Navegación del pie de página">
+
+                            <asp:LinkButton ID="btnFooterAbout"
+                                runat="server"
+                                CausesValidation="false"
+                                OnClick="btnFooterAbout_Click"
+                                CssClass="btn btn-link text-decoration-none p-0 app-footer-link">
+                                Acerca de
+                            </asp:LinkButton>
+
+                            <asp:LinkButton ID="btnFooterContacto"
+                                runat="server"
+                                CausesValidation="false"
+                                OnClick="btnFooterContacto_Click"
+                                CssClass="btn btn-link text-decoration-none p-0 app-footer-link">
+                                Contacto
+                            </asp:LinkButton>
+
+                        </nav>
+
+                    </div>
+
                 </footer>
             </main>
 
@@ -311,5 +409,135 @@
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/Scripts/bootstrap.js") %>
     </asp:PlaceHolder>
+    <script>
+        (function () {
+            "use strict";
+
+            var sidebar = document.getElementById("sidebarMenu");
+            var button = document.querySelector(
+                '[data-bs-target="#sidebarMenu"]'
+            );
+            var stateKey = "tinyDeskSidebarOpen";
+
+            if (!sidebar) return;
+
+            function saveState(isOpen) {
+                try {
+                    sessionStorage.setItem(
+                        stateKey,
+                        isOpen ? "true" : "false"
+                    );
+                } catch (error) {
+                }
+            }
+
+            function readState() {
+                try {
+                    return sessionStorage.getItem(stateKey);
+                } catch (error) {
+                    return null;
+                }
+            }
+
+            // Si nunca se guardó un estado, queda abierto por defecto.
+            var shouldBeOpen = readState() !== "false";
+
+            sidebar.classList.toggle("show", shouldBeOpen);
+
+            if (button) {
+                button.setAttribute(
+                    "aria-expanded",
+                    shouldBeOpen ? "true" : "false"
+                );
+            }
+
+            sidebar.addEventListener("show.bs.collapse", function () {
+                saveState(true);
+            });
+
+            sidebar.addEventListener("hide.bs.collapse", function () {
+                saveState(false);
+            });
+        }());
+    </script>
+    <script>
+        (function () {
+            "use strict";
+
+            var trigger = document.getElementById("<%= btnUserNav.ClientID %>");
+            var popup = document.getElementById("<%= pnlUserNav.ClientID %>");
+            var stateKey = "tinyDeskUserMenuOpen";
+
+            function rememberState(isOpen) {
+                try {
+                    window.sessionStorage.setItem(stateKey, isOpen ? "true" : "false");
+                } catch (error) {
+                }
+            }
+
+            function rememberedOpenState() {
+                try {
+                    return window.sessionStorage.getItem(stateKey);
+                } catch (error) {
+                    return null;
+                }
+            }
+
+            if (!trigger) return;
+
+            trigger.setAttribute("aria-haspopup", "true");
+
+            if (!popup) {
+                trigger.setAttribute("aria-expanded", "false");
+                trigger.addEventListener("click", function () {
+                    rememberState(true);
+                });
+                return;
+            }
+
+            popup.setAttribute("role", "dialog");
+            popup.setAttribute("aria-label", "Menú de usuario");
+            trigger.setAttribute("aria-controls", popup.id);
+
+            function menuIsOpen() {
+                return window.getComputedStyle(popup).display !== "none";
+            }
+
+            function setMenuOpen(isOpen, returnFocus) {
+                popup.style.display = isOpen ? "" : "none";
+                trigger.setAttribute("aria-expanded", isOpen ? "true" : "false");
+                rememberState(isOpen);
+
+                if (!isOpen && returnFocus) {
+                    trigger.focus();
+                }
+            }
+
+            if (rememberedOpenState() === "false") {
+                popup.style.display = "none";
+            }
+
+            trigger.setAttribute("aria-expanded", menuIsOpen() ? "true" : "false");
+
+            trigger.addEventListener("click", function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                setMenuOpen(!menuIsOpen(), false);
+            });
+
+            document.addEventListener("click", function (event) {
+                if (!menuIsOpen()) return;
+                if (popup.contains(event.target) || trigger.contains(event.target)) return;
+                setMenuOpen(false, false);
+            });
+
+            document.addEventListener("keydown", function (event) {
+                if (event.key === "Escape" && menuIsOpen()) {
+                    setMenuOpen(false, true);
+                }
+            });
+        }());
+    </script>
+
 </body>
 </html>

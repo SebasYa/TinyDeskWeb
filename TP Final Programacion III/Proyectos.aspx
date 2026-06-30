@@ -364,30 +364,102 @@
             </button>
         </div>
 
-        <div class="card border-0 shadow-sm mb-4">
-            <div class="card-body d-flex justify-content-between align-items-center flex-wrap gap-3">
-                <div>
-                    <h5 class="fw-semibold mb-1">Estado de los proyectos</h5>
-                    <small class="text-muted">Alterná entre proyectos activos y proyectos finalizados.</small>
-                </div>
+        <asp:Panel
+            ID="pnlFiltroProyectos"
+            runat="server"
+            CssClass="card border-0 shadow-sm mb-5 mx-auto"
+            Style="max-width: 1100px;"
+            DefaultButton="btnBuscarProyecto">
 
-                <div class="d-flex flex-wrap gap-2">
-                    <asp:Button ID="btnFiltroActivos" runat="server"
-                        Text="Activos"
-                        CssClass="btn btn-primary"
-                        OnClick="btnFiltroActivos_Click" />
+            <div class="card-body p-3">
 
-                    <asp:Button ID="btnFiltroFinalizados" runat="server"
-                        Text="Finalizados"
-                        CssClass="btn btn-outline-secondary"
-                        OnClick="btnFiltroFinalizados_Click" />
+                <div class="row g-3 align-items-end">
+
+                    <!-- BÚSQUEDA -->
+                    <div class="col-12 col-lg-8">
+
+                        <label for="txtFiltroProyecto" class="form-label fw-semibold mb-2">
+                            Buscar proyecto
+                        </label>
+
+                        <div class="row g-2">
+
+                            <div class="col-12 col-md-8">
+                                <div class="input-group">
+
+                                    <span class="input-group-text bg-white">
+                                        <i class="bi bi-search text-muted"></i>
+                                    </span>
+
+                                    <asp:TextBox
+                                        ID="txtFiltroProyecto"
+                                        runat="server"
+                                        CssClass="form-control"
+                                        placeholder="Nombre o descripción..." />
+
+                                </div>
+                            </div>
+
+                            <div class="col-6 col-md-2">
+                                <asp:Button
+                                    ID="btnBuscarProyecto"
+                                    runat="server"
+                                    Text="Buscar"
+                                    CssClass="btn btn-primary w-100"
+                                    OnClick="btnBuscarProyecto_Click" />
+                            </div>
+
+                            <div class="col-6 col-md-2">
+                                <asp:Button
+                                    ID="btnLimpiarFiltroProyecto"
+                                    runat="server"
+                                    Text="Limpiar"
+                                    CssClass="btn btn-outline-secondary w-100"
+                                    OnClick="btnLimpiarFiltroProyecto_Click" />
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- ESTADO -->
+                    <div class="col-12 col-lg-4">
+                        <div class="w-100 ms-lg-auto" style="max-width: 280px;">
+
+                        <label class="form-label fw-semibold mb-2">
+                            Estado de los proyectos
+                        </label>
+
+                            <div class="row g-4">
+
+                                <div class="col-6">
+                                    <asp:Button
+                                        ID="btnFiltroActivos"
+                                        runat="server"
+                                        Text="Activos"
+                                        CssClass="btn btn-primary w-100"
+                                        OnClick="btnFiltroActivos_Click" />
+                                </div>
+
+                                <div class="col-6">
+                                    <asp:Button
+                                        ID="btnFiltroFinalizados"
+                                        runat="server"
+                                        Text="Finalizados"
+                                        CssClass="btn btn-outline-secondary w-100"
+                                        OnClick="btnFiltroFinalizados_Click" />
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-        </div>
+        </asp:Panel>
 
         <asp:ListView ID="lvProyectos" runat="server" ItemPlaceholderID="itemPlaceholder" OnItemDataBound="lvProyectos_ItemDataBound" OnPagePropertiesChanging="lvProyectos_PagePropertiesChanging">
             <LayoutTemplate>
-                <div class="row g-3">
+                <div class="row g-4">
                     <asp:PlaceHolder
                         ID="itemPlaceholder"
                         runat="server" />

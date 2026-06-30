@@ -132,6 +132,42 @@ namespace TP_Final_Programacion_III
         protected global::System.Web.UI.WebControls.Panel pnlListadoProyectos;
 
         /// <summary>
+        /// Control pnlFiltroProyectos.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlFiltroProyectos;
+
+        /// <summary>
+        /// Control txtFiltroProyecto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtFiltroProyecto;
+
+        /// <summary>
+        /// Control btnBuscarProyecto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnBuscarProyecto;
+
+        /// <summary>
+        /// Control btnLimpiarFiltroProyecto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnLimpiarFiltroProyecto;
+
+        /// <summary>
         /// Control btnFiltroActivos.
         /// </summary>
         /// <remarks>

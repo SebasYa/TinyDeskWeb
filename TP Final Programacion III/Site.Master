@@ -16,6 +16,101 @@
     <webopt:BundleReference runat="server" Path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+    <style>
+        .app-footer {
+            margin: auto -1.5rem -1.5rem;
+            padding: 0;
+            flex-shrink: 0;
+            border-top: 1px solid rgba(9, 35, 47, .08);
+            background: rgba(255, 255, 255, .62);
+        }
+
+        .app-footer-inner {
+            min-height: 58px;
+        }
+
+        .app-footer-logo {
+            position: relative;
+            display: inline-flex;
+            width: 32px;
+            height: 32px;
+            flex: 0 0 32px;
+            overflow: visible;
+        }
+
+            .app-footer-logo img {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 46px;
+                height: 46px;
+                max-width: none;
+                filter: drop-shadow(0 5px 5px rgba(9, 35, 47, .18));
+                transform: translate(-50%, -50%);
+            }
+
+        .app-footer-copy,
+        .app-footer-link {
+            color: #75797e !important;
+            font-size: .75rem;
+        }
+
+            .app-footer-link:hover,
+            .app-footer-link:focus {
+                color: #09232f !important;
+            }
+
+        .app-shell {
+            min-width: 0;
+            min-height: 100vh;
+            min-height: 100dvh;
+        }
+
+        .app-sidebar {
+            position: fixed !important;
+            z-index: 1030;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            height: 100vh !important;
+            height: 100dvh !important;
+            align-self: flex-start;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+            .app-sidebar.collapsing {
+                overflow: hidden;
+            }
+
+        .app-main {
+            display: flex;
+            min-width: 0;
+            min-height: 100vh;
+            min-height: 100dvh;
+            flex-direction: column;
+            margin-left: 220px;
+            transition: margin-left .35s ease;
+        }
+
+        .app-sidebar:not(.show) + .app-main {
+            margin-left: 0;
+        }
+
+        @media (max-width: 575.98px) {
+            .app-footer-inner {
+                padding-top: .5rem;
+                padding-bottom: .5rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .app-main {
+                transition: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -36,9 +131,9 @@
             </Scripts>
         </asp:ScriptManager>
 
-        <div class="d-flex min-vh-100">
+        <div class="d-flex app-shell">
 
-            <aside id="sidebarMenu" class="collapse collapse-horizontal show bg-dark border-end" style="position: sticky; top: 0; height: 100vh;">
+            <aside id="sidebarMenu" class="collapse collapse-horizontal show bg-dark border-end app-sidebar">
                 <div class="p-3 d-flex flex-column justify-content-between h-100" style="width: 220px;">
 
                     <!-- Contenido superior (Título y Menú) -->
@@ -113,7 +208,7 @@
                 </div>
             </aside>
 
-            <main class="flex-grow-1 p-4">
+            <main class="flex-grow-1 p-4 app-main">
 
                 <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
 
@@ -283,21 +378,42 @@
                 <asp:ContentPlaceHolder ID="MainContent" runat="server">
                 </asp:ContentPlaceHolder>
 
-                <hr />
+                <footer class="app-footer">
 
-                <footer class="d-flex align-items-center gap-0" style="margin-top: -6px;">
-                    <span style="width: 22px; height: 22px; overflow: hidden; position: relative; flex: 0 0 22px;">
+                    <div class="container app-footer-inner d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
 
-                        <img runat="server"
-                            src="~/Images/LogoTD.png"
-                            alt="TinyDesk"
-                            style="width: 32px; height: 32px; object-fit: contain; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); filter: grayscale(1) brightness(0); opacity: .55;" />
-                    </span>
+                        <div class="d-flex align-items-center gap-2">
 
-                    <p class="text-muted mb-0"
-                        style="font-size: .8rem; margin-left: 2px;">
-                        &copy; <%: DateTime.Now.Year %> - TinyDesk, Inc.
-                    </p>
+                            <span class="app-footer-logo" aria-hidden="true">
+                                <img runat="server" src="~/Images/LogoTD.png" alt="" />
+                            </span>
+
+                            <span class="app-footer-copy">&copy; <%: DateTime.Now.Year %> TinyDesk</span>
+
+                        </div>
+
+                        <nav class="d-flex align-items-center gap-3" aria-label="Navegación del pie de página">
+
+                            <asp:LinkButton ID="btnFooterAbout"
+                                runat="server"
+                                CausesValidation="false"
+                                OnClick="btnFooterAbout_Click"
+                                CssClass="btn btn-link text-decoration-none p-0 app-footer-link">
+                                Acerca de
+                            </asp:LinkButton>
+
+                            <asp:LinkButton ID="btnFooterContacto"
+                                runat="server"
+                                CausesValidation="false"
+                                OnClick="btnFooterContacto_Click"
+                                CssClass="btn btn-link text-decoration-none p-0 app-footer-link">
+                                Contacto
+                            </asp:LinkButton>
+
+                        </nav>
+
+                    </div>
+
                 </footer>
             </main>
 
@@ -307,5 +423,134 @@
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/Scripts/bootstrap.js") %>
     </asp:PlaceHolder>
+    <script>
+        (function () {
+            "use strict";
+
+            var sidebar = document.getElementById("sidebarMenu");
+            var button = document.querySelector(
+                '[data-bs-target="#sidebarMenu"]'
+            );
+            var stateKey = "tinyDeskSidebarOpen";
+
+            if (!sidebar) return;
+
+            function saveState(isOpen) {
+                try {
+                    sessionStorage.setItem(
+                        stateKey,
+                        isOpen ? "true" : "false"
+                    );
+                } catch (error) {
+                }
+            }
+
+            function readState() {
+                try {
+                    return sessionStorage.getItem(stateKey);
+                } catch (error) {
+                    return null;
+                }
+            }
+
+            // Si nunca se guardó un estado, queda abierto por defecto.
+            var shouldBeOpen = readState() !== "false";
+
+            sidebar.classList.toggle("show", shouldBeOpen);
+
+            if (button) {
+                button.setAttribute(
+                    "aria-expanded",
+                    shouldBeOpen ? "true" : "false"
+                );
+            }
+
+            sidebar.addEventListener("show.bs.collapse", function () {
+                saveState(true);
+            });
+
+            sidebar.addEventListener("hide.bs.collapse", function () {
+                saveState(false);
+            });
+        }());
+    </script>
+    <script>
+        (function () {
+            "use strict";
+
+            var trigger = document.getElementById("<%= btnUserNav.ClientID %>");
+            var popup = document.getElementById("<%= pnlUserNav.ClientID %>");
+            var stateKey = "tinyDeskUserMenuOpen";
+
+            function rememberState(isOpen) {
+                try {
+                    window.sessionStorage.setItem(stateKey, isOpen ? "true" : "false");
+                } catch (error) {
+                }
+            }
+
+            function rememberedOpenState() {
+                try {
+                    return window.sessionStorage.getItem(stateKey);
+                } catch (error) {
+                    return null;
+                }
+            }
+
+            if (!trigger) return;
+
+            trigger.setAttribute("aria-haspopup", "true");
+
+            if (!popup) {
+                trigger.setAttribute("aria-expanded", "false");
+                trigger.addEventListener("click", function () {
+                    rememberState(true);
+                });
+                return;
+            }
+
+            popup.setAttribute("role", "dialog");
+            popup.setAttribute("aria-label", "Menú de usuario");
+            trigger.setAttribute("aria-controls", popup.id);
+
+            function menuIsOpen() {
+                return window.getComputedStyle(popup).display !== "none";
+            }
+
+            function setMenuOpen(isOpen, returnFocus) {
+                popup.style.display = isOpen ? "" : "none";
+                trigger.setAttribute("aria-expanded", isOpen ? "true" : "false");
+                rememberState(isOpen);
+
+                if (!isOpen && returnFocus) {
+                    trigger.focus();
+                }
+            }
+
+            if (rememberedOpenState() === "false") {
+                popup.style.display = "none";
+            }
+
+            trigger.setAttribute("aria-expanded", menuIsOpen() ? "true" : "false");
+
+            trigger.addEventListener("click", function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                setMenuOpen(!menuIsOpen(), false);
+            });
+
+            document.addEventListener("click", function (event) {
+                if (!menuIsOpen()) return;
+                if (popup.contains(event.target) || trigger.contains(event.target)) return;
+                setMenuOpen(false, false);
+            });
+
+            document.addEventListener("keydown", function (event) {
+                if (event.key === "Escape" && menuIsOpen()) {
+                    setMenuOpen(false, true);
+                }
+            });
+        }());
+    </script>
 </body>
 </html>
