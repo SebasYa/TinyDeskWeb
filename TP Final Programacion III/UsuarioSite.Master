@@ -115,181 +115,152 @@
                         <h2 class="h4 text-dark mb-0 text-capitalize fw-bold"><%: Page.Title %></h2>
                     </div>
 
-                                        <div class="position-relative">
+                    <div class="position-relative">
 
-    <asp:Button
-        ID="btnUserNav"
-        runat="server"
-        Text=""
-        CssClass="btn btn-primary"
-        Style="width: 44px;
-               height: 44px;
-               min-width: 44px;
-               max-width: 44px;
-               padding: 0;
-               border-radius: 50% !important;
-               line-height: 1;
-               font-size: 1.1rem;"
-        CausesValidation="false"
-        OnClick="btnUserNav_Click" />
+                        <asp:Button
+                            ID="btnUserNav"
+                            runat="server"
+                            Text=""
+                            CssClass="btn btn-primary"
+                            Style="width: 44px; height: 44px; min-width: 44px; max-width: 44px; padding: 0; border-radius: 50% !important; line-height: 1; font-size: 1.1rem;"
+                            CausesValidation="false"
+                            OnClick="btnUserNav_Click" />
 
-    <asp:Panel
-        ID="pnlUserNav"
-        runat="server"
-        CssClass="card position-absolute end-0 mt-2 shadow border-0"
-        Style="width: 330px;
-               top: 100%;
-               z-index: 1050;
-               border-radius: 12px;">
+                        <asp:Panel
+                            ID="pnlUserNav"
+                            runat="server"
+                            CssClass="card position-absolute end-0 mt-2 shadow border-0"
+                            Style="width: 330px; top: 100%; z-index: 1050; border-radius: 12px;">
 
-        <div class="card-body p-3">
+                            <div class="card-body p-3">
 
-            <!-- TinyDesk y estado -->
-            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <!-- TinyDesk y estado -->
+                                <div class="d-flex justify-content-between align-items-center mb-3">
 
-                <!-- Isotipo con TinyDesk a su derecha -->
-                <div class="d-flex align-items-center gap-2">
+                                    <!-- Isotipo con TinyDesk a su derecha -->
+                                    <div class="d-flex align-items-center gap-2">
 
-                    <span class="position-relative overflow-hidden d-inline-block flex-shrink-0"
-                          style="width: 27px; height: 22px;">
+                                        <span class="position-relative overflow-hidden d-inline-block flex-shrink-0"
+                                            style="width: 27px; height: 22px;">
 
-                        <img runat="server"
-                             src="~/Images/LogoTD.png"
-                             alt="TinyDesk"
-                             style="position: absolute;
-                                    width: 38px;
-                                    height: 38px;
-                                    max-width: none;
-                                    top: 50%;
-                                    left: 50%;
-                                    transform: translate(-50%, -50%);" />
-                    </span>
+                                            <img runat="server"
+                                                src="~/Images/LogoTD.png"
+                                                alt="TinyDesk"
+                                                style="position: absolute; width: 38px; height: 38px; max-width: none; top: 50%; left: 50%; transform: translate(-50%, -50%);" />
+                                        </span>
 
-                    <span class="fw-bold text-dark">TinyDesk</span>
+                                        <span class="fw-bold text-dark">TinyDesk</span>
 
-                </div>
+                                    </div>
 
-                <!-- Píldora con isotipo y estado -->
-                <span class="rounded-pill d-inline-flex"
-                      style="padding: 1px;
-                             background: linear-gradient(90deg, #079de0, #19cf91);">
+                                    <!-- Píldora con isotipo y estado -->
+                                    <span class="rounded-pill d-inline-flex"
+                                        style="padding: 1px; background: linear-gradient(90deg, #079de0, #19cf91);">
 
-                    <span class="rounded-pill bg-white d-flex align-items-center gap-1 px-2 py-1"
-                          style="font-size: 0.75rem; color: #078fac;">
+                                        <span class="rounded-pill bg-white d-flex align-items-center gap-1 px-2 py-1"
+                                            style="font-size: 0.75rem; color: #078fac;">
 
-                        <span class="position-relative overflow-hidden d-inline-block flex-shrink-0"
-                              style="width: 17px; height: 14px;">
+                                            <span class="position-relative overflow-hidden d-inline-block flex-shrink-0"
+                                                style="width: 17px; height: 14px;">
 
-                            <img runat="server"
-                                 src="~/Images/LogoTD.png"
-                                 alt=""
-                                 style="position: absolute;
-                                        width: 28px;
-                                        height: 28px;
-                                        max-width: none;
-                                        top: 50%;
-                                        left: 50%;
-                                        transform: translate(-50%, -50%);" />
-                        </span>
+                                                <img runat="server"
+                                                    src="~/Images/LogoTD.png"
+                                                    alt=""
+                                                    style="position: absolute; width: 28px; height: 28px; max-width: none; top: 50%; left: 50%; transform: translate(-50%, -50%);" />
+                                            </span>
 
-                        <asp:Label
-                            ID="lblEstadoUsuarioNav"
-                            runat="server">
-                        </asp:Label>
+                                            <asp:Label
+                                                ID="lblEstadoUsuarioNav"
+                                                runat="server">
+                                            </asp:Label>
 
-                    </span>
+                                        </span>
 
-                </span>
+                                    </span>
 
-            </div>
+                                </div>
 
-            <!-- Imagen y datos -->
-            <div class="d-flex align-items-start gap-3">
+                                <!-- Imagen y datos -->
+                                <div class="d-flex align-items-start gap-3">
 
-                <div class="flex-shrink-0"
-                     style="width: 84px; height: 84px;">
+                                    <div class="flex-shrink-0"
+                                        style="width: 84px; height: 84px;">
 
-                    <asp:Image
-                        ID="imgUsuarioMenu"
-                        runat="server"
-                        Visible="false"
-                        CssClass="rounded-circle border border-2 border-light shadow-sm"
-                        Style="width: 84px;
-                               height: 84px;
-                               object-fit: cover;
-                               display: block;" />
+                                        <asp:Image
+                                            ID="imgUsuarioMenu"
+                                            runat="server"
+                                            Visible="false"
+                                            CssClass="rounded-circle border border-2 border-light shadow-sm"
+                                            Style="width: 84px; height: 84px; object-fit: cover; display: block;" />
 
-                    <asp:Label
-                        ID="lblInicialUsuarioMenu"
-                        runat="server"
-                        CssClass="rounded-circle text-white fw-bold d-flex align-items-center justify-content-center shadow-sm"
-                        Style="width: 84px;
-                               height: 84px;
-                               font-size: 1.7rem;
-                               background: linear-gradient(135deg, #079de0, #19cf91);">
-                    </asp:Label>
+                                        <asp:Label
+                                            ID="lblInicialUsuarioMenu"
+                                            runat="server"
+                                            CssClass="rounded-circle text-white fw-bold d-flex align-items-center justify-content-center shadow-sm"
+                                            Style="width: 84px; height: 84px; font-size: 1.7rem; background: linear-gradient(135deg, #079de0, #19cf91);">
+                                        </asp:Label>
 
-                </div>
+                                    </div>
 
-                <div class="flex-grow-1" style="min-width: 0;">
+                                    <div class="flex-grow-1" style="min-width: 0;">
 
-                    <div class="fw-bold text-dark text-truncate">
-                        <asp:Label
-                            ID="lblName_nav"
-                            runat="server">
-                        </asp:Label>
-                    </div>
+                                        <div class="fw-bold text-dark text-truncate">
+                                            <asp:Label
+                                                ID="lblName_nav"
+                                                runat="server">
+                                            </asp:Label>
+                                        </div>
 
-                    <div class="small text-muted mb-2 text-truncate">
-                        <asp:Label
-                            ID="lblNombreUsuarioNav"
-                            runat="server">
-                        </asp:Label>
-                    </div>
+                                        <div class="small text-muted mb-2 text-truncate">
+                                            <asp:Label
+                                                ID="lblNombreUsuarioNav"
+                                                runat="server">
+                                            </asp:Label>
+                                        </div>
 
-                    <div class="small text-dark text-truncate mb-1">
-                        <i class="bi bi-building me-1 text-muted"></i>
+                                        <div class="small text-dark text-truncate mb-1">
+                                            <i class="bi bi-building me-1 text-muted"></i>
 
-                        <asp:Label
-                            ID="lblEmpresa"
-                            runat="server">
-                        </asp:Label>
-                    </div>
+                                            <asp:Label
+                                                ID="lblEmpresa"
+                                                runat="server">
+                                            </asp:Label>
+                                        </div>
 
-                    <div class="small text-dark text-truncate">
-                        <i class="bi bi-briefcase me-1 text-muted"></i>
+                                        <div class="small text-dark text-truncate">
+                                            <i class="bi bi-briefcase me-1 text-muted"></i>
 
-                        <asp:Literal
-                            ID="txtRol"
-                            runat="server">
-                        </asp:Literal>
-                    </div>
+                                            <asp:Literal
+                                                ID="txtRol"
+                                                runat="server">
+                                            </asp:Literal>
+                                        </div>
 
-                </div>
+                                    </div>
 
-            </div>
+                                </div>
 
-            <hr class="text-muted opacity-25 my-3" />
+                                <hr class="text-muted opacity-25 my-3" />
 
-            <div class="d-grid">
-                <asp:LinkButton
-                    ID="btnLogOut"
-                    runat="server"
-                    OnClick="btnLogOut_Click"
-                    CssClass="btn btn-outline-danger btn-sm d-flex align-items-center justify-content-center gap-2"
-                    Style="border-radius: 8px;">
+                                <div class="d-grid">
+                                    <asp:LinkButton
+                                        ID="btnLogOut"
+                                        runat="server"
+                                        OnClick="btnLogOut_Click"
+                                        CssClass="btn btn-outline-danger btn-sm d-flex align-items-center justify-content-center gap-2"
+                                        Style="border-radius: 8px;">
 
                     <i class="bi bi-box-arrow-right"></i>
                     Cerrar sesión
 
-                </asp:LinkButton>
-            </div>
+                                    </asp:LinkButton>
+                                </div>
 
-        </div>
+                            </div>
 
-    </asp:Panel>
+                        </asp:Panel>
 
-</div>
+                    </div>
 
                 </div>
 
@@ -298,8 +269,45 @@
 
                 <hr />
 
-                <footer>
-                    <p class="text-muted">&copy; <%: DateTime.Now.Year %> - TinyDesk</p>
+                <footer class="d-flex flex-column flex-sm-row
+               align-items-center justify-content-between gap-2">
+
+                    <div class="d-flex align-items-center gap-1">
+
+                        <span style="width: 22px; height: 22px; overflow: hidden; position: relative; flex: 0 0 22px;">
+
+                            <img runat="server"
+                                src="~/Images/LogoTD.png"
+                                alt="TinyDesk"
+                                style="width: 32px; height: 32px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); filter: grayscale(1) brightness(0); opacity: .55;" />
+                        </span>
+
+                        <p class="text-muted small mb-0">
+                            &copy; <%: DateTime.Now.Year %> TinyDesk
+                        </p>
+
+                    </div>
+
+                    <nav class="d-flex align-items-center gap-3">
+
+                        <asp:LinkButton ID="btnFooterAbout"
+                            runat="server"
+                            CausesValidation="false"
+                            OnClick="btnFooterAbout_Click"
+                            CssClass="btn btn-link text-muted text-decoration-none small p-0">
+                                Acerca de
+                        </asp:LinkButton>
+
+                        <asp:LinkButton ID="btnFooterContacto"
+                            runat="server"
+                            CausesValidation="false"
+                            OnClick="btnFooterContacto_Click"
+                            CssClass="btn btn-link text-muted text-decoration-none small p-0">
+                                Contacto
+                        </asp:LinkButton>
+
+                    </nav>
+
                 </footer>
             </main>
 

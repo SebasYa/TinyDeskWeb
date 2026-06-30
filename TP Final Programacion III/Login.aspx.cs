@@ -213,5 +213,15 @@ namespace TP_Final_Programacion_III
                 lblReenvioValidacion.Text = "Ocurrió un error al reenviar el correo de validación.";
             }
         }
+        protected void btnFooterAbout_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("About.aspx", false);
+            Context.ApplicationInstance.CompleteRequest();
+        }
+        protected void btnFooterContacto_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Contacto.aspx", false);
+            Context.ApplicationInstance.CompleteRequest();
+        }
     }
 }

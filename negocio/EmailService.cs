@@ -23,10 +23,10 @@ namespace negocio
             server.Port = 2525;
             server.Host = "sandbox.smtp.mailtrap.io";
         }
-        public void armarCorreo(string emailDestino, string asunto, string cuerpo)
+        public void armarCorreo(string emailDestino, string asunto, string cuerpo, string mailOrigen = "noresponder@tinydesk.com")
         {
             email = new MailMessage();
-            email.From = new MailAddress("noresponder@tinydesk.com");
+            email.From = new MailAddress(mailOrigen);
             email.To.Add(emailDestino);
             email.Subject = asunto;
             email.IsBodyHtml = true;
@@ -51,14 +51,40 @@ namespace negocio
             UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
             Usuario usuarioAsignado = usuarioNegocio.BuscarPorId(idUsuario);
 
-            if (usuarioAsignado == null || !usuarioAsignado.Activo || !usuarioAsignado.EmailVerificado)
-                return false;
+            if (usuarioAsignado == null || !usuarioAsignado.Activo || !usuarioAsignado.EmailVerificado) return false;
 
             string area = usuarioAsignado.Area != null ? usuarioAsignado.Area.Nombre : "";
             string cuerpo = EmailTemplates.TicketAsignado(usuarioAsignado.Nombre, ticket, area, linkTicket);
 
             armarCorreo(usuarioAsignado.Email, "Nuevo ticket asignado en TinyDesk", cuerpo);
             return enviarEmail();
+        }
+        public bool EnviarCorreoContacto(string emailDestino, string emailRemitente, string asunto, string cuerpo)
+        {
+            try
+            {
+                armarCorreo(
+                    emailDestino,
+                    LimpiarCabecera(asunto),
+                    cuerpo,
+                    emailRemitente
+                );
+
+                return enviarEmail();
+            }
+            catch (Exception ex)
+            {
+                UltimoError = ex.Message;
+                return false;
+            }
+        }
+
+        private string LimpiarCabecera(string texto)
+        {
+            return (texto ?? "")
+                .Replace("\r", " ")
+                .Replace("\n", " ")
+                .Trim();
         }
     }
 }

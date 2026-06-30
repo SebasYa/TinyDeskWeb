@@ -131,5 +131,15 @@ namespace TP_Final_Programacion_III
             if (string.IsNullOrWhiteSpace(seniority)) return puesto;
             return puesto + " · " + seniority;
         }
+        protected void btnFooterAbout_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("About.aspx", false);
+            Context.ApplicationInstance.CompleteRequest();
+        }
+        protected void btnFooterContacto_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Contacto.aspx", false);
+            Context.ApplicationInstance.CompleteRequest();
+        }
     }
 }
