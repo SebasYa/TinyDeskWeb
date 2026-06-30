@@ -229,46 +229,53 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
-
         public List<Ticket> Listar(int idEmpresa)
+        {
+            return Listar(idEmpresa, 0);
+        }
+
+        public List<Ticket> Listar(int idEmpresa, int idUsuario)
         {
             List<Ticket> lista = new List<Ticket>();
             AccesoDatos datos = new AccesoDatos();
 
             try
             {
-                datos.setearConsulta(@"
-            SELECT T.Id, T.FechaInicio, T.FechaFin, T.FechaEstimadaFin, T.Descripcion, T.Activo,
-                   PR.Id AS IdPrioridad, PR.Nombre AS NombrePrioridad,
-                   U.Id AS IdUsuario, U.Nombre AS NombreUsuario, U.Apellido AS ApellidoUsuario,
-                   E.Id AS IdEstado, E.Nombre AS NombreEstado, E.EsFinal, E.EsSistema,
-                   S.Id AS IdSprint, S.NumeroSprint,
-                   P.Id AS IdProyecto, P.Nombre AS NombreProyecto
-            FROM TICKET T
-            INNER JOIN PRIORIDAD PR ON PR.Id = T.IdPrioridad
-            INNER JOIN USUARIO U ON U.Id = T.IdUsuario
-            INNER JOIN ESTADO E ON E.Id = T.IdEstado
-            INNER JOIN SPRINT S ON S.Id = T.IdSprint
-            INNER JOIN PROYECTO P ON P.Id = S.IdProyecto
-            WHERE P.IdEmpresa = @IdEmpresa AND T.Activo = 1
-            ORDER BY T.FechaEstimadaFin ASC
-        ");
+                datos.setearConsulta(@"SELECT T.Id, T.FechaInicio, T.FechaFin, T.FechaEstimadaFin, T.Descripcion, T.Activo,
+                                              PR.Id AS IdPrioridad, PR.Nombre AS NombrePrioridad,
+                                              U.Id AS IdUsuario, U.Nombre AS NombreUsuario, U.Apellido AS ApellidoUsuario,
+                                              E.Id AS IdEstado, E.Nombre AS NombreEstado, E.EsFinal, E.EsSistema,
+                                              S.Id AS IdSprint, S.NumeroSprint,
+                                              P.Id AS IdProyecto, P.Nombre AS NombreProyecto
+                                       FROM TICKET T
+                                       INNER JOIN PRIORIDAD PR ON PR.Id = T.IdPrioridad
+                                       INNER JOIN USUARIO U ON U.Id = T.IdUsuario
+                                       INNER JOIN ESTADO E ON E.Id = T.IdEstado
+                                       INNER JOIN SPRINT S ON S.Id = T.IdSprint
+                                       INNER JOIN PROYECTO P ON P.Id = S.IdProyecto
+                                       WHERE P.IdEmpresa = @IdEmpresa
+                                         AND (@IdUsuario = 0 OR T.IdUsuario = @IdUsuario)
+                                       ORDER BY
+                                           CASE WHEN T.Activo = 1 AND E.EsFinal = 0 THEN 0 ELSE 1 END,
+                                           T.FechaEstimadaFin ASC,
+                                           T.Id DESC"
+                );
 
                 datos.setearParametro("@IdEmpresa", idEmpresa);
+                datos.setearParametro("@IdUsuario", idUsuario);
                 datos.ejecutarLectura();
 
                 while (datos.Lector.Read())
                 {
                     Ticket ticket = new Ticket();
+
                     ticket.Id = (int)datos.Lector["Id"];
                     ticket.FechaInicio = (DateTime)datos.Lector["FechaInicio"];
                     ticket.FechaEstimadaFin = (DateTime)datos.Lector["FechaEstimadaFin"];
-
-                    if (datos.Lector["FechaFin"] != DBNull.Value)
-                        ticket.FechaFin = (DateTime)datos.Lector["FechaFin"];
-
                     ticket.Descripcion = (string)datos.Lector["Descripcion"];
                     ticket.Activo = (bool)datos.Lector["Activo"];
+
+                    if (datos.Lector["FechaFin"] != DBNull.Value) ticket.FechaFin = (DateTime)datos.Lector["FechaFin"];
 
                     ticket.Prioridad = new Prioridad();
                     ticket.Prioridad.Id = (int)datos.Lector["IdPrioridad"];
@@ -288,6 +295,7 @@ namespace negocio
                     ticket.Sprint = new Sprint();
                     ticket.Sprint.Id = (int)datos.Lector["IdSprint"];
                     ticket.Sprint.NumeroSprint = (int)datos.Lector["NumeroSprint"];
+
                     ticket.Sprint.Proyecto = new Proyecto();
                     ticket.Sprint.Proyecto.Id = (int)datos.Lector["IdProyecto"];
                     ticket.Sprint.Proyecto.Nombre = (string)datos.Lector["NombreProyecto"];
@@ -297,16 +305,11 @@ namespace negocio
 
                 return lista;
             }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
             finally
             {
                 datos.cerrarConexion();
             }
         }
-
         public Ticket BuscarPorId(int id)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -406,16 +409,20 @@ namespace negocio
 
             try
             {
-                datos.setearConsulta(@"
-            UPDATE TICKET SET
-                FechaEstimadaFin = @FechaEstimadaFin,
-                Descripcion = @Descripcion,
-                IdPrioridad = @IdPrioridad,
-                IdUsuario = @IdUsuario,
-                IdEstado = @IdEstado,
-                IdSprint = @IdSprint
-            WHERE Id = @Id
-        ");
+                datos.setearConsulta(@"UPDATE T SET FechaEstimadaFin = @FechaEstimadaFin,
+                                                    Descripcion = @Descripcion,
+                                                    IdPrioridad = @IdPrioridad,
+                                                    IdUsuario = @IdUsuario,
+                                                    IdEstado = @IdEstado,
+                                                    IdSprint = @IdSprint,
+                                                    FechaFin = CASE WHEN E.EsFinal = 1 THEN GETDATE() ELSE NULL END,
+                                                    Activo = CASE WHEN E.EsFinal = 1 THEN 0 ELSE 1 END
+                                                FROM TICKET T
+                                                INNER JOIN ESTADO E ON E.Id = @IdEstado
+                                                INNER JOIN ESTADO EA ON EA.Id = T.IdEstado
+                                                WHERE T.Id = @Id
+                                                  AND EA.EsFinal = 0
+                ");
 
                 datos.setearParametro("@FechaEstimadaFin", ticket.FechaEstimadaFin);
                 datos.setearParametro("@Descripcion", ticket.Descripcion);
@@ -436,7 +443,6 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
-
         public List<Ticket> listarPorSprint(int idSprint)
         {
             List<Ticket> lista = new List<Ticket>();
@@ -478,7 +484,7 @@ namespace negocio
                     ticket.Sprint.Proyecto = new Proyecto();
                     ticket.Sprint.Proyecto.Id = (int)datos.Lector["IdProyecto"];
                     ticket.Sprint.Proyecto.Nombre = (string)datos.Lector["NombreProyecto"];
-                    
+
                     ticket.Estado = new Estado();
                     ticket.Estado.Id = (int)datos.Lector["IdEstado"];
                     ticket.Estado.Nombre = (string)datos.Lector["NombreEstado"];
