@@ -83,24 +83,37 @@
             flex: 0 0 auto;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-            border-radius: 14px;
-            background: linear-gradient(145deg, rgba(185, 229, 229, .92), rgba(147, 192, 222, .5));
+            overflow: visible;
+            background: transparent;
         }
 
         .contact-logo {
-            width: 46px;
-            height: 46px;
-            box-shadow: 0 8px 22px rgba(9, 35, 47, .11);
+            width: 62px;
+            height: 62px;
+        }
+
+        .contact-logo::after {
+            position: absolute;
+            z-index: 0;
+            right: 23%;
+            bottom: 4px;
+            left: 23%;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(9, 35, 47, .25);
+            content: "";
+            filter: blur(5px);
+            transform: translateY(8px);
         }
 
         .contact-logo img {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 64px;
-            height: 64px;
+            width: 84px;
+            height: 84px;
             max-width: none;
+            z-index: 1;
             transform: translate(-50%, -50%);
         }
 
@@ -597,20 +610,18 @@
         }
 
         .footer-logo {
-            width: 26px;
-            height: 26px;
-            border-radius: 8px;
-            background: rgba(185, 229, 229, .48);
+            width: 32px;
+            height: 32px;
         }
 
         .footer-logo img {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 38px;
-            height: 38px;
+            width: 46px;
+            height: 46px;
             max-width: none;
-            opacity: .68;
+            filter: drop-shadow(0 5px 5px rgba(9, 35, 47, .18));
             transform: translate(-50%, -50%);
         }
 
@@ -698,8 +709,8 @@
             }
 
             .contact-logo {
-                width: 40px;
-                height: 40px;
+                width: 54px;
+                height: 54px;
             }
 
             .contact-brand-name {

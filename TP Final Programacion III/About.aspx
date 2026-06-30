@@ -91,24 +91,37 @@
             flex: 0 0 auto;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-            background: var(--about-lavender);
+            overflow: visible;
+            background: transparent;
         }
 
         .about-logo {
-            width: 46px;
-            height: 46px;
-            border-radius: 15px;
-            box-shadow: 0 8px 24px rgba(63, 12, 12, .12);
+            width: 62px;
+            height: 62px;
+        }
+
+        .about-logo::after {
+            position: absolute;
+            z-index: 0;
+            right: 23%;
+            bottom: 4px;
+            left: 23%;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(63, 12, 12, .22);
+            content: "";
+            filter: blur(5px);
+            transform: translateY(8px);
         }
 
         .about-logo img {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 64px;
-            height: 64px;
+            width: 84px;
+            height: 84px;
             max-width: none;
+            z-index: 1;
             transform: translate(-50%, -50%);
         }
 
@@ -440,23 +453,37 @@
         .dashboard-brand-logo {
             position: relative;
             display: inline-flex;
-            width: 20px;
-            height: 20px;
-            flex: 0 0 20px;
+            width: 27px;
+            height: 27px;
+            flex: 0 0 27px;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-            border-radius: 6px;
-            background: var(--about-lavender);
+            overflow: visible;
+            background: transparent;
+        }
+
+        .dashboard-brand-logo::after {
+            position: absolute;
+            z-index: 0;
+            right: 22%;
+            bottom: 1px;
+            left: 22%;
+            height: 4px;
+            border-radius: 50%;
+            background: rgba(63, 12, 12, .22);
+            content: "";
+            filter: blur(2px);
+            transform: translateY(4px);
         }
 
         .dashboard-brand-logo img {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 29px;
-            height: 29px;
+            width: 38px;
+            height: 38px;
             max-width: none;
+            z-index: 1;
             transform: translate(-50%, -50%);
         }
 
@@ -1093,7 +1120,7 @@
 
         .about-footer {
             border-top: 1px solid rgba(63, 12, 12, .09);
-            background: var(--about-cloud);
+            background: rgba(255, 255, 255, .62);
         }
 
         .about-footer-inner {
@@ -1101,25 +1128,24 @@
         }
 
         .about-footer-logo {
-            width: 26px;
-            height: 26px;
-            border-radius: 8px;
+            width: 32px;
+            height: 32px;
         }
 
         .about-footer-logo img {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 38px;
-            height: 38px;
+            width: 46px;
+            height: 46px;
             max-width: none;
-            opacity: .72;
+            filter: drop-shadow(0 5px 5px rgba(9, 35, 47, .18));
             transform: translate(-50%, -50%);
         }
 
         .about-footer-copy,
         .about-footer-link {
-            color: var(--about-muted) !important;
+            color: #75797e !important;
             font-size: .75rem;
         }
 
@@ -1130,7 +1156,7 @@
         .about-footer-link:hover,
         .about-footer-link:focus,
         .about-footer-link.is-active {
-            color: var(--about-wine) !important;
+            color: #09232f !important;
         }
 
         .reveal-ready [data-reveal] {
@@ -1227,8 +1253,8 @@
             }
 
             .about-logo {
-                width: 40px;
-                height: 40px;
+                width: 54px;
+                height: 54px;
             }
 
             .about-brand-name {
