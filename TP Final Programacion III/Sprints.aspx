@@ -169,6 +169,13 @@
                                 OnClientClick='<%# "abrirModalEliminar(" + Eval("Id") + "); return false;" %>' title="Eliminar Sprint">
                                 <i class="bi bi-trash"></i>
                             </asp:LinkButton>
+                            <asp:LinkButton ID="btnFinalizarSprint" runat="server" 
+                                CommandName="Finalizar" 
+                                CommandArgument='<%# Eval("Id") %>' 
+                                CssClass="btn btn-sm btn-outline-success" 
+                                title="Finalizar Sprint"
+                                Visible='<%# !(bool)Eval("Estado.EsFinal") %>'> <i class="bi bi-check-circle"></i>
+                            </asp:LinkButton>
                         </div>
                     </ItemTemplate>
                 </asp:TemplateField>
