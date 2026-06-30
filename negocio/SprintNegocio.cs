@@ -56,7 +56,7 @@ namespace negocio
             {
                 string consulta = @"UPDATE SPRINT SET 
                                         NumeroSprint = @NumeroSprint , 
-                                        FechaInicio = @FechaInicio,
+                                        --FechaInicio = @FechaInicio,
                                         FechaFin = @FechaFin, 
                                         FechaEstimadaFin = @FechaEstimadaFin, 
                                         Activo = @Activo, 
@@ -68,7 +68,7 @@ namespace negocio
                 datos.setearConsulta(consulta);
 
                 datos.setearParametro("@NumeroSprint", sprint.NumeroSprint);
-                datos.setearParametro("@FechaInicio", sprint.FechaInicio);
+                //datos.setearParametro("@FechaInicio", sprint.FechaInicio);
                 if (sprint.FechaFin.HasValue)
                 {
                     datos.setearParametro("@FechaFin", sprint.FechaFin.Value);
@@ -359,6 +359,75 @@ namespace negocio
             catch (Exception ex)
             {
                 throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        public void ModificarSprintConAuditoria(Sprint editarSprint, Sprint original,string accion, int idUsuario, string motivo)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                
+                datos.iniciarTransaccion();
+
+                Modificar(editarSprint);
+                
+
+                AuditoriaService auditoriaService = new AuditoriaService();
+
+                if (original.FechaInicio.Date != editarSprint.FechaInicio.Date)
+                    auditoriaService.Registrar(idUsuario, "Sprint", editarSprint.Id, accion,
+                        "FechaInicio", original.FechaInicio.ToString(), editarSprint.FechaInicio.ToString(), motivo);
+
+                if (original.FechaEstimadaFin.Date != editarSprint.FechaEstimadaFin.Date)
+                    auditoriaService.Registrar(idUsuario, "Sprint", editarSprint.Id, accion,
+                        "FechaEstimadaFin", original.FechaEstimadaFin.ToString(), editarSprint.FechaEstimadaFin.ToString(), motivo);
+
+                if (original.Estado.Id != editarSprint.Estado.Id)
+                    auditoriaService.Registrar(idUsuario, "Sprint", editarSprint.Id, accion,
+                        "Estado", original.Estado.Nombre, editarSprint.Estado.Nombre, motivo);
+
+
+                datos.confirmarTransaccion(); // COMMIT
+            }
+            catch (Exception)
+            {
+                datos.cancelarTransaccion(); // ROLLBACK
+                throw;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        public void EliminarSprintConAuditoria(Sprint eliminarSprint, string accion, int idUsuario, string motivo)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+
+                datos.iniciarTransaccion();
+
+                Desactivar(eliminarSprint);
+
+
+                AuditoriaService auditoriaService = new AuditoriaService();
+
+                auditoriaService.Registrar(idUsuario, "Sprint", eliminarSprint.Id, accion,
+                        "btn Eliminar", motivo);
+
+
+                datos.confirmarTransaccion(); // COMMIT
+            }
+            catch (Exception)
+            {
+                datos.cancelarTransaccion(); // ROLLBACK
+                throw;
             }
             finally
             {

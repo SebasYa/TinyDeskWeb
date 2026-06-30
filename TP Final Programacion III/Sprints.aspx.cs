@@ -375,25 +375,21 @@ namespace TP_Final_Programacion_III
                 editarSprint.Area.Id = int.Parse(ddlEditArea.SelectedValue);
                 editarSprint.Estado = new Estado();
                 editarSprint.Estado.Id = int.Parse(ddlEditEstado.SelectedValue);
+                editarSprint.Estado.Nombre = ddlEditEstado.SelectedItem.Text;
                 editarSprint.Proyecto = new Proyecto();
                 editarSprint.Proyecto.Id = int.Parse(ddlEditProyecto.SelectedValue);
                 editarSprint.Activo = true;
+                
+                if (string.IsNullOrWhiteSpace(txtMotivoCambio.Text))
+                {
+                    MostrarErrorValidacion("Por favor, ingrese el motivo del cambio para poder continuar.");
+                    return;
+                }
 
                 string motivo = txtMotivoCambio.Text;
+                string accion = "UPDATE";
 
-                if (original.FechaInicio.Date != editarSprint.FechaInicio.Date)
-                    auditoriaService.Registrar(userLogueado.Id, "Sprint", editarSprint.Id, "UPDATE",
-                        "FechaInicio", original.FechaInicio.ToString(), editarSprint.FechaInicio.ToString(), motivo);
-
-                if (original.FechaEstimadaFin.Date != editarSprint.FechaEstimadaFin.Date)
-                    auditoriaService.Registrar(userLogueado.Id, "Sprint", editarSprint.Id, "UPDATE",
-                        "FechaEstimadaFin", original.FechaEstimadaFin.ToString(), editarSprint.FechaEstimadaFin.ToString(), motivo);
-
-                if (original.Estado.Id != editarSprint.Estado.Id)
-                    auditoriaService.Registrar(userLogueado.Id, "Sprint", editarSprint.Id, "UPDATE",
-                        "Estado", original.Estado.Nombre, editarSprint.Estado.Id.ToString(), motivo);
-
-                sprintNegocio.Modificar(editarSprint);
+                sprintNegocio.ModificarSprintConAuditoria(editarSprint, original, accion, userLogueado.Id, motivo);
 
                 litMensaje.Text = @"
                 <div class='alert alert-success alert-dismissible fade show' role='alert'>
@@ -446,6 +442,11 @@ namespace TP_Final_Programacion_III
                 Sprint original = listaSprints.Find(x => x.Id == eliminarSprint.Id);
 
                 eliminarSprint.Id = original.Id;
+
+                string motivo = txtMotivoCambio.Text;
+                string accion = "DELETE";
+
+                sprintNegocio.EliminarSprintConAuditoria(eliminarSprint, accion, userLogueado.Id, motivo);
 
                 sprintNegocio.Desactivar(eliminarSprint);
 
@@ -559,7 +560,55 @@ namespace TP_Final_Programacion_III
             }
         }
 
-     
+        protected void dgvTicketsDelSprint_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+
+            dgvTicketsDelSprint.PageIndex = e.NewPageIndex;
+
+            dgvTicketsDelSprint.DataSource = Session["listaSprints"];
+            dgvTicketsDelSprint.DataBind();
+        }
+
+        protected void dgvTicketsDelSprint_PageIndexChanging1(object sender, GridViewPageEventArgs e)
+        {
+           
+        }
+
+        protected void dgvSprints_RowCreated(object sender, GridViewRowEventArgs e)
+        {
+            // Verificamos si la fila creada es la del paginador
+            if (e.Row.RowType == DataControlRowType.Pager)
+            {
+                e.Row.Cells[0].Attributes.Add("class", "pagination-container");
+
+                if (e.Row.Cells[0].Controls.Count > 0)
+                {
+                    Table pagerTable = (Table)e.Row.Cells[0].Controls[0];
+
+                    pagerTable.Attributes.Add("class", "pagination pagination-sm justify-content-center my-3");
+
+                    foreach (TableCell cell in pagerTable.Rows[0].Cells)
+                    {
+                        foreach (Control ctrl in cell.Controls)
+                        {
+                            if (ctrl is LinkButton)
+                            {
+                                ((LinkButton)ctrl).CssClass = "page-link";
+                            }
+                            else if (ctrl is Label) // Este es el número de página actual
+                            {
+                                ((Label)ctrl).CssClass = "page-link active";
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        protected void dgvSprints_PageIndexChanging1(object sender, GridViewPageEventArgs e)
+        {
+
+        }
     }
 
 
