@@ -151,24 +151,27 @@
                     </ItemTemplate>
                 </asp:TemplateField>
 
-                <asp:TemplateField HeaderText="Editar">
+                <asp:TemplateField HeaderText="Acciones" ItemStyle-Width="120px">
                     <ItemTemplate>
-                        <div class="fw-semibold text-dark text-sm">
-                            <asp:LinkButton ID="btnEditarSprint" runat="server" CommandName="Select" CssClass="btn btn-link text-muted p-0 lh-1" title="Editar Sprint">
-                                <i class="bi bi-pencil me-2 text-muted"></i>
+                        <div class="d-flex gap-2">
+                            <asp:LinkButton ID="btnVerSprint" runat="server" CommandName="VerDetalle" 
+                                CommandArgument='<%# Eval("Id") %>' CssClass="btn btn-sm btn-outline-primary" title="Ver Sprint">
+                                <i class="bi bi-eye"></i>
+                            </asp:LinkButton>
+
+                            <asp:LinkButton ID="btnEditarSprint" runat="server" CommandName="Select" 
+                                CssClass="btn btn-sm btn-outline-secondary" title="Editar Sprint">
+                                <i class="bi bi-pencil"></i>
+                            </asp:LinkButton>
+
+                            <asp:LinkButton ID="btnAbrirModalEliminar" runat="server" 
+                                CssClass="btn btn-sm btn-outline-danger" 
+                                OnClientClick='<%# "abrirModalEliminar(" + Eval("Id") + "); return false;" %>' title="Eliminar Sprint">
+                                <i class="bi bi-trash"></i>
                             </asp:LinkButton>
                         </div>
                     </ItemTemplate>
                 </asp:TemplateField>
-                 <asp:TemplateField HeaderText="Ver">
-                     <ItemTemplate>
-                         <div class="fw-semibold text-dark text-sm">
-                             <asp:LinkButton ID="btnVerSprint" runat="server" CommandName="VerDetalle" CommandArgument='<%# Eval("Id") %>' CssClass="btn btn-link text-muted p-0 lh-1" title="Ver Sprint">
-                                 <i class="bi bi-eye me-2 text-primary"></i>
-                             </asp:LinkButton>
-                         </div>
-                     </ItemTemplate>
-                 </asp:TemplateField>
 
             </Columns>
             <PagerSettings 
@@ -189,6 +192,18 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
+                            <div id="alertModalEdit" runat="server" class="alert alert-info border d-flex justify-content-between align-items-center mb-0" role="alert">
+                                <div>
+                                    <asp:Label ID="lblIconoModal" runat="server" CssClass="bi bi-info-circle-fill me-2"></asp:Label>
+                                    <span class="fw-bold">Progreso:</span> 
+                                    <asp:Label ID="lblModalProgreso" runat="server" Text="0%"></asp:Label>
+                                </div>
+                                <div>
+                                    <span class="fw-bold">Días:</span> 
+                                    <asp:Label ID="lblModalDiasRestantes" runat="server" Text="-"></asp:Label>
+                                </div>
+                            </div>
+    
                             <asp:Panel ID="pnlFormEditSprint" CssClass="row g-3" runat="server">
 
 
@@ -264,7 +279,6 @@
                         </div>
                         <div class="modal-footer bg-light">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <asp:Button ID="btnEliminar" runat="server" CssClass="btn btn-danger" Text="Eliminar Sprint" onClick="btnEliminar_Click"/>
                             <asp:Button ID="btnGuardarEdicion" runat="server" CssClass="btn btn-primary" Text="Guardar Sprint" OnClientClick="return validarSprintModal();" OnClick="btnGuardarEdicion_Click" />
                         </div>
                     </div>
@@ -388,13 +402,36 @@
     </div>
         </asp:Panel>
     </div>
-    <!-- CODIGO JS PARA VALIDACION DE CAMPOS MODAL -->
+    <!--MODAL CONFIRMACION ELIMINAR -->
+    <asp:HiddenField ID="hfIdSprintEliminar" runat="server" />
+    <div class="modal fade" id="modalEliminarConfirm" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title">Confirmar Eliminación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Estás seguro de que deseas eliminar este Sprint? Esta acción no se puede deshacer.</p>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Motivo de la eliminación:</label>
+                            <asp:TextBox ID="txtMotivoEliminacion" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="2"></asp:TextBox>
+                            <div id="errorEliminacion" class="text-danger small" style="display:none;">Debe ingresar un motivo.</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <asp:Button ID="btnConfirmarEliminacion" runat="server" CssClass="btn btn-danger" Text="Sí, eliminar" OnClick="btnEliminar_Click" OnClientClick="return validarEliminacion();" />
+                    </div>
+                </div>
+            </div>
+        </div>
+   <!-- CODIGO JS PARA VALIDACION DE CAMPOS MODAL -->
     <script type="text/javascript">
     function validarSprintModal() {
         let esValido = true;
 
-        // --- 1. Obtención segura de elementos ---
-        // Usamos el operador || document.createElement('div') para evitar errores si el elemento no existe en la página actual
+        // --- 1. Obtención de elementos ---
         const txtEstFinCrear = document.getElementById('<%= txtFechaEstimadaFin.ClientID %>');
         const txtInicioCrear = document.getElementById('<%= txtFechaInicio.ClientID %>');
         const ddlProyectoCrear = document.getElementById('<%= ddlProyecto.ClientID %>');
@@ -402,59 +439,88 @@
         const ddlAreaCrear = document.getElementById('<%= ddlArea.ClientID %>');
 
         const txtInicio = document.getElementById('<%= txtEditFechaInicio.ClientID %>');
-    const txtEstFin = document.getElementById('<%= txtEditFechaEstimadaFin.ClientID %>');
-    const txtFinReal = document.getElementById('<%= txtEditFechaFin.ClientID %>');
-    const ddlProyecto = document.getElementById('<%= ddlEditProyecto.ClientID %>');
-    const ddlEstado = document.getElementById('<%= ddlEditEstado.ClientID %>');
-    const ddlArea = document.getElementById('<%= ddlEditArea.ClientID %>');
+        const txtEstFin = document.getElementById('<%= txtEditFechaEstimadaFin.ClientID %>');
+        const txtFinReal = document.getElementById('<%= txtEditFechaFin.ClientID %>');
+        const ddlProyecto = document.getElementById('<%= ddlEditProyecto.ClientID %>');
+        const ddlEstado = document.getElementById('<%= ddlEditEstado.ClientID %>');
+        const ddlArea = document.getElementById('<%= ddlEditArea.ClientID %>');
         const txtDescripcionCambio = document.getElementById('<%= txtMotivoCambio.ClientID %>');
 
-        // --- 2. Función auxiliar de validación ---
-        function setValidacion(control, condicion) {
-            if (!control) return; // Si el control no existe en esta página, ignoramos
+        // --- 2. Función auxiliar con LOG de error ---
+        function setValidacion(control, condicion, nombreCampo) {
+            if (!control) return;
             if (condicion) {
                 control.classList.remove('is-invalid');
                 control.classList.add('is-valid');
             } else {
                 control.classList.remove('is-valid');
                 control.classList.add('is-invalid');
+                console.warn("❌ FALLÓ LA VALIDACIÓN EN: " + (nombreCampo || "Desconocido"));
                 esValido = false;
             }
         }
 
-        // --- 3. Validación de Combos (Solo si existen) ---
-        const combos = [ddlProyectoCrear, ddlEstadoCrear, ddlAreaCrear, ddlProyecto, ddlEstado, ddlArea];
-        combos.forEach(c => { if (c) setValidacion(c, c.value !== ""); });
+        // --- 3. Detección de Modal ---
+        const modalCrearVisible = document.getElementById('sprintModal').classList.contains('show');
+        const modalEditarVisible = document.getElementById('sprintEditarModal').classList.contains('show');
 
-        // --- 4. Validación de Fechas ---
-        const hoyStr = new Date().toISOString().split('T')[0];
+        console.log("--- DEBUG DE VARIABLES ---");
+        console.log("Modal Crear Visible:", modalCrearVisible);
+        console.log("Modal Editar Visible:", modalEditarVisible);
 
-        // Validación Crear
-        if (txtInicioCrear && txtEstFinCrear) {
-            setValidacion(txtInicioCrear, txtInicioCrear.value !== "" && txtInicioCrear.value >= hoyStr);
-            setValidacion(txtEstFinCrear, txtEstFinCrear.value !== "" && txtEstFinCrear.value >= txtInicioCrear.value);
+        // --- 4. Validación de Combos ---
+        if (modalEditarVisible) {
+            setValidacion(ddlProyecto, ddlProyecto && ddlProyecto.value !== "", "Proyecto (Editar)");
+            setValidacion(ddlEstado, ddlEstado && ddlEstado.value !== "", "Estado (Editar)");
+            setValidacion(ddlArea, ddlArea && ddlArea.value !== "", "Area (Editar)");
+        } else if (modalCrearVisible) {
+            setValidacion(ddlProyectoCrear, ddlProyectoCrear && ddlProyectoCrear.value !== "", "Proyecto (Crear)");
+            setValidacion(ddlEstadoCrear, ddlEstadoCrear && ddlEstadoCrear.value !== "", "Estado (Crear)");
+            setValidacion(ddlAreaCrear, ddlAreaCrear && ddlAreaCrear.value !== "", "Area (Crear)");
         }
 
-        // Validación Editar
-        if (txtInicio && txtEstFin) {
-            // Fecha Estimada Fin >= Fecha Inicio
-            setValidacion(txtEstFin, txtEstFin.value !== "" && txtEstFin.value >= txtInicio.value);
+        // --- 5. Validación de Fechas ---
+        const hoyStr = new Date().toISOString().split('T')[0];
 
-            // Fecha Fin Real (Opcional)
+        if (modalCrearVisible && txtInicioCrear && txtEstFinCrear) {
+            setValidacion(txtInicioCrear, txtInicioCrear.value !== "" && txtInicioCrear.value >= hoyStr, "Fecha Inicio (Crear)");
+            setValidacion(txtEstFinCrear, txtEstFinCrear.value !== "" && txtEstFinCrear.value >= txtInicioCrear.value, "Fecha Fin (Crear)");
+        }
+
+        if (modalEditarVisible && txtInicio && txtEstFin) {
+            setValidacion(txtEstFin, txtEstFin.value !== "" && txtEstFin.value >= txtInicio.value, "Fecha Estimada Fin (Editar)");
+
             if (txtFinReal && txtFinReal.value !== "") {
-                setValidacion(txtFinReal, txtFinReal.value >= txtInicio.value);
-            } else if (txtFinReal) {
-                txtFinReal.classList.remove('is-invalid', 'is-valid');
+                setValidacion(txtFinReal, txtFinReal.value >= txtInicio.value, "Fecha Fin Real (Editar)");
             }
         }
 
-        // --- 5. Validación Descripción Motivo ---
-        if (txtDescripcionCambio) {
+        // --- 6. Validación Descripción Motivo ---
+        if (modalEditarVisible && txtDescripcionCambio) {
             const motivoValido = txtDescripcionCambio.value.trim().length >= 5;
-            setValidacion(txtDescripcionCambio, motivoValido);
+            setValidacion(txtDescripcionCambio, motivoValido, "Motivo Cambio");
         }
+
+        console.log("RESULTADO FINAL ¿Es válido?:", esValido);
+        console.log("--------------------------");
 
         return esValido;
     }
+
+        function abrirModalEliminar(id) {
+            document.getElementById('<%= hfIdSprintEliminar.ClientID %>').value = id;
+            var myModal = new bootstrap.Modal(document.getElementById('modalEliminarConfirm'));
+            myModal.show();
+        }
+
+        function validarEliminacion() {
+            const txt = document.getElementById('<%= txtMotivoEliminacion.ClientID %>');
+            const err = document.getElementById('errorEliminacion');
+            if (txt.value.trim().length < 5) {
+                err.style.display = 'block';
+                return false;
+            }
+            return true;
+        }
     </script>
 </asp:Content>

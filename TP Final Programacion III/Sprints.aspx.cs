@@ -4,6 +4,7 @@ using negocio;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -264,6 +265,25 @@ namespace TP_Final_Programacion_III
 
                 if (sprintAEditar != null)
                 {
+
+                    string textoDias = GetDiasRestantesTexto(sprintAEditar.FechaEstimadaFin, sprintAEditar.Estado.EsFinal, sprintAEditar.FechaFin);
+                    lblModalDiasRestantes.Text = textoDias;
+                    lblModalProgreso.Text = sprintAEditar.Progreso + "%";
+
+
+                    if (textoDias.ToLower().Contains("retraso"))
+                    {
+                        alertModalEdit.Attributes["class"] = "alert alert-danger border d-flex justify-content-between align-items-center mb-0";
+
+                        lblIconoModal.Attributes["class"] = "bi bi-exclamation-triangle-fill me-2";
+                    }
+                    else
+                    {
+                        alertModalEdit.Attributes["class"] = "alert alert-info border d-flex justify-content-between align-items-center mb-0";
+                   
+                        lblIconoModal.Attributes["class"] = "bi bi-info-circle-fill me-2";
+                    }
+
                     Session["IdSprintEditar"] = sprintAEditar.Id;
                     lblModalEditarTitulo.Text = $"Editar Sprint {sprintAEditar.NumeroSprint}";
 
@@ -403,6 +423,7 @@ namespace TP_Final_Programacion_III
                 ddlArea.SelectedIndex = 0;
                 ddlEstado.SelectedIndex = 0;
                 ddlProyecto.SelectedIndex = 0;
+                txtMotivoCambio.Text = "";
 
                 Session.Add("listaSprints", sprintNegocio.listar(userLogueado.Empresa.Id));
                 dgvSprints.DataSource = Session["listaSprints"];
@@ -426,6 +447,9 @@ namespace TP_Final_Programacion_III
         {
             try
             {
+                int idSprint = int.Parse(hfIdSprintEliminar.Value);
+                Session["IdSprintEditar"] = idSprint;
+
                 if (Session["IdSprintEditar"] == null)
                 {
                     litMensaje.Text = "<div class='alert alert-danger'>Error: No se pudo identificar el Sprint a editar.</div>";
@@ -443,12 +467,12 @@ namespace TP_Final_Programacion_III
 
                 eliminarSprint.Id = original.Id;
 
-                string motivo = txtMotivoCambio.Text;
+                string motivo = txtMotivoEliminacion.Text;
                 string accion = "DELETE";
 
                 sprintNegocio.EliminarSprintConAuditoria(eliminarSprint, accion, userLogueado.Id, motivo);
 
-                sprintNegocio.Desactivar(eliminarSprint);
+                //sprintNegocio.Desactivar(eliminarSprint);
 
                 litMensaje.Text = @"
                 <div class='alert alert-success alert-dismissible fade show' role='alert'>
@@ -461,6 +485,7 @@ namespace TP_Final_Programacion_III
                 dgvSprints.DataSource = Session["listaSprints"];
                 dgvSprints.DataBind();
 
+                txtMotivoEliminacion.Text = "";
 
             }
             catch (Exception ex)
