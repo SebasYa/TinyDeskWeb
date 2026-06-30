@@ -531,11 +531,63 @@ namespace TP_Final_Programacion_III
         {
             if (e.CommandName == "VerDetalle")
             {
-                // Recuperamos el ID que enviamos en el CommandArgument
                 string idSprint = e.CommandArgument.ToString();
 
                 // Redirigimos a la misma página pasando el ID por parámetro en la URL
                 Response.Redirect($"Sprints.aspx?id={idSprint}");
+            }
+
+            if (e.CommandName == "Finalizar")
+            {
+                int idSprint = Convert.ToInt32(e.CommandArgument);
+                FinalizarSprint(idSprint);
+            }
+        }
+
+        private void FinalizarSprint(int idSprint)
+        {
+            try
+            {
+                SprintNegocio sprintNegocio = new SprintNegocio();
+                Usuario userLogueado = (Usuario)Session["usuario"];
+                List<Sprint> listaSprints = (List<Sprint>)Session["listaSprints"];
+
+                Sprint original = listaSprints.Find(x => x.Id == idSprint);
+
+                Sprint sprintFinalizado = new Sprint();
+
+                sprintFinalizado.Id = original.Id;
+                sprintFinalizado.NumeroSprint = original.NumeroSprint;
+                sprintFinalizado.FechaInicio = original.FechaInicio;
+                sprintFinalizado.FechaEstimadaFin = original.FechaEstimadaFin;
+                sprintFinalizado.Proyecto = original.Proyecto;
+                sprintFinalizado.Area = original.Area;
+                sprintFinalizado.Activo = original.Activo;
+
+                sprintFinalizado.FechaFin = DateTime.Now;
+                sprintFinalizado.Estado = new Estado { Id = 3, Nombre= "Finalizado" };//FINALIZADO
+
+                string motivo = "Finalización automática desde grilla.";
+                sprintNegocio.ModificarSprintConAuditoria(sprintFinalizado, original, "FINALIZAR", userLogueado.Id, motivo);
+
+
+                litMensaje.Text = @"
+                <div class='alert alert-success alert-dismissible fade show' role='alert'>
+                    <strong>¡Éxito!</strong> ¡Sprint finalizado con éxito!
+                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+
+                Session["listaSprints"] = sprintNegocio.listar(userLogueado.Empresa.Id);
+                dgvSprints.DataSource = Session["listaSprints"];
+                dgvSprints.DataBind();
+            }
+            catch (Exception ex)
+            {
+                litMensaje.Text = $@"
+                <div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                    <strong>Error al finalizar:</strong> {ex.Message}
+                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>"; 
             }
         }
 
