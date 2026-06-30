@@ -65,6 +65,14 @@ namespace TP_Final_Programacion_III
                 btnFiltroFinalizados.CssClass = "btn btn-outline-secondary";
             }
 
+            string filtro = txtFiltroProyecto.Text.Trim();
+            if (!string.IsNullOrWhiteSpace(filtro))
+            {
+                lista = lista.Where(x =>
+                    (!string.IsNullOrWhiteSpace(x.Nombre) && x.Nombre.IndexOf(filtro, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (!string.IsNullOrWhiteSpace(x.Descripcion) && x.Descripcion.IndexOf(filtro, StringComparison.OrdinalIgnoreCase) >= 0)
+                ).ToList();
+            }
             lvProyectos.DataSource = lista;
             lvProyectos.DataBind();
             dpProyectos.Visible = lista.Count > dpProyectos.PageSize;
@@ -383,6 +391,19 @@ namespace TP_Final_Programacion_III
             return "<span class='badge rounded-pill bg-info-subtle text-info'>" +
                    "<i class='bi bi-tag-fill me-1'></i>" + estado +
                    "</span>";
+        }
+        protected void btnBuscarProyecto_Click(object sender, EventArgs e)
+        {
+            dpProyectos.SetPageProperties(0, dpProyectos.PageSize, false);
+            Usuario usuario = (Usuario)Session["usuario"];
+            CargarListadoProyectos(usuario.Empresa.Id);
+        }
+        protected void btnLimpiarFiltroProyecto_Click(object sender, EventArgs e)
+        {
+            txtFiltroProyecto.Text = "";
+            dpProyectos.SetPageProperties(0, dpProyectos.PageSize, false);
+            Usuario usuario = (Usuario)Session["usuario"];
+            CargarListadoProyectos(usuario.Empresa.Id);
         }
     }
 }
