@@ -32,181 +32,281 @@
                 </div>
             </div>
 
-            <!-- MODAL NUEVO TICKET -->
-            <div class="modal fade" id="ticketModal" tabindex="-1"
-                aria-labelledby="ticketModalLabel" aria-hidden="true">
+            <!-- INICIO - CREAR TICKET MODAL -->
+
+            <div class="modal fade" id="ticketModal" tabindex="-1" aria-labelledby="ticketModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header bg-light">
                             <h5 class="modal-title fw-bold" id="ticketModalLabel">Nuevo Ticket</h5>
-                            <button type="button" class="btn-close"
-                                data-bs-dismiss="modal" aria-label="Close">
-                            </button>
+                            <asp:LinkButton ID="btnCloseTicket" runat="server" CssClass="btn-close" OnClick="btnCancelarTicket_Click" aria-label="Close"></asp:LinkButton>
                         </div>
                         <div class="modal-body">
-                            <div class="row g-3">
+                            <asp:UpdatePanel ID="upTicketModal" runat="server" UpdateMode="Conditional">
+                                <ContentTemplate>
+                                    <asp:Panel ID="pnlFormTicket" CssClass="row g-3" runat="server">
 
-                                <div class="col-12">
-                                    <label class="form-label fw-semibold">Descripción</label>
-                                    <asp:TextBox ID="txtDescripcion" runat="server"
-                                        CssClass="form-control"
-                                        TextMode="MultiLine" Rows="3" />
-                                    <div class="invalid-feedback">
-                                        La descripción es obligatoria.
-                                    </div>
-                                </div>
+                                        <div class="col-12">
+                                            <div class="border-bottom pb-2 mb-1">
+                                                <h6 class="text-uppercase text-muted fw-bold mb-0" style="font-size: .75rem;">Detalle del ticket</h6>
+                                            </div>
+                                        </div>
 
-                                <div class="col-md-6">
-                                    <label class="form-label fw-semibold">Fecha Estimada Fin</label>
-                                    <asp:TextBox ID="txtFechaEstimadaFin" runat="server"
-                                        CssClass="form-control" TextMode="Date" />
-                                    <div class="invalid-feedback">
-                                        La fecha estimada de fin es obligatoria.
-                                    </div>
-                                </div>
+                                        <div class="col-md-12">
+                                            <label for="txtDescripcionTicket" class="form-label fw-semibold">Descripción</label>
+                                            <asp:TextBox ID="txtDescripcionTicket" runat="server" CssClass="form-control w-100 mw-100"
+                                                TextMode="MultiLine" Rows="3" MaxLength="150"
+                                                placeholder="Ingresá una descripción breve..."></asp:TextBox>
+                                        </div>
 
-                                <div class="col-md-6">
-                                    <label class="form-label fw-semibold">Prioridad</label>
-                                    <asp:DropDownList ID="ddlPrioridad" runat="server" CssClass="form-select">
-                                        <asp:ListItem Text="Seleccione Prioridad..." Value="" />
-                                    </asp:DropDownList>
-                                    <div class="invalid-feedback">Debes elegir una Prioridad.</div>
-                                </div>
+                                        <div class="col-md-4">
+                                            <label for="txtFechaInicioTicket" class="form-label fw-semibold">Fecha Inicio</label>
+                                            <asp:TextBox ID="txtFechaInicioTicket" runat="server" CssClass="form-control" TextMode="Date" Enabled="false"></asp:TextBox>
+                                        </div>
 
-                                <div class="col-md-4">
-                                    <label class="form-label fw-semibold">Estado</label>
-                                    <asp:DropDownList ID="ddlEstado" runat="server" CssClass="form-select">
-                                        <asp:ListItem Text="Seleccione Estado..." Value="" />
-                                    </asp:DropDownList>
-                                    <div class="invalid-feedback">Debes elegir un Estado.</div>
-                                </div>
+                                        <div class="col-md-4">
+                                            <label for="txtFechaEstimadaTicket" class="form-label fw-semibold">Fecha Estimada Fin</label>
+                                            <asp:TextBox ID="txtFechaEstimadaTicket" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                                        </div>
 
-                                <div class="col-md-4">
-                                    <label class="form-label fw-semibold">Usuario</label>
-                                    <asp:DropDownList ID="ddlUsuario" runat="server" CssClass="form-select">
-                                        <asp:ListItem Text="Seleccione Usuario..." Value="" />
-                                    </asp:DropDownList>
-                                    <div class="invalid-feedback">Debes elegir un Usuario.</div>
-                                </div>
+                                        <div class="col-md-4">
+                                            <label for="ddlPrioridadTicket" class="form-label fw-semibold">Prioridad</label>
+                                            <asp:DropDownList ID="ddlPrioridadTicket" runat="server" CssClass="form-select">
+                                            </asp:DropDownList>
+                                        </div>
 
-                                <div class="col-md-4">
-                                    <label class="form-label fw-semibold">Sprint</label>
-                                    <asp:DropDownList ID="ddlSprint" runat="server" CssClass="form-select">
-                                        <asp:ListItem Text="Seleccione Sprint..." Value="" />
-                                    </asp:DropDownList>
-                                    <div class="invalid-feedback">Debes elegir un Sprint.</div>
-                                </div>
+                                        <div class="col-12 mt-3">
+                                            <div class="border-bottom pb-2 mb-1">
+                                                <h6 class="text-uppercase text-muted fw-bold mb-0" style="font-size: .75rem;">Proyecto y sprint</h6>
+                                            </div>
+                                        </div>
 
-                            </div>
+                                        <div class="col-md-6">
+                                            <label for="ddlProyectoTicket" class="form-label fw-semibold">Proyecto</label>
+                                            <asp:DropDownList ID="ddlProyectoTicket" runat="server" CssClass="form-select"
+                                                AutoPostBack="true" OnSelectedIndexChanged="ddlProyectoTicket_SelectedIndexChanged">
+                                            </asp:DropDownList>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label for="ddlSprintTicket" class="form-label fw-semibold">Sprint</label>
+                                            <asp:DropDownList ID="ddlSprintTicket" runat="server" CssClass="form-select">
+                                            </asp:DropDownList>
+                                        </div>
+
+                                        <div class="col-12 mt-3">
+                                            <div class="border-bottom pb-2 mb-1">
+                                                <h6 class="text-uppercase text-muted fw-bold mb-0" style="font-size: .75rem;">Asignación</h6>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label for="ddlAreaTicket" class="form-label fw-semibold">Area</label>
+                                            <asp:DropDownList ID="ddlAreaTicket" runat="server" CssClass="form-select"
+                                                AutoPostBack="true" OnSelectedIndexChanged="ddlFiltroUsuarioTicket_SelectedIndexChanged">
+                                            </asp:DropDownList>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label for="ddlPuestoTicket" class="form-label fw-semibold">Puesto</label>
+                                            <asp:DropDownList ID="ddlPuestoTicket" runat="server" CssClass="form-select"
+                                                AutoPostBack="true" OnSelectedIndexChanged="ddlFiltroUsuarioTicket_SelectedIndexChanged">
+                                            </asp:DropDownList>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label for="ddlSeniorityTicket" class="form-label fw-semibold">Seniority</label>
+                                            <asp:DropDownList ID="ddlSeniorityTicket" runat="server" CssClass="form-select"
+                                                AutoPostBack="true" OnSelectedIndexChanged="ddlFiltroUsuarioTicket_SelectedIndexChanged">
+                                            </asp:DropDownList>
+                                        </div>
+
+                                        <div class="col-md-8">
+                                            <label for="ddlUsuarioTicket" class="form-label fw-semibold">Usuario</label>
+                                            <asp:DropDownList ID="ddlUsuarioTicket" runat="server" CssClass="form-select"
+                                                AutoPostBack="true" OnSelectedIndexChanged="ddlUsuarioTicket_SelectedIndexChanged">
+                                            </asp:DropDownList>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label for="ddlEstadoTicket" class="form-label fw-semibold">Estado</label>
+                                            <asp:DropDownList ID="ddlEstadoTicket" runat="server" CssClass="form-select">
+                                            </asp:DropDownList>
+                                        </div>
+
+                                    </asp:Panel>
+                                </ContentTemplate>
+                            </asp:UpdatePanel>
                         </div>
+
                         <div class="modal-footer bg-light">
-                            <button type="button" class="btn btn-secondary"
-                                data-bs-dismiss="modal">
-                                Cancelar</button>
-                            <asp:Button ID="btnGuardarTicket" runat="server"
-                                CssClass="btn btn-primary"
-                                Text="Guardar Ticket"
-                                OnClick="btnGuardarTicket_Click" />
+                            <asp:Button ID="btnCancelarTicket" runat="server" CssClass="btn btn-secondary" Text="Cancelar" OnClick="btnCancelarTicket_Click" UseSubmitBehavior="false" />
+                            <asp:Button ID="btnGuardarTicket" runat="server" CssClass="btn btn-primary"
+                                Text="Guardar Ticket" OnClick="btnGuardarTicket_Click" />
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- FIN MODAL NUEVO -->
+
+            <!-- FIN - CREAR TICKET MODAL -->
 
             <!-- GRILLA -->
-            <asp:GridView ID="dgvTickets" runat="server"
-                DataKeyNames="Id"
-                CssClass="table table-hover align-middle bg-white border-0 shadow-sm rounded mb-0"
-                AutoGenerateColumns="false"
-                OnSelectedIndexChanged="dgvTickets_SelectedIndexChanged"
-                OnPageIndexChanging="dgvTickets_PageIndexChanging"
-                OnRowCommand="dgvTickets_RowCommand"
-                AllowPaging="true" PageSize="10" GridLines="None">
+            <div class="table-responsive">
 
-                <HeaderStyle CssClass="table-light text-secondary fw-semibold border-bottom" />
+                <asp:ListView
+                    ID="lvTickets"
+                    runat="server"
+                    ItemPlaceholderID="itemPlaceholder"
+                    OnItemCommand="lvTickets_ItemCommand"
+                    OnPagePropertiesChanging="lvTickets_PagePropertiesChanging">
 
-                <Columns>
+                    <LayoutTemplate>
+                        <table class="table table-hover align-middle bg-white border-0 shadow-sm rounded mb-0">
 
-                    <asp:TemplateField HeaderText="Ticket">
-                        <ItemTemplate>
-                            <span class="text-dark fw-bold">TK-<%# Eval("Id").ToString().PadLeft(3, '0') %>
-                            </span>
-                            <div class="text-muted small"><%# Eval("Descripcion") %></div>
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                            <thead class="table-light text-secondary fw-semibold border-bottom">
+                                <tr>
+                                    <th>Ticket</th>
+                                    <th>Estado</th>
+                                    <th>Prioridad</th>
+                                    <th>Sprint / Proyecto</th>
+                                    <th>Asignado a</th>
+                                    <th>Fecha Est. Fin</th>
+                                    <th>Editar</th>
+                                    <th>Ver</th>
+                                </tr>
+                            </thead>
 
-                    <asp:TemplateField HeaderText="Estado">
-                        <ItemTemplate>
-                            <span class='<%# GetClassEtiquetaEstado(Eval("Estado.Nombre")) %>'>
-                                <%# Eval("Estado.Nombre") %>
-                            </span>
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                            <tbody>
+                                <asp:PlaceHolder
+                                    ID="itemPlaceholder"
+                                    runat="server" />
+                            </tbody>
 
-                    <asp:TemplateField HeaderText="Prioridad">
-                        <ItemTemplate>
-                            <span class='<%# GetClassEtiquetaPrioridad(Eval("Prioridad.Nombre")) %>'>
-                                <%# Eval("Prioridad.Nombre") %>
-                            </span>
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        </table>
+                    </LayoutTemplate>
 
-                    <asp:TemplateField HeaderText="Sprint / Proyecto">
-                        <ItemTemplate>
-                            <div class="fw-semibold text-dark text-sm">
-                                <%# Eval("Sprint.Proyecto.Nombre") %>
-                            </div>
-                            <span class="badge bg-secondary-subtle text-secondary rounded-pill font-monospace"
-                                style="font-size: 0.75rem;">Sprint <%# Eval("Sprint.NumeroSprint") %>
-                            </span>
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                    <ItemTemplate>
+                        <tr>
 
-                    <asp:TemplateField HeaderText="Asignado a">
-                        <ItemTemplate>
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-person text-muted me-2"></i>
-                                <span class="text-dark fw-medium text-sm">
-                                    <%# Eval("Usuario.Nombre") %> <%# Eval("Usuario.Apellido") %>
+                            <td>
+                                <span class="text-dark fw-bold">TK-<%# Eval("Id").ToString().PadLeft(3, '0') %>
                                 </span>
-                            </div>
-                        </ItemTemplate>
-                    </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Fecha Est. Fin" ItemStyle-Width="120px">
-                        <ItemTemplate>
-                            <span class="text-muted small">
-                                <%# Convert.ToDateTime(Eval("FechaEstimadaFin")).ToString("dd/MM/yyyy") %>
-                            </span>
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                                <div class="text-muted small">
+                                    <%# Eval("Descripcion") %>
+                                </div>
+                            </td>
 
-                    <asp:TemplateField HeaderText="Editar">
-                        <ItemTemplate>
-                            <asp:LinkButton ID="btnEditarTicket" runat="server"
-                                CommandName="AbrirEditar"
-                                CommandArgument='<%# Eval("Id") %>'
-                                CssClass="btn btn-link text-muted p-0 lh-1"
-                                title="Editar Ticket">
-                            <i class="bi bi-pencil me-2 text-muted"></i>
-                            </asp:LinkButton>
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                            <td>
+                                <span class='<%# GetClassEtiquetaEstado(Eval("Estado.Nombre")) %>'>
+                                    <%# Eval("Estado.Nombre") %>
+                                </span>
+                            </td>
 
-                    <asp:TemplateField HeaderText="Ver">
-                        <ItemTemplate>
-                            <asp:LinkButton ID="btnVerTicket" runat="server"
-                                CommandName="VerDetalle"
-                                CommandArgument='<%# Eval("Id") %>'
-                                CssClass="btn btn-link text-muted p-0 lh-1"
-                                title="Ver Ticket">
-                            <i class="bi bi-eye me-2 text-primary"></i>
-                            </asp:LinkButton>
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                            <td>
+                                <span class='<%# GetClassEtiquetaPrioridad(Eval("Prioridad.Nombre")) %>'>
+                                    <%# Eval("Prioridad.Nombre") %>
+                                </span>
+                            </td>
 
-                </Columns>
-            </asp:GridView>
+                            <td>
+                                <div class="fw-semibold text-dark">
+                                    <%# Eval("Sprint.Proyecto.Nombre") %>
+                                </div>
+
+                                <span class="badge bg-secondary-subtle text-secondary rounded-pill font-monospace">Sprint <%# Eval("Sprint.NumeroSprint") %>
+                                </span>
+                            </td>
+
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-person text-muted me-2"></i>
+
+                                    <span class="text-dark fw-medium">
+                                        <%# Eval("Usuario.Nombre") %>
+                                        <%# Eval("Usuario.Apellido") %>
+                                    </span>
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="text-muted small">
+                                    <%# Eval("FechaEstimadaFin", "{0:dd/MM/yyyy}") %>
+                                </span>
+                            </td>
+
+                            <td>
+                                <asp:LinkButton
+                                    ID="btnEditarTicket"
+                                    runat="server"
+                                    CommandName="AbrirEditar"
+                                    CommandArgument='<%# Eval("Id") %>'
+                                    CssClass="btn btn-link text-muted p-0 lh-1"
+                                    CausesValidation="false"
+                                    ToolTip="Editar Ticket">
+
+                        <i class="bi bi-pencil text-muted"></i>
+                                </asp:LinkButton>
+                            </td>
+
+                            <td>
+                                <asp:LinkButton
+                                    ID="btnVerTicket"
+                                    runat="server"
+                                    CommandName="VerDetalle"
+                                    CommandArgument='<%# Eval("Id") %>'
+                                    CssClass="btn btn-link text-primary p-0 lh-1"
+                                    CausesValidation="false"
+                                    ToolTip="Ver Ticket">
+
+                        <i class="bi bi-eye text-primary"></i>
+                                </asp:LinkButton>
+                            </td>
+
+                        </tr>
+                    </ItemTemplate>
+
+                    <EmptyDataTemplate>
+                        <div class="alert alert-info">
+                            No hay tickets para mostrar.
+                        </div>
+                    </EmptyDataTemplate>
+
+                </asp:ListView>
+
+            </div>
+
+            <div class="d-flex justify-content-center mt-4">
+
+                <asp:DataPager
+                    ID="dpTickets"
+                    runat="server"
+                    PagedControlID="lvTickets"
+                    PageSize="8">
+
+                    <Fields>
+
+                        <asp:NextPreviousPagerField
+                            ShowPreviousPageButton="true"
+                            ShowNextPageButton="false"
+                            PreviousPageText="Anterior"
+                            ButtonCssClass="btn btn-outline-secondary me-1" />
+
+                        <asp:NumericPagerField
+                            ButtonCount="5"
+                            NumericButtonCssClass="btn btn-outline-primary me-1"
+                            CurrentPageLabelCssClass="btn btn-primary me-1" />
+
+                        <asp:NextPreviousPagerField
+                            ShowPreviousPageButton="false"
+                            ShowNextPageButton="true"
+                            NextPageText="Siguiente"
+                            ButtonCssClass="btn btn-outline-secondary" />
+
+                    </Fields>
+                </asp:DataPager>
+
+            </div>
 
         </asp:Panel>
         <!-- FIN PANEL LISTADO -->

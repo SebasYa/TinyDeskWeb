@@ -56,8 +56,18 @@ namespace TP_Final_Programacion_III
             List<Ticket> lista = negocio.Listar(idEmpresa);
 
             Session["listaTickets"] = lista;
-            dgvTickets.DataSource = lista;
-            dgvTickets.DataBind();
+            Session["listaTicketsFiltrados"] = lista;
+
+            dpTickets.SetPageProperties(
+                0,
+                dpTickets.PageSize,
+                false
+            );
+
+            lvTickets.DataSource = lista;
+            lvTickets.DataBind();
+
+            dpTickets.Visible = lista.Count > dpTickets.PageSize;
         }
 
         private void CargarDetalleTicket(int idTicket, int idEmpresa)
@@ -102,53 +112,22 @@ namespace TP_Final_Programacion_III
 
         private void CargarDropdowns(int idEmpresa)
         {
+            CargarCombosTicket(idEmpresa);
             // Prioridades
             PrioridadNegocio prioridadNegocio = new PrioridadNegocio();
             var prioridades = prioridadNegocio.listar();
-
-            ddlPrioridad.DataSource = prioridades;
-            ddlPrioridad.DataValueField = "Id";
-            ddlPrioridad.DataTextField = "Nombre";
-            ddlPrioridad.DataBind();
-            ddlPrioridad.Items.Insert(0, new ListItem("Seleccione prioridad...", ""));
-
-            ddlEditPrioridad.DataSource = prioridades;
-            ddlEditPrioridad.DataValueField = "Id";
-            ddlEditPrioridad.DataTextField = "Nombre";
-            ddlEditPrioridad.DataBind();
-            ddlEditPrioridad.Items.Insert(0, new ListItem("Seleccione prioridad...", ""));
+            CargarLista(ddlEditPrioridad, prioridades, "Id", "Nombre", "Seleccione Prioridad...");
 
             // Estados
             EstadoNegocio estadoNegocio = new EstadoNegocio();
             var estados = estadoNegocio.listar(idEmpresa);
             Session["listaEstadosTicket"] = estados;
-
-            ddlEstado.DataSource = estados;
-            ddlEstado.DataValueField = "Id";
-            ddlEstado.DataTextField = "Nombre";
-            ddlEstado.DataBind();
-            ddlEstado.Items.Insert(0, new ListItem("Seleccione estado...", ""));
-
-            ddlEditEstado.DataSource = estados;
-            ddlEditEstado.DataValueField = "Id";
-            ddlEditEstado.DataTextField = "Nombre";
-            ddlEditEstado.DataBind();
-            ddlEditEstado.Items.Insert(0, new ListItem("Seleccione estado...", ""));
+            CargarLista(ddlEditEstado, estados, "Id", "Nombre", "Seleccione Estado...");
 
             // Usuarios activos de la empresa
             UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
             var usuarios = usuarioNegocio.listar(idEmpresa)
                 .FindAll(u => u.Activo && u.EmailVerificado);
-
-            ddlUsuario.DataSource = usuarios.Select(u => new
-            {
-                Id = u.Id,
-                NombreCompleto = u.Nombre + " " + u.Apellido
-            }).ToList();
-            ddlUsuario.DataValueField = "Id";
-            ddlUsuario.DataTextField = "NombreCompleto";
-            ddlUsuario.DataBind();
-            ddlUsuario.Items.Insert(0, new ListItem("Seleccione usuario...", ""));
 
             ddlEditUsuario.DataSource = usuarios.Select(u => new
             {
@@ -163,16 +142,6 @@ namespace TP_Final_Programacion_III
             // Sprints activos de la empresa
             SprintNegocio sprintNegocio = new SprintNegocio();
             var sprints = sprintNegocio.listar(idEmpresa);
-
-            ddlSprint.DataSource = sprints.Select(s => new
-            {
-                Id = s.Id,
-                Nombre = "Sprint " + s.NumeroSprint + " - " + s.Proyecto.Nombre
-            }).ToList();
-            ddlSprint.DataValueField = "Id";
-            ddlSprint.DataTextField = "Nombre";
-            ddlSprint.DataBind();
-            ddlSprint.Items.Insert(0, new ListItem("Seleccione sprint...", ""));
 
             ddlEditSprint.DataSource = sprints.Select(s => new
             {
@@ -191,43 +160,82 @@ namespace TP_Final_Programacion_III
 
         protected void btnGuardarTicket_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtDescripcion.Text) ||
-                string.IsNullOrWhiteSpace(txtFechaEstimadaFin.Text) ||
-                string.IsNullOrWhiteSpace(ddlPrioridad.SelectedValue) ||
-                string.IsNullOrWhiteSpace(ddlEstado.SelectedValue) ||
-                string.IsNullOrWhiteSpace(ddlUsuario.SelectedValue) ||
-                string.IsNullOrWhiteSpace(ddlSprint.SelectedValue))
+            if (string.IsNullOrWhiteSpace(txtDescripcionTicket.Text) ||
+                string.IsNullOrWhiteSpace(txtFechaEstimadaTicket.Text) ||
+                string.IsNullOrWhiteSpace(ddlPrioridadTicket.SelectedValue) ||
+                string.IsNullOrWhiteSpace(ddlProyectoTicket.SelectedValue) ||
+                string.IsNullOrWhiteSpace(ddlSprintTicket.SelectedValue) ||
+                string.IsNullOrWhiteSpace(ddlUsuarioTicket.SelectedValue) ||
+                string.IsNullOrWhiteSpace(ddlEstadoTicket.SelectedValue))
             {
                 MostrarError("Completá todos los campos obligatorios.");
                 return;
             }
+            int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
 
             try
             {
-                Ticket ticket = new Ticket();
-                ticket.Descripcion = txtDescripcion.Text;
-                ticket.FechaInicio = DateTime.Today;
-                ticket.FechaEstimadaFin = Convert.ToDateTime(txtFechaEstimadaFin.Text);
-                ticket.Activo = true;
+                // Creacion del ticket
+                TicketNegocio ticketNegocio = new TicketNegocio();
+                Ticket nuevoTicket = new Ticket();
 
-                ticket.Prioridad = new Prioridad();
-                ticket.Prioridad.Id = int.Parse(ddlPrioridad.SelectedValue);
+                DateTime fechaInicio = DateTime.Today;
+                DateTime fechaEstimadaFin = Convert.ToDateTime(txtFechaEstimadaTicket.Text);
+                if (fechaEstimadaFin.Date < fechaInicio.Date)
+                {
+                    litMensaje.Text = @" <div class='alert alert-warning alert-dismissible fade show' role='alert'>
+                                             La fecha estimada de fin no puede ser anterior a la fecha de inicio.
+                                             <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                                         </div>";
+                    return;
+                }
 
-                ticket.Estado = new Estado();
-                ticket.Estado.Id = int.Parse(ddlEstado.SelectedValue);
+                nuevoTicket.Descripcion = txtDescripcionTicket.Text;
+                nuevoTicket.FechaInicio = fechaInicio;
+                nuevoTicket.FechaEstimadaFin = fechaEstimadaFin;
+                nuevoTicket.Activo = true;
 
-                ticket.Usuario = new Usuario();
-                ticket.Usuario.Id = int.Parse(ddlUsuario.SelectedValue);
+                nuevoTicket.Prioridad = new Prioridad();
+                nuevoTicket.Prioridad.Id = int.Parse(ddlPrioridadTicket.SelectedValue);
+                nuevoTicket.Prioridad.Nombre = ddlPrioridadTicket.SelectedItem.Text;
 
-                ticket.Sprint = new Sprint();
-                ticket.Sprint.Id = int.Parse(ddlSprint.SelectedValue);
+                nuevoTicket.Usuario = new Usuario();
+                nuevoTicket.Usuario.Id = int.Parse(ddlUsuarioTicket.SelectedValue);
 
-                TicketNegocio negocio = new TicketNegocio();
-                negocio.AgregarTicket(ticket);
+                nuevoTicket.Estado = new Estado();
+                nuevoTicket.Estado.Id = int.Parse(ddlEstadoTicket.SelectedValue);
 
-                int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
-                MostrarExito("Ticket creado correctamente.");
+                nuevoTicket.Sprint = new Sprint();
+                nuevoTicket.Sprint.Id = int.Parse(ddlSprintTicket.SelectedValue);
+
+                int idTicket = ticketNegocio.AgregarTicket(nuevoTicket);
+                nuevoTicket.Id = idTicket;
+
+                // Enviar mail al usuario asignado
+                EmailService emailService = new EmailService();
+                string linkTicket = LinkHelper.GenerarLink(this, "Tickets.aspx", "id", nuevoTicket.Id.ToString());
+
+                bool mailEnviado = emailService.EnviarMailTicketAsignado(nuevoTicket.Usuario.Id, nuevoTicket, linkTicket);
+
+                if (mailEnviado)
+                {
+                    litMensaje.Text = @"<div class='alert alert-success alert-dismissible fade show' role='alert'>
+                                            El ticket fue creado y se notificó al usuario asignado.
+                                            <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                                        </div>";
+                }
+                else
+                {
+                    litMensaje.Text = @"<div class='alert alert-warning alert-dismissible fade show' role='alert'>
+                                            El ticket fue creado, pero no se pudo enviar el mail al usuario asignado.
+                                            <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                                        </div>";
+                }
+
+                //Limpiar Campos y recargar grilla
                 CargarListado(idEmpresa);
+                CargarCombosTicket(idEmpresa);
+                LimpiarCamposTicket();
             }
             catch (Exception ex)
             {
@@ -235,11 +243,8 @@ namespace TP_Final_Programacion_III
                 MostrarError("Ocurrió un error al crear el ticket.");
             }
         }
-
         
-        //MODIFICAR TICKET
-        
-
+        //MODIFICAR TICKET     
         protected void btnGuardarEdicion_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtEditDescripcion.Text) ||
@@ -286,11 +291,14 @@ namespace TP_Final_Programacion_III
                 MostrarError("Ocurrió un error al modificar el ticket.");
             }
         }
+        protected void btnCancelarTicket_Click(object sender, EventArgs e)
+        {
+            int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
+            CargarCombosTicket(idEmpresa);
+            LimpiarCamposTicket();
+        }
 
-        
         //BAJA LÓGICA
-        
-
         protected void btnBajaLogica_Click(object sender, EventArgs e)
         {
             try
@@ -310,27 +318,19 @@ namespace TP_Final_Programacion_III
             }
         }
 
-        
+
         // GRILLA 
-        
-
-        protected void dgvTickets_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        protected void lvTickets_PagePropertiesChanging(object sender, PagePropertiesChangingEventArgs e)
         {
-            dgvTickets.PageIndex = e.NewPageIndex;
-            dgvTickets.DataSource = Session["listaTickets"];
-            dgvTickets.DataBind();
-        }
-
-        protected void dgvTickets_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            int idTicket = (int)dgvTickets.SelectedDataKey.Value;
-            Response.Redirect("Tickets.aspx?id=" + idTicket, false);
+            dpTickets.SetPageProperties(e.StartRowIndex, e.MaximumRows, false);
+            List<Ticket> lista = Session["listaTicketsFiltrados"] as List<Ticket> ?? Session["listaTickets"] as List<Ticket> ?? new List<Ticket>();
+            lvTickets.DataSource = lista;
+            lvTickets.DataBind();
+            dpTickets.Visible = lista.Count > dpTickets.PageSize;
         }
 
         
         // HELPERS
-        
-
         private void MostrarError(string mensaje)
         {
             litMensaje.Text = $@"<div class='alert alert-danger alert-dismissible fade show' role='alert'>
@@ -347,7 +347,7 @@ namespace TP_Final_Programacion_III
                                   </div>";
         }
 
-        protected void dgvTickets_RowCommand(object sender, GridViewCommandEventArgs e)
+        protected void lvTickets_ItemCommand(object sender, ListViewCommandEventArgs e)
         {
             if (e.CommandName == "VerDetalle")
             {
@@ -432,9 +432,8 @@ namespace TP_Final_Programacion_III
         }
         protected void txtFiltroTickets_TextChanged(object sender, EventArgs e)
         {
-            string filtro = txtFiltroTickets.Text.Trim().ToLower();
-
-            List<Ticket> lista = (List<Ticket>)Session["listaTickets"];
+            string filtro = txtFiltroTickets.Text.Trim();
+            List<Ticket> lista = Session["listaTickets"] as List<Ticket>;
 
             if (lista == null)
             {
@@ -443,25 +442,30 @@ namespace TP_Final_Programacion_III
                 return;
             }
 
+            List<Ticket> filtrada;
+
             if (string.IsNullOrWhiteSpace(filtro))
             {
-                dgvTickets.DataSource = lista;
-                dgvTickets.DataBind();
-                return;
+                filtrada = lista;
+            }
+            else
+            {
+                filtrada = lista.Where(t =>
+                    (!string.IsNullOrWhiteSpace(t.Descripcion) && t.Descripcion.IndexOf(filtro, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (t.Sprint?.Proyecto != null && !string.IsNullOrWhiteSpace(t.Sprint.Proyecto.Nombre) && t.Sprint.Proyecto.Nombre.IndexOf(filtro, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (t.Usuario != null && !string.IsNullOrWhiteSpace(t.Usuario.Nombre) && t.Usuario.Nombre.IndexOf(filtro, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (t.Usuario != null && !string.IsNullOrWhiteSpace(t.Usuario.Apellido) && t.Usuario.Apellido.IndexOf(filtro, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (t.Estado != null && !string.IsNullOrWhiteSpace(t.Estado.Nombre) && t.Estado.Nombre.IndexOf(filtro, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (t.Prioridad != null && !string.IsNullOrWhiteSpace(t.Prioridad.Nombre) && t.Prioridad.Nombre.IndexOf(filtro, StringComparison.OrdinalIgnoreCase) >= 0)
+                ).ToList();
             }
 
-            List<Ticket> filtrada = lista.FindAll(t =>
-                (t.Descripcion != null && t.Descripcion.ToLower().Contains(filtro)) ||
-                (t.Sprint != null && t.Sprint.Proyecto != null && t.Sprint.Proyecto.Nombre != null && t.Sprint.Proyecto.Nombre.ToLower().Contains(filtro)) ||
-                (t.Usuario != null && t.Usuario.Nombre != null && t.Usuario.Nombre.ToLower().Contains(filtro)) ||
-                (t.Usuario != null && t.Usuario.Apellido != null && t.Usuario.Apellido.ToLower().Contains(filtro)) ||
-                (t.Estado != null && t.Estado.Nombre != null && t.Estado.Nombre.ToLower().Contains(filtro)) ||
-                (t.Prioridad != null && t.Prioridad.Nombre != null && t.Prioridad.Nombre.ToLower().Contains(filtro))
-            );
+            Session["listaTicketsFiltrados"] = filtrada;
 
-            dgvTickets.PageIndex = 0;
-            dgvTickets.DataSource = filtrada;
-            dgvTickets.DataBind();
+            dpTickets.SetPageProperties(0, dpTickets.PageSize, false);
+            lvTickets.DataSource = filtrada;
+            lvTickets.DataBind();
+            dpTickets.Visible = filtrada.Count > dpTickets.PageSize;
         }
         public string GetClassEtiquetaEstado(object estadoNombre)
         {
@@ -480,6 +484,225 @@ namespace TP_Final_Programacion_III
             if (prioridad == "media") return "badge text-bg-warning px-3 py-2";
             if (prioridad == "baja") return "badge text-bg-success px-3 py-2";
             return "badge text-bg-secondary px-3 py-2";
+        }
+        private void CargarLista<T>(DropDownList ddl, List<T> lista, string valueField, string textField, string textoInicial)
+        {
+            ddl.DataSource = lista;
+            ddl.DataValueField = valueField;
+            ddl.DataTextField = textField;
+            ddl.DataBind();
+            ddl.Items.Insert(0, new ListItem(textoInicial, ""));
+        }
+        protected void ddlProyectoTicket_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                ddlSprintTicket.Items.Clear();
+
+                if (string.IsNullOrWhiteSpace(ddlProyectoTicket.SelectedValue))
+                {
+                    ddlSprintTicket.Items.Insert(0, new ListItem("Seleccione Sprint...", ""));
+                    return;
+                }
+
+                Usuario userLogueado = (Usuario)Session["usuario"];
+                SprintNegocio sprintNegocio = new SprintNegocio();
+
+                List<Sprint> listaSprints = sprintNegocio.listarPorProyecto(int.Parse(ddlProyectoTicket.SelectedValue), userLogueado.Empresa.Id).FindAll(x => x.Activo);
+
+                ddlSprintTicket.DataSource = listaSprints.Select(x => new
+                {
+                    Id = x.Id,
+                    Nombre = "Sprint " + x.NumeroSprint + " (" +
+                             x.FechaInicio.ToString("dd/MM/yyyy") + " al " +
+                             x.FechaEstimadaFin.ToString("dd/MM/yyyy") + ")"
+                }).ToList();
+
+                ddlSprintTicket.DataValueField = "Id";
+                ddlSprintTicket.DataTextField = "Nombre";
+                ddlSprintTicket.DataBind();
+                ddlSprintTicket.Items.Insert(0, new ListItem("Seleccione Sprint...", ""));
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+            }
+        }
+        protected void ddlUsuarioTicket_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(ddlUsuarioTicket.SelectedValue))
+                    return;
+
+                List<Usuario> listaUsuarios = (List<Usuario>)Session["listaUsuariosTicket"];
+                Usuario usuario = listaUsuarios.Find(x => x.Id == int.Parse(ddlUsuarioTicket.SelectedValue));
+
+                if (usuario == null)
+                    return;
+
+                if (ddlAreaTicket.Items.FindByValue(usuario.Area.Id.ToString()) != null)
+                    ddlAreaTicket.SelectedValue = usuario.Area.Id.ToString();
+
+                if (ddlPuestoTicket.Items.FindByValue(usuario.Puesto.Id.ToString()) != null)
+                    ddlPuestoTicket.SelectedValue = usuario.Puesto.Id.ToString();
+
+                if (usuario.Seniority != null && ddlSeniorityTicket.Items.FindByValue(usuario.Seniority.Id.ToString()) != null)
+                    ddlSeniorityTicket.SelectedValue = usuario.Seniority.Id.ToString();
+                else
+                    ddlSeniorityTicket.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+            }
+        }
+        protected void ddlFiltroUsuarioTicket_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                string idAreaSeleccionada = ddlAreaTicket.SelectedValue;
+                string idPuestoSeleccionado = ddlPuestoTicket.SelectedValue;
+                string idSenioritySeleccionado = ddlSeniorityTicket.SelectedValue;
+                string idUsuarioSeleccionado = ddlUsuarioTicket.SelectedValue;
+
+                List<Usuario> listaUsuarios = (List<Usuario>)Session["listaUsuariosTicket"];
+                listaUsuarios = listaUsuarios.FindAll(x => x.Activo && x.EmailVerificado);
+
+                List<Usuario> usuariosFiltrados = listaUsuarios;
+                if (!string.IsNullOrWhiteSpace(idAreaSeleccionada))
+                    usuariosFiltrados = usuariosFiltrados.FindAll(x => x.Area.Id == int.Parse(idAreaSeleccionada));
+                if (!string.IsNullOrWhiteSpace(idPuestoSeleccionado))
+                    usuariosFiltrados = usuariosFiltrados.FindAll(x => x.Puesto.Id == int.Parse(idPuestoSeleccionado));
+                if (!string.IsNullOrWhiteSpace(idSenioritySeleccionado))
+                    usuariosFiltrados = usuariosFiltrados.FindAll(x => x.Seniority != null && x.Seniority.Id == int.Parse(idSenioritySeleccionado));
+
+                List<Usuario> usuariosParaAreas = listaUsuarios;
+                if (!string.IsNullOrWhiteSpace(idPuestoSeleccionado))
+                    usuariosParaAreas = usuariosParaAreas.FindAll(x => x.Puesto.Id == int.Parse(idPuestoSeleccionado));
+                if (!string.IsNullOrWhiteSpace(idSenioritySeleccionado))
+                    usuariosParaAreas = usuariosParaAreas.FindAll(x => x.Seniority != null && x.Seniority.Id == int.Parse(idSenioritySeleccionado));
+
+                List<Usuario> usuariosParaPuestos = listaUsuarios;
+                if (!string.IsNullOrWhiteSpace(idAreaSeleccionada))
+                    usuariosParaPuestos = usuariosParaPuestos.FindAll(x => x.Area.Id == int.Parse(idAreaSeleccionada));
+                if (!string.IsNullOrWhiteSpace(idSenioritySeleccionado))
+                    usuariosParaPuestos = usuariosParaPuestos.FindAll(x => x.Seniority != null && x.Seniority.Id == int.Parse(idSenioritySeleccionado));
+
+                List<Usuario> usuariosParaSeniorities = listaUsuarios;
+                if (!string.IsNullOrWhiteSpace(idAreaSeleccionada))
+                    usuariosParaSeniorities = usuariosParaSeniorities.FindAll(x => x.Area.Id == int.Parse(idAreaSeleccionada));
+                if (!string.IsNullOrWhiteSpace(idPuestoSeleccionado))
+                    usuariosParaSeniorities = usuariosParaSeniorities.FindAll(x => x.Puesto.Id == int.Parse(idPuestoSeleccionado));
+
+                List<Area> areasDisponibles = usuariosParaAreas
+                    .Where(x => x.Area != null)
+                    .Select(x => x.Area)
+                    .GroupBy(x => x.Id)
+                    .Select(x => x.First())
+                    .ToList();
+
+                List<Puesto> puestosDisponibles = usuariosParaPuestos
+                    .Where(x => x.Puesto != null)
+                    .Select(x => x.Puesto)
+                    .GroupBy(x => x.Id)
+                    .Select(x => x.First())
+                    .ToList();
+
+                List<Seniority> senioritiesDisponibles = usuariosParaSeniorities
+                    .Where(x => x.Seniority != null)
+                    .Select(x => x.Seniority)
+                    .GroupBy(x => x.Id)
+                    .Select(x => x.First())
+                    .ToList();
+
+                CargarLista(ddlAreaTicket, areasDisponibles, "Id", "Nombre", "Seleccione Área...");
+                CargarLista(ddlPuestoTicket, puestosDisponibles, "Id", "Nombre", "Seleccione Puesto...");
+                CargarLista(ddlSeniorityTicket, senioritiesDisponibles, "Id", "Nombre", "Seleccione Seniority...");
+
+                ddlUsuarioTicket.DataSource = usuariosFiltrados.Select(x => new
+                {
+                    Id = x.Id,
+                    Nombre = x.Nombre + " " + x.Apellido + " (" + x.NombreUsuario + ")"
+                }).ToList();
+
+                ddlUsuarioTicket.DataValueField = "Id";
+                ddlUsuarioTicket.DataTextField = "Nombre";
+                ddlUsuarioTicket.DataBind();
+                ddlUsuarioTicket.Items.Insert(0, new ListItem("Seleccione Usuario...", ""));
+
+                if (!string.IsNullOrWhiteSpace(idAreaSeleccionada) && ddlAreaTicket.Items.FindByValue(idAreaSeleccionada) != null)
+                    ddlAreaTicket.SelectedValue = idAreaSeleccionada;
+
+                if (!string.IsNullOrWhiteSpace(idPuestoSeleccionado) && ddlPuestoTicket.Items.FindByValue(idPuestoSeleccionado) != null)
+                    ddlPuestoTicket.SelectedValue = idPuestoSeleccionado;
+
+                if (!string.IsNullOrWhiteSpace(idSenioritySeleccionado) && ddlSeniorityTicket.Items.FindByValue(idSenioritySeleccionado) != null)
+                    ddlSeniorityTicket.SelectedValue = idSenioritySeleccionado;
+
+                if (!string.IsNullOrWhiteSpace(idUsuarioSeleccionado) && ddlUsuarioTicket.Items.FindByValue(idUsuarioSeleccionado) != null)
+                    ddlUsuarioTicket.SelectedValue = idUsuarioSeleccionado;
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+            }
+        }
+        private void LimpiarCamposTicket()
+        {
+            txtDescripcionTicket.Text = "";
+            txtFechaInicioTicket.Text = DateTime.Today.ToString("yyyy-MM-dd");
+            txtFechaInicioTicket.Enabled = false;
+            txtFechaEstimadaTicket.Text = "";
+
+            ddlProyectoTicket.SelectedIndex = 0;
+
+            ddlSprintTicket.Items.Clear();
+            ddlSprintTicket.Items.Insert(0, new ListItem("Seleccione Sprint...", ""));
+
+            ddlEstadoTicket.SelectedIndex = 0;
+            ddlPrioridadTicket.SelectedIndex = 0;
+            ddlAreaTicket.SelectedIndex = 0;
+            ddlPuestoTicket.SelectedIndex = 0;
+            ddlSeniorityTicket.SelectedIndex = 0;
+            ddlUsuarioTicket.SelectedIndex = 0;
+        }
+        private void CargarCombosTicket(int idEmpresa)
+        {
+            ProyectoNegocio proyectoNegocio = new ProyectoNegocio();
+            EstadoNegocio estadoNegocio = new EstadoNegocio();
+            PrioridadNegocio prioridadNegocio = new PrioridadNegocio();
+            AreaNegocio areaNegocio = new AreaNegocio();
+            PuestoNegocio puestoNegocio = new PuestoNegocio();
+            SeniorityNegocio seniorityNegocio = new SeniorityNegocio();
+            UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
+
+            txtFechaInicioTicket.Text = DateTime.Today.ToString("yyyy-MM-dd");
+            txtFechaInicioTicket.Enabled = false;
+
+            CargarLista(ddlProyectoTicket, proyectoNegocio.listar(idEmpresa).FindAll(x => x.Activo), "Id", "Nombre", "Seleccione Proyecto...");
+            CargarLista(ddlEstadoTicket, estadoNegocio.listar(idEmpresa).FindAll(x => !x.EsFinal), "Id", "Nombre", "Seleccione Estado...");
+            CargarLista(ddlPrioridadTicket, prioridadNegocio.listar(), "Id", "Nombre", "Seleccione Prioridad...");
+            CargarLista(ddlAreaTicket, areaNegocio.listar(idEmpresa), "Id", "Nombre", "Seleccione Área...");
+            CargarLista(ddlPuestoTicket, puestoNegocio.listar(idEmpresa), "Id", "Nombre", "Seleccione Puesto...");
+            CargarLista(ddlSeniorityTicket, seniorityNegocio.listar(), "Id", "Nombre", "Seleccione Seniority...");
+
+            ddlSprintTicket.Items.Clear();
+            ddlSprintTicket.Items.Insert(0, new ListItem("Seleccione Sprint...", ""));
+
+            Session["listaUsuariosTicket"] = usuarioNegocio.listar(idEmpresa);
+
+            List<Usuario> listaUsuarios = ((List<Usuario>)Session["listaUsuariosTicket"]).FindAll(x => x.Activo && x.EmailVerificado);
+            ddlUsuarioTicket.DataSource = listaUsuarios.Select(x => new
+            {
+                Id = x.Id,
+                Nombre = x.Nombre + " " + x.Apellido + " (" + x.NombreUsuario + ")"
+            }).ToList();
+
+            ddlUsuarioTicket.DataValueField = "Id";
+            ddlUsuarioTicket.DataTextField = "Nombre";
+            ddlUsuarioTicket.DataBind();
+            ddlUsuarioTicket.Items.Insert(0, new ListItem("Seleccione Usuario...", ""));
         }
     }
 }
