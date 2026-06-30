@@ -19,8 +19,9 @@
 
     <style>
         .app-footer {
-            margin: 1.5rem -1.5rem -1.5rem;
-            padding: 0 1.5rem;
+            margin: auto -1.5rem -1.5rem;
+            padding: 0;
+            flex-shrink: 0;
             border-top: 1px solid rgba(9, 35, 47, .08);
             background: rgba(255, 255, 255, .62);
         }
@@ -56,8 +57,49 @@
         .app-footer-link:hover,
         .app-footer-link:focus { color: #09232f !important; }
 
+        .app-shell {
+            min-width: 0;
+            min-height: 100vh;
+            min-height: 100dvh;
+        }
+
+        .app-sidebar {
+            position: fixed !important;
+            z-index: 1030;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            height: 100vh !important;
+            height: 100dvh !important;
+            align-self: flex-start;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .app-sidebar.collapsing {
+            overflow: hidden;
+        }
+
+        .app-main {
+            display: flex;
+            min-width: 0;
+            min-height: 100vh;
+            min-height: 100dvh;
+            flex-direction: column;
+            margin-left: 220px;
+            transition: margin-left .35s ease;
+        }
+
+        .app-sidebar:not(.show) + .app-main {
+            margin-left: 0;
+        }
+
         @media (max-width: 575.98px) {
             .app-footer-inner { padding-top: 1rem; padding-bottom: 1rem; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .app-main { transition: none; }
         }
     </style>
 </head>
@@ -80,9 +122,9 @@
             </Scripts>
         </asp:ScriptManager>
 
-        <div class="d-flex min-vh-100">
+        <div class="d-flex app-shell">
 
-            <aside id="sidebarMenu" class="collapse collapse-horizontal show bg-dark border-end" style="position: sticky; top: 0; height: 100vh;">
+            <aside id="sidebarMenu" class="collapse collapse-horizontal show bg-dark border-end app-sidebar">
                 <div class="p-3 d-flex flex-column justify-content-between h-100" style="width: 220px;">
 
                     <!-- Contenido superior (Título y Menú) -->
@@ -157,7 +199,7 @@
                 </div>
             </aside>
 
-            <main class="flex-grow-1 p-4">
+            <main class="flex-grow-1 p-4 app-main">
 
                 <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
 
@@ -329,7 +371,7 @@
 
                 <footer class="app-footer">
 
-                    <div class="container-fluid px-0 app-footer-inner d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
+                    <div class="container app-footer-inner d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
 
                         <div class="d-flex align-items-center gap-2">
 
