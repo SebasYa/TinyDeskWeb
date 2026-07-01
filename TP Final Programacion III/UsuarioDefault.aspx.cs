@@ -29,6 +29,7 @@ namespace TP_Final_Programacion_III
             {
                 Usuario usuario = (Usuario)Session["usuario"];
                 CargarDatosUsuario(usuario);
+                CargarResumenTickets(usuario);
             }
         }
         protected void btnSprintsActivosUsuario_Click(object sender, EventArgs e)
@@ -52,5 +53,67 @@ namespace TP_Final_Programacion_III
             lblRolUsuario.Text = usuario.Puesto.Nombre;
             lblSeniorityUsuario.Text = usuario.Seniority != null ? usuario.Seniority.Nombre : "-";
         }
+
+        private void CargarResumenTickets(Usuario usuario)
+        {
+            TicketNegocio ticketNegocio = new TicketNegocio();
+            List<Ticket> tickets = ticketNegocio.Listar(usuario.Empresa.Id, usuario.Id);
+            List<Ticket> pendientes = tickets.FindAll(x => x.Activo && !x.Estado.EsFinal);
+            List<Ticket> vencidos = pendientes.FindAll(x => x.FechaEstimadaFin.Date < DateTime.Today);
+
+            lblMisTicketsVencidos.Text = vencidos.Count.ToString();
+            pnlMisTicketsVencidos.CssClass = ObtenerClaseTarjetaVencidos(vencidos.Count);
+
+            Ticket proximaTarea = pendientes.OrderBy(x => x.FechaEstimadaFin).ThenBy(x => x.Id).FirstOrDefault();
+
+            if (proximaTarea == null)
+            {
+                pnlProximaTarea.Visible = false;
+                pnlSinTareas.Visible = true;
+                return;
+            }
+
+            pnlProximaTarea.Visible = true;
+            pnlSinTareas.Visible = false;
+
+            lblProximaTareaDescripcion.Text = proximaTarea.Descripcion;
+            lblProximaTareaNumero.Text = "TK-" + proximaTarea.Id.ToString().PadLeft(3, '0');
+            lblProximaTareaPrioridad.Text = proximaTarea.Prioridad.Nombre;
+            lblProximaTareaPrioridad.CssClass = ObtenerClasePrioridad(proximaTarea.Prioridad.Nombre);
+            lblProximaTareaVencimiento.Text = ObtenerTextoVencimiento(proximaTarea.FechaEstimadaFin);
+            lnkProximaTarea.NavigateUrl = "TicketsUsuario.aspx?id=" + proximaTarea.Id;
+        }
+
+        private string ObtenerClaseTarjetaVencidos(int cantidad)
+        {
+            string claseBase = "card border-0 shadow-sm h-100 ";
+
+            if (cantidad == 0) return claseBase + "bg-light";
+            if (cantidad <= 2) return claseBase + "bg-danger bg-opacity-10";
+            if (cantidad <= 5) return claseBase + "bg-danger bg-opacity-25";
+
+            return claseBase + "bg-danger bg-opacity-50";
+        }
+
+        private string ObtenerClasePrioridad(string prioridad)
+        {
+            if (prioridad.ToUpper() == "ALTA") return "badge bg-danger-subtle text-danger";
+            if (prioridad.ToUpper() == "MEDIA") return "badge bg-warning-subtle text-warning";
+            if (prioridad.ToUpper() == "BAJA") return "badge bg-success-subtle text-success";
+
+            return "badge bg-secondary-subtle text-secondary";
+        }
+
+        private string ObtenerTextoVencimiento(DateTime fechaEstimada)
+        {
+            int dias = (fechaEstimada.Date - DateTime.Today).Days;
+
+            if (dias < 0) return "Vencido hace " + Math.Abs(dias) + (Math.Abs(dias) == 1 ? " día" : " días");
+            if (dias == 0) return "Vence hoy";
+            if (dias == 1) return "Vence mañana";
+
+            return "Faltan " + dias + " días";
+        }
+
     }
 }
