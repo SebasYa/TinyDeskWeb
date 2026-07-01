@@ -213,7 +213,7 @@ namespace TP_Final_Programacion_III
                     hdnEliminarId.Value = id.ToString();
                     hdnEliminarNombre.Value = nombre;
                     lblEliminarNombre.Text = nombre;
-                    litNombreConfirmacion.Text = Server.HtmlEncode(nombre.ToUpper());
+                    litNombreConfirmacion.Text = (string)(nombre.ToUpper());
                     txtConfirmarEliminar.Text = "";
 
                     AbrirModal("eliminarModal");

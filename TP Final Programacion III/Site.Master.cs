@@ -68,7 +68,7 @@ namespace TP_Final_Programacion_III
             lblName_nav.Text = usuario.Nombre + " " + usuario.Apellido;
             lblNombreUsuarioNav.Text = "@" + usuario.NombreUsuario;
             lblEmpresa.Text = ObtenerEmpresaYArea(usuario);
-            txtRol.Text = Server.HtmlEncode(ObtenerPuestoYSeniority(usuario));
+            txtRol.Text = (String)(ObtenerPuestoYSeniority(usuario));
             lblEstadoUsuarioNav.Text = "Activo";
             ConfigurarImagenUsuario(usuario);
         }

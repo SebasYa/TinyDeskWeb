@@ -333,18 +333,7 @@
             font-weight: 750;
         }
 
-            .user-menu-status > .position-relative {
-                display: none !important;
-            }
 
-            .user-menu-status::before {
-                content: "";
-                width: .45rem;
-                height: .45rem;
-                border-radius: 50%;
-                background: #4caf7d;
-                box-shadow: 0 0 0 3px rgba(76, 175, 125, .12);
-            }
 
         .user-menu-profile {
             padding: .85rem;
