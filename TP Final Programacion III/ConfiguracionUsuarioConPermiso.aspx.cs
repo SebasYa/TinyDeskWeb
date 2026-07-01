@@ -217,12 +217,18 @@ namespace TP_Final_Programacion_III
                     //Leer img
                     string rutaImagen =  ResolveUrl("~/Images/" + imagenUsuario.ImagenURL) + "?v=" + Guid.NewGuid();
                     Button botonUsuario = (Button)Master.FindControl("btnUserNav");
+                    Image botonPopup = (Image)Master.FindControl("imgUsuarioMenu");
 
                     botonUsuario.Text = "";
                     botonUsuario.Style["background-image"] = "url('" + rutaImagen + "')";
                     botonUsuario.Style["background-size"] = "cover";
                     botonUsuario.Style["background-position"] = "center";
                     botonUsuario.Style["background-repeat"] = "no-repeat";
+
+                    botonPopup.Style["background-image"] = "url('" + rutaImagen + "')";
+                    botonPopup.Style["background-size"] = "cover";
+                    botonPopup.Style["background-position"] = "center";
+                    botonPopup.Style["background-repeat"] = "no-repeat";
 
                     Session["imagenUsuario"] = rutaImagen;
                     imgPerfilActual.ImageUrl = rutaImagen;
