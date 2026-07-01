@@ -360,6 +360,60 @@
             </div>
 
         </div>
+        <div class="row g-4 mt-1">
+
+        <div class="col-12 col-md-6">
+            <asp:Panel ID="pnlTicketsVencidosDashboard" runat="server" CssClass="card border-0 shadow-sm h-100" Style="border-radius: 12px;">
+                <div class="card-body p-4">
+
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <span class="text-muted fw-semibold small">Tickets vencidos</span>
+
+                            <h2 class="fw-bold text-dark display-5 my-2">
+                                <asp:Label ID="lblTicketsVencidosDashboard" runat="server"></asp:Label>
+                            </h2>
+
+                            <span class="small text-muted">Tickets activos que superaron su fecha estimada.</span>
+                        </div>
+
+                        <div class="text-danger bg-danger-subtle rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                            <i class="bi bi-exclamation-triangle-fill fs-3"></i>
+                        </div>
+                    </div>
+
+                </div>
+            </asp:Panel>
+        </div>
+
+        <div class="col-12 col-md-6">
+            <asp:Panel ID="pnlAreaAtrasadaDashboard" runat="server" CssClass="card border-0 shadow-sm h-100" Style="border-radius: 12px;">
+                <div class="card-body p-4">
+
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <span class="text-muted fw-semibold small">Área más atrasada</span>
+
+                            <h3 class="fw-bold text-dark my-2">
+                                <asp:Label ID="lblAreaAtrasadaDashboard" runat="server"></asp:Label>
+                            </h3>
+
+                            <span class="small text-muted">
+                                <asp:Label ID="lblCantidadAreaAtrasadaDashboard" runat="server"></asp:Label>
+                            </span>
+                        </div>
+
+                        <div class="text-danger bg-danger-subtle rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                            <i class="bi bi-people-fill fs-3"></i>
+                        </div>
+                    </div>
+
+                </div>
+            </asp:Panel>
+        </div>
+
+    </div>
+
     </section>
     <!-- TERMINA RPUEBA -->
 

@@ -26,6 +26,8 @@ namespace TP_Final_Programacion_III
                     lblProyectosActivos.Text = proyectoNegocio.ContarActivos(idEmpresa).ToString();
                     lblSprintsEnCurso.Text = sprintNegocio.ContarEnCurso(idEmpresa).ToString();
                     lblTicketsAbiertos.Text = ticketNegocio.ContarAbiertos(idEmpresa).ToString();
+                    List<Ticket> ticketsDashboard = ticketNegocio.Listar(idEmpresa);
+                    CargarIndicadoresVencidos(idEmpresa, ticketsDashboard);
 
                     int ticketsUsuariosDesactivados = ticketNegocio.ContarAsignadosUsuariosDesactivados(idEmpresa);
                     if (ticketsUsuariosDesactivados > 0)
@@ -554,5 +556,43 @@ namespace TP_Final_Programacion_III
             ddlUsuarioTicket.DataBind();
             ddlUsuarioTicket.Items.Insert(0, new ListItem("Seleccione Usuario...", ""));
         }
+
+        private void CargarIndicadoresVencidos(int idEmpresa, List<Ticket> tickets)
+        {
+            List<Ticket> ticketsVencidos = tickets.FindAll(x => x.Activo && !x.Estado.EsFinal && x.FechaEstimadaFin.Date < DateTime.Today);
+
+            lblTicketsVencidosDashboard.Text = ticketsVencidos.Count.ToString();
+            pnlTicketsVencidosDashboard.CssClass = ObtenerClaseTarjetaVencidos(ticketsVencidos.Count);
+
+            UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
+            List<Usuario> usuarios = usuarioNegocio.listar(idEmpresa);
+
+            var areaAtrasada = ticketsVencidos.Select(x => usuarios.Find(u => u.Id == x.Usuario.Id)).Where(x => x != null && x.Area != null).GroupBy(x => new { x.Area.Id, x.Area.Nombre }).Select(x => new { Nombre = x.Key.Nombre, Cantidad = x.Count() }).OrderByDescending(x => x.Cantidad).ThenBy(x => x.Nombre).FirstOrDefault();
+
+            if (areaAtrasada != null)
+            {
+                lblAreaAtrasadaDashboard.Text = areaAtrasada.Nombre;
+                lblCantidadAreaAtrasadaDashboard.Text = areaAtrasada.Cantidad == 1 ? "1 ticket vencido" : areaAtrasada.Cantidad + " tickets vencidos";
+                pnlAreaAtrasadaDashboard.CssClass = ObtenerClaseTarjetaVencidos(areaAtrasada.Cantidad);
+            }
+            else
+            {
+                lblAreaAtrasadaDashboard.Text = "Sin áreas atrasadas";
+                lblCantidadAreaAtrasadaDashboard.Text = "No hay tickets vencidos";
+                pnlAreaAtrasadaDashboard.CssClass = ObtenerClaseTarjetaVencidos(0);
+            }
+        }
+
+        private string ObtenerClaseTarjetaVencidos(int cantidad)
+        {
+            string claseBase = "card border-0 shadow-sm h-100 ";
+
+            if (cantidad == 0) return claseBase + "bg-light";
+            if (cantidad <= 2) return claseBase + "bg-danger bg-opacity-10";
+            if (cantidad <= 5) return claseBase + "bg-danger bg-opacity-25";
+
+            return claseBase + "bg-danger bg-opacity-50";
+        }
+
     }
 }
