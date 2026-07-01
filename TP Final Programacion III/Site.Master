@@ -78,6 +78,8 @@
             align-self: flex-start;
             overflow-x: hidden;
             overflow-y: auto;
+            width: 220px;
+            transition: width .3s ease;
         }
 
         .app-sidebar {
@@ -107,6 +109,7 @@
 
         .sidebar-brand {
             height: 66px !important;
+            padding-left: 0 !important;
             border-color: rgba(185, 229, 229, .12) !important;
         }
 
@@ -121,12 +124,20 @@
             }
 
         .sidebar-brand-name {
+            white-space: nowrap;
             letter-spacing: -.035em;
             text-shadow: 0 2px 12px rgba(0, 0, 0, .18);
+            transition: opacity .2s ease, visibility .2s ease;
         }
 
         .sidebar-nav {
             gap: .28rem;
+        }
+
+        .sidebar-link-label {
+            display: inline-block;
+            white-space: nowrap;
+            transition: opacity .2s ease, visibility .2s ease;
         }
 
         .app-sidebar .sidebar-nav .nav-item {
@@ -142,7 +153,7 @@
             display: flex;
             align-items: center;
             min-height: 44px;
-            padding: .55rem .62rem;
+            padding: .55rem .62rem .55rem .375rem;
             border: 1px solid transparent;
             border-radius: .78rem;
             color: rgba(248, 252, 253, .9) !important;
@@ -192,6 +203,12 @@
             letter-spacing: .12em;
         }
 
+        .sidebar-section-label {
+            max-height: 2.25rem;
+            overflow: hidden;
+            transition: max-height .3s ease, margin .3s ease, opacity .2s ease;
+        }
+
         .sidebar-account {
             margin-top: 1rem;
             padding: .75rem !important;
@@ -200,14 +217,21 @@
             background: rgba(255, 255, 255, .035);
         }
 
-            .sidebar-account .text-muted {
-                color: rgba(230, 242, 245, .5) !important;
-                line-height: 1.35;
-            }
+        .sidebar-account-welcome {
+            max-width: 140px;
+            overflow: hidden;
+            white-space: nowrap;
+            transition: max-width .3s ease, margin .3s ease, opacity .2s ease, visibility .2s ease;
+        }
 
-            .sidebar-account .text-light {
-                color: #fff !important;
-            }
+        .sidebar-account .text-muted {
+            color: rgba(230, 242, 245, .5) !important;
+            line-height: 1.35;
+        }
+
+        .sidebar-account .text-light {
+            color: #fff !important;
+        }
 
         .sidebar-settings-button {
             display: inline-grid;
@@ -219,6 +243,7 @@
             border-radius: .68rem !important;
             background: rgba(147, 192, 222, .1);
             color: #b9e5e5;
+            transition: transform .3s ease, background-color .18s ease, color .18s ease;
         }
 
             .sidebar-settings-button:hover,
@@ -421,6 +446,71 @@
             overflow: hidden;
         }
 
+        .sidebar-edge-toggle {
+            position: fixed;
+            z-index: 1040;
+            top: 32px;
+            left: 205px;
+            display: inline-grid;
+            place-items: center;
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            border: 1px solid rgba(9, 35, 47, .16);
+            border-radius: 50%;
+            background: #f8fcfd;
+            color: #315f76;
+            box-shadow: 0 4px 12px rgba(9, 35, 47, .2);
+            transition: left .3s ease, color .18s ease, background-color .18s ease, transform .18s ease;
+        }
+
+            .sidebar-edge-toggle:hover,
+            .sidebar-edge-toggle:focus-visible {
+                background: #b9e5e5;
+                color: #09232f;
+            }
+
+            .sidebar-edge-toggle i {
+                font-size: .85rem;
+                line-height: 1;
+                transition: transform .3s ease;
+            }
+
+        .app-sidebar.is-collapsed {
+            width: 76px;
+        }
+
+            .app-sidebar.is-collapsed + .sidebar-edge-toggle {
+                left: 61px;
+            }
+
+                .app-sidebar.is-collapsed + .sidebar-edge-toggle i {
+                    transform: rotate(180deg);
+                }
+
+            .app-sidebar.is-collapsed .sidebar-brand-name,
+            .app-sidebar.is-collapsed .sidebar-link-label,
+            .app-sidebar.is-collapsed .sidebar-account-welcome {
+                opacity: 0;
+                visibility: hidden;
+            }
+
+            .app-sidebar.is-collapsed .sidebar-section-label {
+                max-height: 0;
+                margin-top: 0 !important;
+                margin-bottom: 0 !important;
+                opacity: 0;
+            }
+
+            .app-sidebar.is-collapsed .sidebar-settings-button {
+                transform: translateX(-135px);
+            }
+
+            .app-sidebar.is-collapsed .sidebar-account {
+                border-color: transparent !important;
+                background: transparent;
+            }
+
         .app-main {
             display: flex;
             min-width: 0;
@@ -428,7 +518,7 @@
             min-height: 100dvh;
             flex-direction: column;
             margin-left: 220px;
-            transition: margin-left .35s ease;
+            transition: margin-left .3s ease;
         }
 
         .app-content {
@@ -436,8 +526,8 @@
             padding-bottom: clamp(2.25rem, 4vw, 3.75rem);
         }
 
-        .app-sidebar:not(.show) + .app-main {
-            margin-left: 0;
+        .app-sidebar.is-collapsed ~ .app-main {
+            margin-left: 76px;
         }
 
         @media (max-width: 575.98px) {
@@ -452,10 +542,16 @@
                 transition: none;
             }
 
-            .app-sidebar .sidebar-nav .nav-link,
-            .app-user-trigger {
+            .app-sidebar,
+            .sidebar-edge-toggle,
+            .sidebar-edge-toggle i {
                 transition: none;
             }
+
+                .app-sidebar .sidebar-nav .nav-link,
+                .app-user-trigger {
+                    transition: none;
+                }
         }
     </style>
 </head>
@@ -480,7 +576,7 @@
 
         <div class="d-flex app-shell">
 
-            <aside id="sidebarMenu" class="collapse collapse-horizontal show bg-dark border-end app-sidebar">
+            <aside id="sidebarMenu" class="bg-dark border-end app-sidebar">
                 <div class="sidebar-inner p-3 d-flex flex-column justify-content-between h-100" style="width: 220px;">
 
                     <!-- Contenido superior (Título y Menú) -->
@@ -506,31 +602,31 @@
                         <ul class="nav flex-column sidebar-nav">
                             <li class="nav-item mb-2 sideBar">
                                 <a class="nav-link text-light" runat="server" href="~/Default.aspx">
-                                    <i class="bi bi-speedometer mx-2"></i>Dashboard</a>
+                                    <i class="bi bi-speedometer mx-2"></i><span class="sidebar-link-label">Dashboard</span></a>
                             </li>
                             <li class="nav-item mb-2 sideBar">
                                 <a class="nav-link text-light" runat="server" href="~/Proyectos.aspx">
-                                    <i class="bi bi-bar-chart-fill mx-2"></i>Proyectos</a>
+                                    <i class="bi bi-bar-chart-fill mx-2"></i><span class="sidebar-link-label">Proyectos</span></a>
                             </li>
                             <li class="nav-item mb-2 sideBar">
                                 <a class="nav-link text-light" runat="server" href="~/Sprints.aspx">
-                                    <i class="bi bi-calendar-week mx-2"></i>Sprints</a>
+                                    <i class="bi bi-calendar-week mx-2"></i><span class="sidebar-link-label">Sprints</span></a>
                             </li>
                             <li class="nav-item mb-2 sideBar">
                                 <a class="nav-link text-light" runat="server" href="~/Tickets.aspx">
-                                    <i class="bi bi-ticket-detailed mx-2"></i>Tickets</a>
+                                    <i class="bi bi-ticket-detailed mx-2"></i><span class="sidebar-link-label">Tickets</span></a>
                             </li>
-                            <li id="liAdminTitulo" runat="server" class="nav-item mt-3 mb-1">
+                            <li id="liAdminTitulo" runat="server" class="nav-item sidebar-section-label mt-3 mb-1">
                                 <span class="text-uppercase text-secondary small fw-semibold px-3" style="font-size: .72rem;">Administración</span>
                             </li>
                             <li id="liNavCatalogos" runat="server" class="nav-item mb-2 sideBar">
                                 <a class="nav-link text-light" runat="server" href="~/Administracion.aspx">
-                                    <i class="bi bi-sliders mx-2"></i>Catálogos
+                                    <i class="bi bi-sliders mx-2"></i><span class="sidebar-link-label">Catálogos</span>
                                 </a>
                             </li>
                             <li id="liNavUsuarios" runat="server" class="nav-item mb-2 sideBar">
                                 <a class="nav-link text-light" runat="server" href="~/Usuarios.aspx">
-                                    <i class="bi bi-person-circle mx-2"></i>Usuarios
+                                    <i class="bi bi-person-circle mx-2"></i><span class="sidebar-link-label">Usuarios</span>
                                 </a>
                             </li>
                         </ul>
@@ -540,7 +636,7 @@
                     <div class="sidebar-account border-top border-secondary pt-3">
                         <div class="d-flex align-items-center justify-content-between gap-2">
 
-                            <span class="text-muted small me-1" style="font-size: 0.8rem;">Bienvenido, 
+                            <span class="sidebar-account-welcome text-muted small me-1" style="font-size: 0.8rem;">Bienvenido,
                                 <asp:Label ID="lblUserWelcome" runat="server" CssClass="text-light fw-bold" Style="font-size: 0.9rem;"></asp:Label>
                             </span>
 
@@ -555,22 +651,20 @@
                 </div>
             </aside>
 
+            <button class="sidebar-edge-toggle"
+                type="button"
+                data-sidebar-toggle="true"
+                aria-controls="sidebarMenu"
+                aria-expanded="true"
+                aria-label="Compactar navegación">
+                <i class="bi bi-chevron-left" aria-hidden="true"></i>
+            </button>
+
             <main class="flex-grow-1 p-4 app-main">
 
                 <div class="app-topbar d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
 
                     <div class="d-flex align-items-center gap-3">
-                        <button
-                            class="btn btn-outline-secondary btn-sm btn-hamburguesa m-0"
-                            type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#sidebarMenu"
-                            aria-controls="sidebarMenu"
-                            aria-expanded="true">
-                            <i class="bi bi-layout-sidebar-inset" aria-hidden="true"></i>
-                            <span class="visually-hidden">Mostrar u ocultar navegación</span>
-                        </button>
-
                         <h2 class="h4 text-dark mb-0 text-capitalize fw-bold"><%: Page.Title %></h2>
                     </div>
 
@@ -781,12 +875,10 @@
             "use strict";
 
             var sidebar = document.getElementById("sidebarMenu");
-            var button = document.querySelector(
-                '[data-bs-target="#sidebarMenu"]'
-            );
+            var button = document.querySelector("[data-sidebar-toggle]");
             var stateKey = "tinyDeskSidebarOpen";
 
-            if (!sidebar) return;
+            if (!sidebar || !button) return;
 
             function saveState(isOpen) {
                 try {
@@ -806,24 +898,27 @@
                 }
             }
 
-            // Si nunca se guardó un estado, queda abierto por defecto.
-            var shouldBeOpen = readState() !== "false";
-
-            sidebar.classList.toggle("show", shouldBeOpen);
-
-            if (button) {
+            function setSidebarState(isOpen, persistState) {
+                sidebar.classList.toggle("is-collapsed", !isOpen);
+                button.setAttribute("aria-expanded", isOpen ? "true" : "false");
                 button.setAttribute(
-                    "aria-expanded",
-                    shouldBeOpen ? "true" : "false"
+                    "aria-label",
+                    isOpen ? "Compactar navegación" : "Expandir navegación"
                 );
+
+                if (persistState) {
+                    saveState(isOpen);
+                }
             }
 
-            sidebar.addEventListener("show.bs.collapse", function () {
-                saveState(true);
-            });
+            // Si nunca se guardó un estado, queda abierto por defecto.
+            setSidebarState(readState() !== "false", false);
 
-            sidebar.addEventListener("hide.bs.collapse", function () {
-                saveState(false);
+            button.addEventListener("click", function () {
+                setSidebarState(
+                    sidebar.classList.contains("is-collapsed"),
+                    true
+                );
             });
         }());
     </script>
