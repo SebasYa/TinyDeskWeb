@@ -5,7 +5,7 @@
     ContentPlaceHolderID="MainContent"
     runat="server">
 
-    <div class="container-fluid px-0">
+    <div class="container-fluid config-workspace px-0 pt-2">
 
         <asp:Literal
             ID="litMensaje"
@@ -13,20 +13,29 @@
         </asp:Literal>
 
         <!-- ENCABEZADO -->
-        <div class="mb-4">
-            <h1 class="h3 fw-bold text-dark mb-1">Configuración de cuenta
-            </h1>
+        <div class="config-hero d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+            <div class="config-hero-copy">
+                <span class="config-eyebrow"><i class="bi bi-stars"></i>Espacio personal</span>
+                <h1 class="h3 fw-bold mb-1">Configuración de cuenta</h1>
+                <p class="mb-0">Consultá tus datos, personalizá tu perfil y administrá la seguridad.</p>
+            </div>
 
-            <p class="text-muted mb-0">
-                Consultá los datos de tu cuenta y administrá su seguridad.
-            </p>
+            <div class="config-security-chip">
+                <i class="bi bi-shield-check"></i>
+                <span><strong>Cuenta protegida</strong><small>Acceso de consulta</small></span>
+            </div>
         </div>
 
-        <div class="row g-4">
+        <div class="row g-4 config-layout align-items-start">
 
             <!-- NAVEGACIÓN INTERNA -->
-            <div class="col-12 col-lg-3">
-                <div class="list-group shadow-sm config-nav">
+            <div class="col-12 col-lg-3 config-nav-column">
+                <div class="list-group config-nav">
+
+                    <div class="config-nav-heading">
+                        <span class="config-nav-mark"><i class="bi bi-person-circle"></i></span>
+                        <div><strong>Tu cuenta</strong><small>Preferencias y seguridad</small></div>
+                    </div>
 
                     <asp:LinkButton
                         ID="btnPerfil"
@@ -79,12 +88,13 @@
             </div>
 
             <!-- CONTENIDO -->
-            <div class="col-12 col-lg-9">
+            <div class="col-12 col-lg-9 config-content">
 
                 <!-- PERFIL -->
                 <asp:Panel
                     ID="pnlPerfil"
-                    runat="server">
+                    runat="server"
+                    data-config-panel="true">
 
                     <div class="card border-0 shadow-sm config-card">
 
@@ -206,6 +216,7 @@
                 <asp:Panel
                     ID="pnlInformacionLaboral"
                     runat="server"
+                    data-config-panel="true"
                     Visible="false">
 
                     <div class="card border-0 shadow-sm config-card">
@@ -382,6 +393,7 @@
                 <asp:Panel
                     ID="pnlSeguridad"
                     runat="server"
+                    data-config-panel="true"
                     Visible="false">
 
                     <div class="card border-0 shadow-sm config-card">
@@ -535,6 +547,7 @@
                 <asp:Panel
                     ID="pnlPreferencias"
                     runat="server"
+                    data-config-panel="true"
                     Visible="false">
 
                     <div class="card border-0 shadow-sm config-card">
@@ -719,16 +732,388 @@
         }
     </style>
 
+    <style>
+        .config-workspace {
+            --config-sky: #93c0de;
+            --config-aqua: #b9e5e5;
+            --config-ink: #09232f;
+            --config-muted: #75797e;
+            width: 100%;
+            max-width: 1540px;
+            margin-inline: auto;
+            color: var(--config-ink);
+        }
+
+        .app-main.config-app-surface {
+            background: radial-gradient(circle at 88% 8%, rgba(147, 192, 222, .22), transparent 26rem), radial-gradient(circle at 12% 82%, rgba(185, 229, 229, .2), transparent 30rem), linear-gradient(180deg, #f6f9fa, #eef4f5);
+        }
+
+        .config-hero {
+            position: relative;
+            overflow: hidden;
+            padding: clamp(1.45rem, 2.8vw, 2.25rem);
+            border: 1px solid rgba(185, 229, 229, .15);
+            border-radius: 1.4rem;
+            background: linear-gradient(118deg, #09232f 0%, #123f52 64%, #1a586a 100%);
+            box-shadow: 0 20px 48px rgba(9, 35, 47, .17);
+            color: #fff;
+            isolation: isolate;
+        }
+
+            .config-hero::before {
+                content: "";
+                position: absolute;
+                z-index: -1;
+                width: 18rem;
+                height: 18rem;
+                right: -5rem;
+                top: -11rem;
+                border: 3.2rem solid rgba(185, 229, 229, .13);
+                border-radius: 50%;
+            }
+
+        .config-hero-copy h1 {
+            color: #fff;
+            letter-spacing: -.03em;
+        }
+
+        .config-hero-copy p {
+            color: rgba(255, 255, 255, .7);
+        }
+
+        .config-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: .45rem;
+            margin-bottom: .65rem;
+            color: var(--config-aqua);
+            font-size: .71rem;
+            font-weight: 800;
+            letter-spacing: .11em;
+            text-transform: uppercase;
+        }
+
+        .config-security-chip {
+            display: flex;
+            align-items: center;
+            gap: .7rem;
+            padding: .65rem .8rem;
+            border: 1px solid rgba(255, 255, 255, .15);
+            border-radius: .9rem;
+            background: rgba(255, 255, 255, .08);
+            backdrop-filter: blur(8px);
+        }
+
+            .config-security-chip > i {
+                display: grid;
+                place-items: center;
+                width: 2.45rem;
+                height: 2.45rem;
+                border-radius: .72rem;
+                background: rgba(185, 229, 229, .16);
+                color: var(--config-aqua);
+            }
+
+            .config-security-chip span,
+            .config-nav-heading > div {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .config-security-chip strong {
+                color: #fff;
+                font-size: .8rem;
+            }
+
+            .config-security-chip small {
+                color: rgba(255, 255, 255, .62);
+                font-size: .68rem;
+            }
+
+        .config-layout {
+            max-width: 1350px;
+            margin-inline: auto;
+        }
+
+        .config-nav-column {
+            position: sticky;
+            top: 1rem;
+        }
+
+        .config-nav {
+            padding: .75rem;
+            border: 1px solid rgba(9, 35, 47, .08);
+            border-radius: 1.15rem;
+            background: rgba(255, 255, 255, .86);
+            box-shadow: 0 16px 38px rgba(9, 35, 47, .075);
+            backdrop-filter: blur(10px);
+        }
+
+        .config-nav-heading {
+            display: flex;
+            align-items: center;
+            gap: .7rem;
+            margin-bottom: .65rem;
+            padding: .35rem .25rem .9rem;
+            border-bottom: 1px solid rgba(9, 35, 47, .08);
+        }
+
+        .config-nav-mark {
+            display: grid;
+            place-items: center;
+            width: 2.55rem;
+            height: 2.55rem;
+            flex: 0 0 auto;
+            border-radius: .78rem;
+            background: linear-gradient(145deg, rgba(147, 192, 222, .28), rgba(185, 229, 229, .4));
+            color: #315f76;
+        }
+
+        .config-nav-heading strong {
+            color: var(--config-ink);
+            font-size: .86rem;
+        }
+
+        .config-nav-heading small {
+            color: var(--config-muted);
+            font-size: .67rem;
+        }
+
+        .config-nav .list-group-item {
+            display: flex;
+            align-items: center;
+            margin: .15rem 0;
+            padding: .76rem .8rem;
+            border: 0;
+            border-radius: .72rem !important;
+            background: transparent;
+            color: #607078;
+            font-size: .83rem;
+            font-weight: 650;
+        }
+
+            .config-nav .list-group-item:hover {
+                background: rgba(147, 192, 222, .12);
+                color: var(--config-ink);
+            }
+
+            .config-nav .list-group-item.active {
+                border: 0;
+                background: var(--config-ink);
+                color: #fff;
+                box-shadow: 0 8px 18px rgba(9, 35, 47, .14);
+            }
+
+                .config-nav .list-group-item.active i {
+                    color: var(--config-aqua);
+                }
+
+        .config-content {
+            min-width: 0;
+        }
+
+        .config-card {
+            border: 1px solid rgba(9, 35, 47, .08) !important;
+            border-radius: 1.25rem;
+            background: rgba(255, 255, 255, .88);
+            box-shadow: 0 20px 48px rgba(9, 35, 47, .085) !important;
+            backdrop-filter: blur(12px);
+        }
+
+            .config-card > .card-header {
+                border-bottom-color: rgba(9, 35, 47, .08);
+                background: linear-gradient(120deg, rgba(255, 255, 255, .96), rgba(237, 247, 249, .88)) !important;
+            }
+
+            .config-card h2 {
+                color: var(--config-ink);
+                letter-spacing: -.02em;
+            }
+
+        .config-avatar {
+            width: 72px;
+            height: 72px;
+            border: 4px solid rgba(255, 255, 255, .92);
+            border-radius: 1.15rem;
+            background: linear-gradient(145deg, #315f76, #09232f);
+            box-shadow: 0 10px 22px rgba(9, 35, 47, .17);
+        }
+
+        .config-readonly {
+            min-height: 48px;
+            border-color: rgba(9, 35, 47, .1);
+            border-radius: .72rem;
+            background: linear-gradient(145deg, rgba(255, 255, 255, .95), rgba(237, 245, 247, .78));
+            color: var(--config-ink);
+        }
+
+        .laboral-card {
+            min-height: 112px;
+            border-color: rgba(9, 35, 47, .08);
+            border-radius: .9rem;
+            background: linear-gradient(145deg, rgba(255, 255, 255, .95), rgba(241, 247, 248, .78));
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+            .laboral-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 12px 24px rgba(9, 35, 47, .07);
+            }
+
+        .laboral-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: .78rem;
+            background: linear-gradient(145deg, rgba(147, 192, 222, .27), rgba(185, 229, 229, .4));
+            color: #315f76;
+        }
+
+        .config-workspace .badge {
+            padding: .46rem .66rem;
+            border: 1px solid transparent;
+        }
+
+        .config-workspace .bg-success-subtle {
+            background: rgba(76, 175, 125, .14) !important;
+            color: #237a55 !important;
+        }
+
+        .config-workspace .bg-primary-subtle {
+            background: rgba(147, 192, 222, .22) !important;
+            color: #315f76 !important;
+        }
+
+        .config-workspace .bg-secondary-subtle {
+            background: rgba(130, 149, 217, .16) !important;
+            color: #584d91 !important;
+        }
+
+        .config-workspace .form-control {
+            min-height: 44px;
+            border-color: rgba(9, 35, 47, .14);
+            border-radius: .72rem;
+        }
+
+            .config-workspace .form-control:focus {
+                border-color: #75a9c9;
+                box-shadow: 0 0 0 .23rem rgba(147, 192, 222, .22);
+            }
+
+        .config-workspace .btn-primary {
+            border-color: var(--config-ink);
+            border-radius: .72rem;
+            background: var(--config-ink);
+            color: #fff;
+            font-weight: 700;
+        }
+
+            .config-workspace .btn-primary:hover {
+                border-color: #123d4f;
+                background: #123d4f;
+                color: #fff !important;
+            }
+
+        .security-help {
+            border-color: rgba(147, 192, 222, .2);
+            border-radius: .9rem;
+            background: linear-gradient(145deg, rgba(147, 192, 222, .1), rgba(185, 229, 229, .1));
+        }
+
+        .config-card img {
+            border: 5px solid rgba(185, 229, 229, .48) !important;
+            box-shadow: 0 16px 34px rgba(9, 35, 47, .15);
+        }
+
+        .config-card input[type="file"] {
+            width: 100% !important;
+            max-width: 620px !important;
+        }
+
+        .config-js [data-config-panel] {
+            animation: configReveal .35s ease both;
+        }
+
+        @keyframes configReveal {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        @media (max-width: 991.98px) {
+            .config-nav-column {
+                position: static;
+            }
+
+            .config-nav {
+                display: grid;
+                grid-template-columns: repeat(4, minmax(145px, 1fr));
+                overflow-x: auto;
+                gap: .3rem;
+            }
+
+            .config-nav-heading {
+                display: none;
+            }
+
+            .config-nav .list-group-item {
+                justify-content: center;
+                margin: 0;
+                white-space: nowrap;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .config-hero {
+                border-radius: 1rem;
+            }
+
+            .config-security-chip {
+                display: none;
+            }
+
+            .config-card .card-body, .config-card .card-header {
+                padding: 1.2rem !important;
+            }
+
+            .config-nav {
+                grid-template-columns: repeat(4, minmax(135px, 1fr));
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .config-js [data-config-panel], .laboral-card {
+                animation: none;
+                transform: none;
+                transition: none;
+            }
+        }
+    </style>
+
     <script>
         function previsualizarImagen(input) {
             if (!input.files || !input.files[0]) return;
 
             const imagen = document.getElementById(
             '<%= imgPerfilActual.ClientID %>'
-        );
+            );
 
             imagen.src = URL.createObjectURL(input.files[0]);
         }
+    </script>
+
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            var appMain = document.querySelector('.app-main');
+            if (appMain && document.querySelector('.config-workspace')) {
+                appMain.classList.add('config-app-surface', 'config-js');
+            }
+        });
     </script>
 
 </asp:Content>

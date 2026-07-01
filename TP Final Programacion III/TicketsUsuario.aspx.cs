@@ -320,7 +320,7 @@ namespace TP_Final_Programacion_III
         }
         private void MostrarExito(string mensaje)
         {
-            litMensaje.Text = "<div class='alert alert-success alert-dismissible fade show' role='alert'><strong>Correcto:</strong> " 
+            litMensaje.Text = "<div class='alert alert-success alert-dismissible fade show' role='alert'><strong>Correcto:</strong> "
                               + mensaje + "<button type='button' class='btn-close' data-bs-dismiss='alert'></button></div>";
         }
         private int ObtenerOrdenPrioridad(string prioridad)

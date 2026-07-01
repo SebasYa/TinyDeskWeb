@@ -80,9 +80,357 @@
             overflow-y: auto;
         }
 
-            .app-sidebar.collapsing {
-                overflow: hidden;
+        .app-sidebar {
+            border-right: 1px solid rgba(185, 229, 229, .12) !important;
+            background: radial-gradient(circle at 15% 3%, rgba(147, 192, 222, .12), transparent 11rem), linear-gradient(180deg, #0b2733 0%, #081f29 58%, #071a22 100%) !important;
+            box-shadow: 10px 0 30px rgba(9, 35, 47, .08);
+            scrollbar-color: rgba(147, 192, 222, .28) transparent;
+            scrollbar-width: thin;
+        }
+
+            .app-sidebar::-webkit-scrollbar {
+                width: 5px;
             }
+
+            .app-sidebar::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            .app-sidebar::-webkit-scrollbar-thumb {
+                border-radius: 999px;
+                background: rgba(147, 192, 222, .28);
+            }
+
+        .sidebar-inner {
+            position: relative;
+        }
+
+        .sidebar-brand {
+            height: 66px !important;
+            border-color: rgba(185, 229, 229, .12) !important;
+        }
+
+        .sidebar-brand-mark {
+            width: 46px !important;
+            height: 46px !important;
+            overflow: visible !important;
+        }
+
+            .sidebar-brand-mark img {
+                filter: drop-shadow(0 6px 8px rgba(0, 0, 0, .2));
+            }
+
+        .sidebar-brand-name {
+            letter-spacing: -.035em;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, .18);
+        }
+
+        .sidebar-nav {
+            gap: .28rem;
+        }
+
+        .app-sidebar .sidebar-nav .nav-item {
+            margin-bottom: 0 !important;
+        }
+
+        .app-sidebar .sidebar-nav .sideBar:hover {
+            background: transparent !important;
+        }
+
+        .app-sidebar .sidebar-nav .nav-link {
+            position: relative;
+            display: flex;
+            align-items: center;
+            min-height: 44px;
+            padding: .55rem .62rem;
+            border: 1px solid transparent;
+            border-radius: .78rem;
+            color: rgba(248, 252, 253, .9) !important;
+            font-size: .88rem;
+            font-weight: 600;
+            transition: color .18s ease, background-color .18s ease, border-color .18s ease, transform .18s ease;
+        }
+
+            .app-sidebar .sidebar-nav .nav-link i {
+                display: inline-grid;
+                place-items: center;
+                width: 2rem;
+                height: 2rem;
+                margin: 0 .55rem 0 0 !important;
+                border-radius: .58rem;
+                background: rgba(255, 255, 255, .045);
+                color: #93c0de;
+                font-size: .95rem;
+                transition: background-color .18s ease, color .18s ease;
+            }
+
+            .app-sidebar .sidebar-nav .nav-link:hover,
+            .app-sidebar .sidebar-nav .nav-link:focus-visible {
+                border-color: rgba(147, 192, 222, .13);
+                background: rgba(147, 192, 222, .09);
+                color: #fff !important;
+                transform: translateX(2px);
+            }
+
+            .app-sidebar .sidebar-nav .nav-link.is-active {
+                border-color: rgba(185, 229, 229, .2);
+                background: linear-gradient(100deg, rgba(147, 192, 222, .22), rgba(185, 229, 229, .1));
+                color: #fff !important;
+                box-shadow: inset 3px 0 0 #b9e5e5, 0 8px 20px rgba(0, 0, 0, .08);
+            }
+
+                .app-sidebar .sidebar-nav .nav-link.is-active i {
+                    background: rgba(185, 229, 229, .15);
+                    color: #b9e5e5;
+                }
+
+        .app-sidebar .sidebar-nav > li > span {
+            display: block;
+            padding: .25rem .65rem !important;
+            color: rgba(185, 229, 229, .45) !important;
+            font-size: .64rem !important;
+            letter-spacing: .12em;
+        }
+
+        .sidebar-account {
+            margin-top: 1rem;
+            padding: .75rem !important;
+            border: 1px solid rgba(185, 229, 229, .1) !important;
+            border-radius: .9rem;
+            background: rgba(255, 255, 255, .035);
+        }
+
+            .sidebar-account .text-muted {
+                color: rgba(230, 242, 245, .5) !important;
+                line-height: 1.35;
+            }
+
+            .sidebar-account .text-light {
+                color: #fff !important;
+            }
+
+        .sidebar-settings-button {
+            display: inline-grid;
+            place-items: center;
+            width: 2.25rem;
+            height: 2.25rem;
+            flex: 0 0 auto;
+            padding: 0;
+            border-radius: .68rem !important;
+            background: rgba(147, 192, 222, .1);
+            color: #b9e5e5;
+        }
+
+            .sidebar-settings-button:hover,
+            .sidebar-settings-button:focus,
+            .sidebar-settings-button.is-current {
+                background: #b9e5e5;
+                color: #09232f;
+            }
+
+        .app-topbar {
+            min-height: 61px;
+            border-color: rgba(9, 35, 47, .09) !important;
+        }
+
+        .btn-hamburguesa {
+            display: inline-grid;
+            place-items: center;
+            width: 2.55rem;
+            height: 2.55rem;
+            padding: 0;
+            border-color: rgba(9, 35, 47, .18);
+            border-radius: .72rem;
+            background: rgba(255, 255, 255, .7);
+            color: #315f76;
+            box-shadow: 0 5px 14px rgba(9, 35, 47, .06);
+        }
+
+            .btn-hamburguesa::after {
+                display: none !important;
+                content: none !important;
+            }
+
+            .btn-hamburguesa i {
+                font-size: 1.08rem;
+                line-height: 1;
+            }
+
+            .btn-hamburguesa:hover,
+            .btn-hamburguesa:focus {
+                border-color: #09232f;
+                background: #09232f;
+                color: #fff;
+            }
+
+        .app-user-trigger {
+            position: relative;
+            border: 3px solid #fff !important;
+            background-color: #09232f;
+            background-image: linear-gradient(145deg, #315f76, #09232f);
+            color: #fff;
+            box-shadow: 0 0 0 2px #93c0de, 0 9px 20px rgba(9, 35, 47, .16);
+            font-weight: 800;
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+            .app-user-trigger:hover,
+            .app-user-trigger:focus {
+                color: #fff;
+                transform: translateY(-1px);
+                box-shadow: 0 0 0 3px #b9e5e5, 0 12px 24px rgba(9, 35, 47, .2);
+            }
+
+        .user-trigger-status {
+            position: absolute;
+            z-index: 2;
+            right: -2px;
+            bottom: -1px;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            background: #4caf7d;
+            box-shadow: 0 2px 6px rgba(9, 35, 47, .2);
+            pointer-events: none;
+        }
+
+        .app-user-menu {
+            overflow: hidden;
+            width: min(330px, calc(100vw - 2rem)) !important;
+            border: 1px solid rgba(9, 35, 47, .1) !important;
+            border-radius: 1.05rem !important;
+            background: rgba(255, 255, 255, .97);
+            box-shadow: 0 24px 60px rgba(9, 35, 47, .22) !important;
+            backdrop-filter: blur(14px);
+        }
+
+            .app-user-menu .card-body {
+                padding: 1rem !important;
+            }
+
+        .user-menu-brandbar {
+            margin: -1rem -1rem 1rem;
+            padding: .9rem 1rem;
+            border-bottom: 1px solid rgba(9, 35, 47, .08);
+            background: linear-gradient(120deg, rgba(147, 192, 222, .15), rgba(185, 229, 229, .13));
+        }
+
+        .user-menu-logo {
+            overflow: visible !important;
+        }
+
+        .user-menu-status-shell {
+            padding: 0 !important;
+            border: 1px solid rgba(35, 134, 91, .2);
+            background: transparent !important;
+        }
+
+        .user-menu-status {
+            background: rgba(76, 175, 125, .13) !important;
+            color: #237a55 !important;
+            font-size: .7rem !important;
+            font-weight: 750;
+        }
+
+            .user-menu-status > .position-relative {
+                display: none !important;
+            }
+
+            .user-menu-status::before {
+                content: "";
+                width: .45rem;
+                height: .45rem;
+                border-radius: 50%;
+                background: #4caf7d;
+                box-shadow: 0 0 0 3px rgba(76, 175, 125, .12);
+            }
+
+        .user-menu-profile {
+            padding: .85rem;
+            border: 1px solid rgba(9, 35, 47, .07);
+            border-radius: .9rem;
+            background: linear-gradient(145deg, rgba(255, 255, 255, .96), rgba(239, 246, 247, .84));
+        }
+
+        .user-menu-avatar {
+            position: relative;
+        }
+
+            .user-menu-avatar::after {
+                content: "";
+                position: absolute;
+                right: 1px;
+                bottom: 1px;
+                width: 14px;
+                height: 14px;
+                border: 3px solid #f4f9fa;
+                border-radius: 50%;
+                background: #4caf7d;
+            }
+
+        .user-menu-name {
+            color: #09232f !important;
+            font-size: .98rem;
+            letter-spacing: -.01em;
+        }
+
+        .user-menu-handle {
+            color: #738087 !important;
+            font-size: .74rem !important;
+        }
+
+        .user-menu-meta {
+            display: flex;
+            align-items: center;
+            gap: .35rem;
+            width: fit-content;
+            max-width: 100%;
+            padding: .27rem .48rem;
+            border-radius: .5rem;
+            background: rgba(147, 192, 222, .11);
+            color: #456575 !important;
+            font-size: .7rem !important;
+        }
+
+            .user-menu-meta + .user-menu-meta {
+                margin-top: .3rem;
+            }
+
+            .user-menu-meta i {
+                color: #4f8299 !important;
+            }
+
+        .user-menu-divider {
+            border-color: rgba(9, 35, 47, .1);
+            opacity: 1 !important;
+        }
+
+        .app-user-menu img.rounded-circle,
+        .app-user-menu .rounded-circle.text-white {
+            border: 4px solid rgba(185, 229, 229, .48) !important;
+            box-shadow: 0 10px 24px rgba(9, 35, 47, .14) !important;
+        }
+
+        .app-user-menu .btn-outline-danger {
+            min-height: 39px;
+            border-color: rgba(184, 64, 77, .28);
+            border-radius: .72rem !important;
+            background: rgba(224, 91, 105, .06);
+            color: #a23d49;
+            font-weight: 650;
+        }
+
+            .app-user-menu .btn-outline-danger:hover,
+            .app-user-menu .btn-outline-danger:focus {
+                border-color: #a23d49;
+                background: #a23d49;
+                color: #fff;
+            }
+
+        .app-sidebar.collapsing {
+            overflow: hidden;
+        }
 
         .app-main {
             display: flex;
@@ -92,6 +440,11 @@
             flex-direction: column;
             margin-left: 220px;
             transition: margin-left .35s ease;
+        }
+
+        .app-content {
+            width: 100%;
+            padding-bottom: clamp(2.25rem, 4vw, 3.75rem);
         }
 
         .app-sidebar:not(.show) + .app-main {
@@ -107,6 +460,11 @@
 
         @media (prefers-reduced-motion: reduce) {
             .app-main {
+                transition: none;
+            }
+
+            .app-sidebar .sidebar-nav .nav-link,
+            .app-user-trigger {
                 transition: none;
             }
         }
@@ -134,14 +492,14 @@
         <div class="d-flex app-shell">
 
             <aside id="sidebarMenu" class="collapse collapse-horizontal show bg-dark border-end app-sidebar">
-                <div class="p-3 d-flex flex-column justify-content-between h-100" style="width: 220px;">
+                <div class="sidebar-inner p-3 d-flex flex-column justify-content-between h-100" style="width: 220px;">
 
                     <!-- Contenido superior (Título y Menú) -->
                     <div>
-                        <div class="d-flex align-items-center gap-2 px-2 pb-3 mb-3 mt-2 border-bottom border-secondary"
+                        <div class="sidebar-brand d-flex align-items-center gap-2 px-2 pb-3 mb-3 mt-2 border-bottom border-secondary"
                             style="height: 61px; box-sizing: border-box;">
 
-                            <span class="position-relative overflow-hidden flex-shrink-0"
+                            <span class="sidebar-brand-mark position-relative overflow-hidden flex-shrink-0"
                                 style="width: 44px; height: 44px;">
 
                                 <img runat="server"
@@ -150,13 +508,13 @@
                                     style="position: absolute; width: 62px; height: 62px; max-width: none; top: 50%; left: 50%; transform: translate(-50%, -50%);" />
                             </span>
 
-                            <span class="text-light fw-bold fs-4"
+                            <span class="sidebar-brand-name text-light fw-bold fs-4"
                                 style="line-height: 1.2;">TinyDesk
                             </span>
 
                         </div>
 
-                        <ul class="nav flex-column">
+                        <ul class="nav flex-column sidebar-nav">
                             <li class="nav-item mb-2 sideBar">
                                 <a class="nav-link text-light" runat="server" href="~/Default.aspx">
                                     <i class="bi bi-speedometer mx-2"></i>Dashboard</a>
@@ -190,7 +548,7 @@
                     </div>
 
                     <!-- Contenido inferior -->
-                    <div class="border-top border-secondary pt-3">
+                    <div class="sidebar-account border-top border-secondary pt-3">
                         <div class="d-flex align-items-center justify-content-between gap-2">
 
                             <span class="text-muted small me-1" style="font-size: 0.8rem;">Bienvenido, 
@@ -198,7 +556,7 @@
                             </span>
 
 
-                            <asp:LinkButton ID="btnConfiguracionUsuario" runat="server" CssClass="btn btn-outline-light btn-sm border-0" ToolTip="Configuración de cuenta" CausesValidation="false" OnClick="btnConfiguracionUsuario_Click">
+                            <asp:LinkButton ID="btnConfiguracionUsuario" runat="server" CssClass="btn sidebar-settings-button btn-sm border-0" ToolTip="Configuración de cuenta" CausesValidation="false" OnClick="btnConfiguracionUsuario_Click">
                                 <i class="bi bi-gear-fill"></i>
                             </asp:LinkButton>
 
@@ -210,7 +568,7 @@
 
             <main class="flex-grow-1 p-4 app-main">
 
-                <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+                <div class="app-topbar d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
 
                     <div class="d-flex align-items-center gap-3">
                         <button
@@ -220,7 +578,8 @@
                             data-bs-target="#sidebarMenu"
                             aria-controls="sidebarMenu"
                             aria-expanded="true">
-                            &#9776;
+                            <i class="bi bi-layout-sidebar-inset" aria-hidden="true"></i>
+                            <span class="visually-hidden">Mostrar u ocultar navegación</span>
                         </button>
 
                         <h2 class="h4 text-dark mb-0 text-capitalize fw-bold"><%: Page.Title %></h2>
@@ -232,26 +591,29 @@
                             ID="btnUserNav"
                             runat="server"
                             Text=""
-                            CssClass="btn btn-primary"
+                            CssClass="btn app-user-trigger"
                             Style="width: 44px; height: 44px; min-width: 44px; max-width: 44px; padding: 0; border-radius: 50% !important; line-height: 1; font-size: 1.1rem;"
+                            aria-label="Abrir menú de usuario"
                             CausesValidation="false"
                             OnClick="btnUserNav_Click" />
+
+                        <span class="user-trigger-status" aria-hidden="true"></span>
 
                         <asp:Panel
                             ID="pnlUserNav"
                             runat="server"
-                            CssClass="card position-absolute end-0 mt-2 shadow border-0"
+                            CssClass="card app-user-menu position-absolute end-0 mt-2 shadow border-0"
                             Style="width: 330px; top: 100%; z-index: 1050; border-radius: 12px;">
 
                             <div class="card-body p-3">
 
                                 <!-- TinyDesk y estado -->
-                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="user-menu-brandbar d-flex justify-content-between align-items-center mb-3">
 
                                     <!-- Isotipo con TinyDesk a su derecha -->
                                     <div class="d-flex align-items-center gap-2">
 
-                                        <span class="position-relative overflow-hidden d-inline-block flex-shrink-0"
+                                        <span class="user-menu-logo position-relative overflow-hidden d-inline-block flex-shrink-0"
                                             style="width: 27px; height: 22px;">
 
                                             <img runat="server"
@@ -265,10 +627,10 @@
                                     </div>
 
                                     <!-- Píldora con isotipo y estado -->
-                                    <span class="rounded-pill d-inline-flex"
+                                    <span class="user-menu-status-shell rounded-pill d-inline-flex"
                                         style="padding: 1px; background: linear-gradient(90deg, #079de0, #19cf91);">
 
-                                        <span class="rounded-pill bg-white d-flex align-items-center gap-1 px-2 py-1"
+                                        <span class="user-menu-status rounded-pill bg-white d-flex align-items-center gap-1 px-2 py-1"
                                             style="font-size: 0.75rem; color: #078fac;">
 
                                             <span class="position-relative overflow-hidden d-inline-block flex-shrink-0"
@@ -292,9 +654,9 @@
                                 </div>
 
                                 <!-- Imagen y datos -->
-                                <div class="d-flex align-items-start gap-3">
+                                <div class="user-menu-profile d-flex align-items-start gap-3">
 
-                                    <div class="flex-shrink-0"
+                                    <div class="user-menu-avatar flex-shrink-0"
                                         style="width: 84px; height: 84px;">
 
                                         <asp:Image
@@ -313,23 +675,23 @@
 
                                     </div>
 
-                                    <div class="flex-grow-1" style="min-width: 0;">
+                                    <div class="user-menu-copy flex-grow-1" style="min-width: 0;">
 
-                                        <div class="fw-bold text-dark text-truncate">
+                                        <div class="user-menu-name fw-bold text-dark text-truncate">
                                             <asp:Label
                                                 ID="lblName_nav"
                                                 runat="server">
                                             </asp:Label>
                                         </div>
 
-                                        <div class="small text-muted mb-2 text-truncate">
+                                        <div class="user-menu-handle small text-muted mb-2 text-truncate">
                                             <asp:Label
                                                 ID="lblNombreUsuarioNav"
                                                 runat="server">
                                             </asp:Label>
                                         </div>
 
-                                        <div class="small text-dark text-truncate mb-1">
+                                        <div class="user-menu-meta small text-dark text-truncate mb-1">
                                             <i class="bi bi-building me-1 text-muted"></i>
 
                                             <asp:Label
@@ -338,7 +700,7 @@
                                             </asp:Label>
                                         </div>
 
-                                        <div class="small text-dark text-truncate">
+                                        <div class="user-menu-meta small text-dark text-truncate">
                                             <i class="bi bi-briefcase me-1 text-muted"></i>
 
                                             <asp:Literal
@@ -351,7 +713,7 @@
 
                                 </div>
 
-                                <hr class="text-muted opacity-25 my-3" />
+                                <hr class="user-menu-divider text-muted opacity-25 my-3" />
 
                                 <div class="d-grid">
                                     <asp:LinkButton
@@ -375,8 +737,10 @@
 
                 </div>
 
-                <asp:ContentPlaceHolder ID="MainContent" runat="server">
-                </asp:ContentPlaceHolder>
+                <div class="app-content">
+                    <asp:ContentPlaceHolder ID="MainContent" runat="server">
+                    </asp:ContentPlaceHolder>
+                </div>
 
                 <footer class="app-footer">
 
@@ -472,6 +836,36 @@
             sidebar.addEventListener("hide.bs.collapse", function () {
                 saveState(false);
             });
+        }());
+    </script>
+    <script>
+        (function () {
+            "use strict";
+
+            var sidebar = document.getElementById("sidebarMenu");
+            if (!sidebar) return;
+
+            var currentPage = window.location.pathname.split("/").pop().toLowerCase();
+            var aliases = {
+                "crearusuario.aspx": "usuarios.aspx"
+            };
+
+            currentPage = aliases[currentPage] || currentPage;
+
+            sidebar.querySelectorAll(".sidebar-nav a.nav-link").forEach(function (link) {
+                var linkPage = new URL(link.href, window.location.origin).pathname.split("/").pop().toLowerCase();
+                var isCurrent = linkPage === currentPage;
+                link.classList.toggle("is-active", isCurrent);
+
+                if (isCurrent) {
+                    link.setAttribute("aria-current", "page");
+                }
+            });
+
+            var settingsButton = sidebar.querySelector(".sidebar-settings-button");
+            if (settingsButton && currentPage.indexOf("configuracionusuario") === 0) {
+                settingsButton.classList.add("is-current");
+            }
         }());
     </script>
     <script>
