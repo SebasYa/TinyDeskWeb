@@ -127,15 +127,28 @@
                     </ItemTemplate>
                 </asp:TemplateField>
 
-                <asp:TemplateField HeaderText="Progreso" ItemStyle-Width="150px">
+                <asp:TemplateField HeaderText="Progreso" ItemStyle-Width="180px">
                     <ItemTemplate>
-                        <div class="d-flex flex-column">
-                            <span class="small fw-bold text-dark mb-1"><%# Eval("Progreso") %>%</span>
+                        <div class="d-flex flex-column gap-1">
+            
+                            <div class="d-flex justify-content-between">
+                                <span class="text-xs text-muted">Tiempo: <%# Eval("ProgresoTiempo") %>%</span>
+                            </div>
+            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="small fw-bold text-dark">
+                                    Tickets: <%# Eval("ProgresoTickets") %>%
+                                    <span class="text-muted fw-normal" style="font-size: 0.75rem;">
+                                        (<%# Eval("TicketsFinalizados") %>/<%# Eval("TicketsTotales") %>)
+                                    </span>
+                                </span>
+                            </div>
+            
                             <div class="progress" style="height: 6px;">
                                 <div class='<%# GetClassBarraProgreso(Eval("Estado.Nombre")) %>' 
                                      role="progressbar" 
-                                     style='width: <%# Eval("Progreso") %>%;' 
-                                     aria-valuenow='<%# Eval("Progreso") %>' 
+                                     style='width: <%# Eval("ProgresoTickets") %>%;' 
+                                     aria-valuenow='<%# Eval("ProgresoTickets") %>' 
                                      aria-valuemin="0" 
                                      aria-valuemax="100">
                                 </div>
@@ -150,7 +163,6 @@
                         <span class="badge bg-secondary-subtle text-secondary rounded-pill font-monospace" style="font-size: 0.75rem;"><%# Eval("Area.Nombre") %></span>
                     </ItemTemplate>
                 </asp:TemplateField>
-
                 <asp:TemplateField HeaderText="Acciones" ItemStyle-Width="120px">
                     <ItemTemplate>
                         <div class="d-flex gap-2">

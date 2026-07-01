@@ -268,7 +268,7 @@ namespace TP_Final_Programacion_III
 
                     string textoDias = GetDiasRestantesTexto(sprintAEditar.FechaEstimadaFin, sprintAEditar.Estado.EsFinal, sprintAEditar.FechaFin);
                     lblModalDiasRestantes.Text = textoDias;
-                    lblModalProgreso.Text = sprintAEditar.Progreso + "%";
+                    lblModalProgreso.Text = sprintAEditar.ProgresoTiempo + "%";
 
 
                     if (textoDias.ToLower().Contains("retraso"))

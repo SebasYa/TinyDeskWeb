@@ -444,17 +444,20 @@ namespace negocio
 
             try
             {
-                datos.setearConsulta(@"SELECT T.Id,T.FechaInicio, T.FechaEstimadaFin, T.FechaFin, T.Activo,T.Descripcion, 
+                datos.setearConsulta(@"
+                                        SELECT T.Id, T.FechaInicio, T.FechaEstimadaFin, T.FechaFin, T.Activo, T.Descripcion, 
                                                P.Nombre AS NombreProyecto, P.Id AS IdProyecto,
                                                E.Id AS IdEstado, E.Nombre AS NombreEstado, E.EsFinal, E.EsSistema,
-                                               A.Nombre AS NombreArea, A.Id AS IdArea, PRI.Nombre AS Prioridad, U.Nombre AS UsuarioNombre, U.Apellido AS UsuarioApellido
+                                               A.Nombre AS NombreArea, A.Id AS IdArea, 
+                                               PRI.Nombre AS Prioridad, 
+                                               U.Nombre AS UsuarioNombre, U.Apellido AS UsuarioApellido
                                         FROM TICKET T
                                         INNER JOIN ESTADO E ON E.Id = T.IdEstado
                                         INNER JOIN SPRINT S ON T.IdSprint = S.Id
                                         INNER JOIN PROYECTO P ON S.IdProyecto = P.Id
                                         INNER JOIN AREA A ON A.Id = S.IdArea
                                         INNER JOIN USUARIO U ON U.Id = T.IdUsuario
-                                        INNER JOIN PRIORIDAD PRI ON P.Id = T.IdPrioridad
+                                        INNER JOIN PRIORIDAD PRI ON PRI.Id = T.IdPrioridad 
                                         WHERE S.Id = @IdSprint
                 ");
 

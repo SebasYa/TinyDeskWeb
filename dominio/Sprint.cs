@@ -17,6 +17,9 @@ namespace dominio
         public Proyecto Proyecto { get; set; }
         public Estado Estado { get; set; }
         public Area Area { get; set; }
-        public int Progreso { get; set; }
+        public int ProgresoTiempo { get; set; }
+        public int ProgresoTickets { get; set; }
+        public int TicketsFinalizados { get; set; }
+        public int TicketsTotales { get; set; }
     }
 }

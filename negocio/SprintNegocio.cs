@@ -129,15 +129,24 @@ namespace negocio
             try
             {
                 datos.setearConsulta(@"
-                    SELECT S.Id, S.NumeroSprint, S.FechaInicio, S.FechaEstimadaFin, S.FechaFin, S.Activo, 
+                     SELECT S.Id, S.NumeroSprint, S.FechaInicio, S.FechaEstimadaFin, S.FechaFin, S.Activo, 
                            P.Nombre AS NombreProyecto,P.Id AS IdProyecto, E.Id AS IdEstado, E.Nombre AS NombreEstado, 
                            E.EsFinal, E.EsSistema, A.Nombre AS NombreArea, A.Id AS IdArea,
                            CASE 
-                                WHEN E.EsFinal = 1 THEN 100
-                                WHEN GETDATE() < S.FechaInicio THEN 0
-                                WHEN GETDATE() > S.FechaEstimadaFin THEN 100
-                                ELSE (DATEDIFF(DAY, S.FechaInicio, GETDATE()) * 100) / NULLIF(DATEDIFF(DAY, S.FechaInicio, S.FechaEstimadaFin), 0)
-                           END AS Progreso
+                               WHEN E.EsFinal = 1 THEN 100
+                               WHEN GETDATE() < S.FechaInicio THEN 0
+                               WHEN GETDATE() > S.FechaEstimadaFin THEN 100
+                               ELSE (DATEDIFF(DAY, S.FechaInicio, GETDATE()) * 100) / NULLIF(DATEDIFF(DAY, S.FechaInicio, S.FechaEstimadaFin), 0)
+                           END AS ProgresoTiempo,
+                       -- Progreso por Tickets (Cálculo real de trabajo terminado)
+                       ISNULL((
+                           SELECT CAST((COUNT(CASE WHEN ET.EsFinal = 1 THEN 1 END) * 100.0) / NULLIF(COUNT(T.Id), 0) AS INT)
+                           FROM TICKET T
+                           INNER JOIN ESTADO ET ON ET.Id = T.IdEstado
+                           WHERE T.IdSprint = S.Id
+                       ), 0) AS ProgresoTickets,
+                       (SELECT COUNT(CASE WHEN ET.EsFinal = 1 THEN 1 END) FROM TICKET T INNER JOIN ESTADO ET ON ET.Id = T.IdEstado WHERE T.IdSprint = S.Id) AS TicketsFinalizados,
+                       (SELECT COUNT(T.Id) FROM TICKET T WHERE T.IdSprint = S.Id) AS TicketsTotales
                     FROM SPRINT S
                     INNER JOIN ESTADO E ON E.Id = S.IdEstado
                     INNER JOIN PROYECTO P ON P.Id = S.IdProyecto
@@ -170,7 +179,10 @@ namespace negocio
                     aux.Area = new Area();
                     aux.Area.Id = (int)datos.Lector["IdArea"];
                     aux.Area.Nombre = (string)datos.Lector["NombreArea"];
-                    aux.Progreso = (int)datos.Lector["Progreso"];
+                    aux.ProgresoTiempo = Convert.ToInt32(datos.Lector["ProgresoTiempo"]);
+                    aux.ProgresoTickets = Convert.ToInt32(datos.Lector["ProgresoTickets"]);
+                    aux.TicketsFinalizados = Convert.ToInt32(datos.Lector["TicketsFinalizados"]);
+                    aux.TicketsTotales = Convert.ToInt32(datos.Lector["TicketsTotales"]);
 
                     lista.Add(aux);
                 }
