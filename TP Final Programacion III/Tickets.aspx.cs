@@ -25,6 +25,8 @@ namespace TP_Final_Programacion_III
                 {
                     int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
                     CargarDropdowns(idEmpresa);
+                    Session["filtroMisTickets"] = false;
+                    Session["filtroEstadoTickets"] = "";
 
                     if (Request.QueryString["id"] != null)
                     {
@@ -57,18 +59,7 @@ namespace TP_Final_Programacion_III
             List<Ticket> lista = negocio.Listar(idEmpresa);
 
             Session["listaTickets"] = lista;
-            Session["listaTicketsFiltrados"] = lista;
-
-            dpTickets.SetPageProperties(
-                0,
-                dpTickets.PageSize,
-                false
-            );
-
-            lvTickets.DataSource = lista;
-            lvTickets.DataBind();
-
-            dpTickets.Visible = lista.Count > dpTickets.PageSize;
+            AplicarFiltrosTickets();
         }
 
         private void CargarDetalleTicket(int idTicket, int idEmpresa)
@@ -155,9 +146,9 @@ namespace TP_Final_Programacion_III
             ddlEditSprint.Items.Insert(0, new ListItem("Seleccione sprint...", ""));
         }
 
-        
+
         //CREAR TICKET
-        
+
 
         protected void btnGuardarTicket_Click(object sender, EventArgs e)
         {
@@ -244,7 +235,7 @@ namespace TP_Final_Programacion_III
                 MostrarError("Ocurrió un error al crear el ticket.");
             }
         }
-        
+
         //MODIFICAR TICKET     
         protected void btnGuardarEdicion_Click(object sender, EventArgs e)
         {
@@ -359,7 +350,7 @@ namespace TP_Final_Programacion_III
             dpTickets.Visible = lista.Count > dpTickets.PageSize;
         }
 
-        
+
         // HELPERS
         private void MostrarError(string mensaje)
         {
@@ -462,40 +453,7 @@ namespace TP_Final_Programacion_III
         }
         protected void txtFiltroTickets_TextChanged(object sender, EventArgs e)
         {
-            string filtro = txtFiltroTickets.Text.Trim();
-            List<Ticket> lista = Session["listaTickets"] as List<Ticket>;
-
-            if (lista == null)
-            {
-                int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
-                CargarListado(idEmpresa);
-                return;
-            }
-
-            List<Ticket> filtrada;
-
-            if (string.IsNullOrWhiteSpace(filtro))
-            {
-                filtrada = lista;
-            }
-            else
-            {
-                filtrada = lista.Where(t =>
-                    (!string.IsNullOrWhiteSpace(t.Descripcion) && t.Descripcion.IndexOf(filtro, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                    (t.Sprint?.Proyecto != null && !string.IsNullOrWhiteSpace(t.Sprint.Proyecto.Nombre) && t.Sprint.Proyecto.Nombre.IndexOf(filtro, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                    (t.Usuario != null && !string.IsNullOrWhiteSpace(t.Usuario.Nombre) && t.Usuario.Nombre.IndexOf(filtro, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                    (t.Usuario != null && !string.IsNullOrWhiteSpace(t.Usuario.Apellido) && t.Usuario.Apellido.IndexOf(filtro, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                    (t.Estado != null && !string.IsNullOrWhiteSpace(t.Estado.Nombre) && t.Estado.Nombre.IndexOf(filtro, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                    (t.Prioridad != null && !string.IsNullOrWhiteSpace(t.Prioridad.Nombre) && t.Prioridad.Nombre.IndexOf(filtro, StringComparison.OrdinalIgnoreCase) >= 0)
-                ).ToList();
-            }
-
-            Session["listaTicketsFiltrados"] = filtrada;
-
-            dpTickets.SetPageProperties(0, dpTickets.PageSize, false);
-            lvTickets.DataSource = filtrada;
-            lvTickets.DataBind();
-            dpTickets.Visible = filtrada.Count > dpTickets.PageSize;
+            AplicarFiltrosTickets();
         }
         public string GetClassEtiquetaEstado(object estadoNombre)
         {
@@ -733,6 +691,68 @@ namespace TP_Final_Programacion_III
             ddlUsuarioTicket.DataTextField = "Nombre";
             ddlUsuarioTicket.DataBind();
             ddlUsuarioTicket.Items.Insert(0, new ListItem("Seleccione Usuario...", ""));
+        }
+
+        protected void btnMisTickets_Click(object sender, EventArgs e)
+        {
+            bool soloMios = Session["filtroMisTickets"] != null && (bool)Session["filtroMisTickets"];
+            Session["filtroMisTickets"] = !soloMios;
+            AplicarFiltrosTickets();
+        }
+
+        protected void btnTicketsActivos_Click(object sender, EventArgs e)
+        {
+            CambiarFiltroEstado("activos");
+        }
+
+        protected void btnTicketsFinalizados_Click(object sender, EventArgs e)
+        {
+            CambiarFiltroEstado("finalizados");
+        }
+
+        private void CambiarFiltroEstado(string estado)
+        {
+            string filtroActual = Session["filtroEstadoTickets"] as string ?? "";
+            Session["filtroEstadoTickets"] = filtroActual == estado ? "" : estado;
+            AplicarFiltrosTickets();
+        }
+
+        private void AplicarFiltrosTickets()
+        {
+            List<Ticket> lista = Session["listaTickets"] as List<Ticket> ?? new List<Ticket>();
+            IEnumerable<Ticket> filtrada = lista;
+            Usuario usuarioLogueado = (Usuario)Session["usuario"];
+
+            bool soloMios = Session["filtroMisTickets"] != null && (bool)Session["filtroMisTickets"];
+            string filtroEstado = Session["filtroEstadoTickets"] as string ?? "";
+            string texto = txtFiltroTickets.Text.Trim();
+
+            if (soloMios) filtrada = filtrada.Where(t => t.Usuario != null && t.Usuario.Id == usuarioLogueado.Id);
+            if (filtroEstado == "activos") filtrada = filtrada.Where(t => t.Activo && (t.Estado == null || !t.Estado.EsFinal));
+            if (filtroEstado == "finalizados") filtrada = filtrada.Where(t => t.Estado != null && t.Estado.EsFinal);
+
+            if (!string.IsNullOrWhiteSpace(texto))
+            {
+                filtrada = filtrada.Where(t =>
+                                          t.Id.ToString().IndexOf(texto, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                          (!string.IsNullOrWhiteSpace(t.Descripcion) && t.Descripcion.IndexOf(texto, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                                          (t.Sprint?.Proyecto != null && !string.IsNullOrWhiteSpace(t.Sprint.Proyecto.Nombre) && t.Sprint.Proyecto.Nombre.IndexOf(texto, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                                          (t.Usuario != null && (t.Usuario.Nombre + " " + t.Usuario.Apellido).IndexOf(texto, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                                          (t.Estado != null && !string.IsNullOrWhiteSpace(t.Estado.Nombre) && t.Estado.Nombre.IndexOf(texto, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                                          (t.Prioridad != null && !string.IsNullOrWhiteSpace(t.Prioridad.Nombre) && t.Prioridad.Nombre.IndexOf(texto, StringComparison.OrdinalIgnoreCase) >= 0));
+            }
+
+            List<Ticket> resultado = filtrada.OrderByDescending(t => t.Activo && (t.Estado == null || !t.Estado.EsFinal)).ThenBy(t => t.FechaEstimadaFin).ToList();
+
+            Session["listaTicketsFiltrados"] = resultado;
+            dpTickets.SetPageProperties(0, dpTickets.PageSize, false);
+            lvTickets.DataSource = resultado;
+            lvTickets.DataBind();
+            dpTickets.Visible = resultado.Count > dpTickets.PageSize;
+
+            btnMisTickets.CssClass = soloMios ? "btn btn-primary" : "btn btn-outline-primary";
+            btnTicketsActivos.CssClass = filtroEstado == "activos" ? "btn btn-success" : "btn btn-outline-success";
+            btnTicketsFinalizados.CssClass = filtroEstado == "finalizados" ? "btn btn-secondary" : "btn btn-outline-secondary";
         }
     }
 }

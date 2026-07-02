@@ -12,21 +12,21 @@
 
         <asp:Panel ID="pnlListado" runat="server">
 
-            <div class="row">
-                <div class="col-6">
-                    <div class="mb-3">
-                        <asp:TextBox runat="server" ID="txtFiltroTickets"
-                            CssClass="form-control"
-                            placeholder="Filtrar por descripción o proyecto"
-                            AutoPostBack="true"
-                            OnTextChanged="txtFiltroTickets_TextChanged" />
+            <div class="row g-3 align-items-end mb-3">
+                <div class="col-lg-4">
+                    <asp:TextBox runat="server" ID="txtFiltroTickets" CssClass="form-control" placeholder="Filtrar por descripción o proyecto" AutoPostBack="true" OnTextChanged="txtFiltroTickets_TextChanged" />
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="d-flex flex-wrap gap-2">
+                        <asp:Button ID="btnMisTickets" runat="server" Text="Mis tickets" CssClass="btn btn-outline-primary" CausesValidation="false" OnClick="btnMisTickets_Click" />
+                        <asp:Button ID="btnTicketsActivos" runat="server" Text="Activos" CssClass="btn btn-outline-success" CausesValidation="false" OnClick="btnTicketsActivos_Click" />
+                        <asp:Button ID="btnTicketsFinalizados" runat="server" Text="Finalizados" CssClass="btn btn-outline-secondary" CausesValidation="false" OnClick="btnTicketsFinalizados_Click" />
                     </div>
                 </div>
-                <div class="col-6 d-flex align-items-center flex-row-reverse">
-                    <button type="button"
-                        class="btn btn-primary shadow-sm d-flex align-items-center gap-2"
-                        data-bs-toggle="modal"
-                        data-bs-target="#ticketModal">
+
+                <div class="col-lg-3 d-flex justify-content-lg-end">
+                    <button type="button" class="btn btn-primary shadow-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#ticketModal">
                         <i class="bi bi-plus-circle"></i>Crear Ticket
                     </button>
                 </div>
@@ -239,6 +239,7 @@
                                 <asp:LinkButton
                                     ID="btnEditarTicket"
                                     runat="server"
+                                    Visible='<%# Convert.ToBoolean(Eval("Activo")) %>'
                                     CommandName="AbrirEditar"
                                     CommandArgument='<%# Eval("Id") %>'
                                     CssClass="btn btn-link text-muted p-0 lh-1"
@@ -490,11 +491,11 @@
                             </div>
                             <div class="col-12 position-relative">
                                 <label for="txtMotivoCambio" class="form-label fw-semibold">Motivo del cambio</label>
-    
-                                <asp:TextBox ID="txtMotivoCambio" runat="server" 
-                                             CssClass="form-control w-100" 
-                                             TextMode="MultiLine" Rows="2" 
-                                             placeholder="Explique por qué realiza esta modificación...">
+
+                                <asp:TextBox ID="txtMotivoCambio" runat="server"
+                                    CssClass="form-control w-100"
+                                    TextMode="MultiLine" Rows="2"
+                                    placeholder="Explique por qué realiza esta modificación...">
                                 </asp:TextBox>
 
                                 <div class="invalid-feedback">
@@ -524,5 +525,5 @@
         <!-- FIN MODAL EDITAR -->
 
     </div>
- 
+
 </asp:Content>
