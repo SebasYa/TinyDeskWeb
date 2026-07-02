@@ -668,5 +668,35 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
+
+        public void EliminarTicketConAuditoria(int idTicket, string accion, int idUsuario, string motivo)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+
+                datos.iniciarTransaccion();
+
+                BajaLogica(idTicket);
+
+
+                AuditoriaService auditoriaService = new AuditoriaService();
+
+                auditoriaService.Registrar(idUsuario, "Ticket", idTicket, accion,
+                        "Baja Lógica", motivo);
+
+
+                datos.confirmarTransaccion(); // COMMIT
+            }
+            catch (Exception)
+            {
+                datos.cancelarTransaccion(); // ROLLBACK
+                throw;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
     }
 }

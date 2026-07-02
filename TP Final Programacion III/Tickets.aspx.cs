@@ -324,9 +324,20 @@ namespace TP_Final_Programacion_III
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(txtMotivoCambio.Text))
+                {
+                    MostrarError("Completá el campo de motivo para proceder a la baja del ticket.");
+                    return;
+                }
+
+                int idUsuario = ((Usuario)Session["usuario"]).Id;
                 int idTicket = int.Parse(hdnIdTicket.Value);
                 TicketNegocio negocio = new TicketNegocio();
-                negocio.BajaLogica(idTicket);
+
+                string motivo = txtMotivoCambio.Text;
+                string accion = "DELETE";
+                negocio.EliminarTicketConAuditoria(idTicket, accion, idUsuario, motivo);
+                //negocio.BajaLogica(idTicket);
 
                 int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
                 MostrarExito("Ticket desactivado correctamente.");
