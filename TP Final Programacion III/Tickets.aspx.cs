@@ -1,4 +1,5 @@
-﻿using dominio;
+﻿using Antlr.Runtime.Misc;
+using dominio;
 using negocio;
 using System;
 using System.Collections.Generic;
@@ -260,8 +261,18 @@ namespace TP_Final_Programacion_III
 
             try
             {
+                AuditoriaService auditoriaService = new AuditoriaService();
                 Ticket ticket = new Ticket();
+                Usuario userLogueado = (Usuario)Session["usuario"];
+
+
                 ticket.Id = int.Parse(hdnIdTicket.Value);
+                //ticket.Id = (int)Session["IdTicket"];
+
+                List<Ticket> listaTickets = (List<Ticket>)Session["listaTickets"];
+                Ticket original = listaTickets.Find(x => x.Id == ticket.Id);
+
+
                 ticket.Descripcion = txtEditDescripcion.Text;
                 ticket.FechaEstimadaFin = Convert.ToDateTime(txtEditFechaEstimadaFin.Text);
 
@@ -279,11 +290,16 @@ namespace TP_Final_Programacion_III
                 ticket.Sprint = new Sprint();
                 ticket.Sprint.Id = int.Parse(ddlEditSprint.SelectedValue);
 
+                string motivo = txtMotivoCambio.Text;
+                string accion = "UPDATE";
+
                 TicketNegocio negocio = new TicketNegocio();
-                negocio.Modificar(ticket);
+                negocio.ModificarTicketConAuditoria(ticket, original, accion, userLogueado.Id, motivo);
+                //negocio.Modificar(ticket);
 
                 MostrarExito("Ticket modificado correctamente.");
                 CargarDetalleTicket(ticket.Id, ((Usuario)Session["usuario"]).Empresa.Id);
+                
             }
             catch (Exception ex)
             {

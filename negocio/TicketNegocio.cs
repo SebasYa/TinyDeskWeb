@@ -443,6 +443,61 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
+
+        public void ModificarTicketConAuditoria(Ticket ticket, Ticket original, string accion, int idUsuario, string motivo)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+
+                datos.iniciarTransaccion();
+
+                Modificar(ticket);
+
+
+                AuditoriaService auditoriaService = new AuditoriaService();
+
+                
+                if (original.Prioridad.Id != ticket.Prioridad.Id)
+                    auditoriaService.Registrar(idUsuario, "Ticket", ticket.Id, accion,
+                        "Prioridad", original.Prioridad.Nombre.ToString(), ticket.Prioridad.Nombre.ToString(), motivo);
+
+                if (original.FechaEstimadaFin.Date != ticket.FechaEstimadaFin.Date)
+                    auditoriaService.Registrar(idUsuario, "Ticket", ticket.Id, accion,
+                        "FechaEstimadaFin", original.FechaEstimadaFin.ToString(), ticket.FechaEstimadaFin.ToString(), motivo);
+
+                if (original.Estado.Id != ticket.Estado.Id)
+                    auditoriaService.Registrar(idUsuario, "Ticket", ticket.Id, accion,
+                        "Estado", original.Estado.Nombre, ticket.Estado.Nombre, motivo);
+
+                if (original.Usuario.Id != ticket.Usuario.Id)
+                    auditoriaService.Registrar(idUsuario, "Ticket", ticket.Id, accion,
+                        "Usuario", original.Usuario.Id.ToString() , ticket.Usuario.Id.ToString(), motivo);
+
+                if (original.Sprint.Id != ticket.Sprint.Id)
+                    auditoriaService.Registrar(idUsuario, "Ticket", ticket.Id, accion,
+                        "Sprint", original.Sprint.NumeroSprint.ToString(), ticket.Sprint.NumeroSprint.ToString(), motivo);
+
+                string descOriginal = (original.Descripcion ?? "").Trim();
+                string descNuevo = (ticket.Descripcion ?? "").Trim();
+                if (!descOriginal.Equals(descNuevo, StringComparison.OrdinalIgnoreCase))
+                    auditoriaService.Registrar(idUsuario, "Ticket", ticket.Id, accion,
+                        "Descripcion", original.Descripcion, ticket.Descripcion, motivo);
+
+
+                datos.confirmarTransaccion(); // COMMIT
+            }
+            catch (Exception)
+            {
+                datos.cancelarTransaccion(); // ROLLBACK
+                throw;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
         public List<Ticket> listarPorSprint(int idSprint)
         {
             List<Ticket> lista = new List<Ticket>();

@@ -488,6 +488,19 @@
                                 </asp:DropDownList>
                                 <div class="invalid-feedback">Debes elegir un Sprint.</div>
                             </div>
+                            <div class="col-12 position-relative">
+                                <label for="txtMotivoCambio" class="form-label fw-semibold">Motivo del cambio</label>
+    
+                                <asp:TextBox ID="txtMotivoCambio" runat="server" 
+                                             CssClass="form-control w-100" 
+                                             TextMode="MultiLine" Rows="2" 
+                                             placeholder="Explique por qué realiza esta modificación...">
+                                </asp:TextBox>
+
+                                <div class="invalid-feedback">
+                                    Por favor, ingrese un motivo para realizar el cambio.
+                                </div>
+                            </div>
 
                         </div>
                     </div>
@@ -502,6 +515,7 @@
                         <asp:Button ID="btnGuardarEdicion" runat="server"
                             CssClass="btn btn-primary"
                             Text="Guardar Cambios"
+                            OnClientClick="return validarSprintModal();"
                             OnClick="btnGuardarEdicion_Click" />
                     </div>
                 </div>
@@ -510,4 +524,44 @@
         <!-- FIN MODAL EDITAR -->
 
     </div>
+    <script type="text/javascript">
+function validarSprintModal() {
+    let esValido = true;
+
+    // --- 1. Obtención de elementos ---
+    
+    const txtDescripcionCambio = document.getElementById('<%= txtMotivoCambio.ClientID %>');
+
+    // --- 2. Función auxiliar con LOG de error ---
+    function setValidacion(control, condicion, nombreCampo) {
+        if (!control) return;
+        if (condicion) {
+            control.classList.remove('is-invalid');
+            control.classList.add('is-valid');
+        } else {
+            control.classList.remove('is-valid');
+            control.classList.add('is-invalid');
+            console.warn("❌ FALLÓ LA VALIDACIÓN EN: " + (nombreCampo || "Desconocido"));
+            esValido = false;
+        }
+    }
+
+    // --- 3. Detección de Modal ---
+
+    console.log("--- DEBUG DE VARIABLES ---");
+
+    // --- 6. Validación Descripción Motivo ---
+    if (modalEditarVisible && txtDescripcionCambio) {
+        const motivoValido = txtDescripcionCambio.value.trim().length >= 5;
+        setValidacion(txtDescripcionCambio, motivoValido, "Motivo Cambio");
+    }
+
+    console.log("RESULTADO FINAL ¿Es válido?:", esValido);
+    console.log("--------------------------");
+
+    return esValido;
+}
+
+    
+    </script>
 </asp:Content>
