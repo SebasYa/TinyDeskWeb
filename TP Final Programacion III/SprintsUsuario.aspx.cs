@@ -59,16 +59,18 @@ namespace TP_Final_Programacion_III
                          pnlDetalleSprint.Visible = true;
                          pnlListado.Visible = false;
                          pnlFiltros.Visible = false;
-                         //CargarFiltros();
+                        //CargarFiltros();
+                        CargarListado(userLogueado);
                          ActualizarVisibilidadFiltros();
                          CargarDetalleDelSprint(idSprint);
                          
                      }
                      else
                      {
-                         pnlListadoSprints.Visible = true;
-                         pnlDetalleSprint.Visible = false;
-                     }
+                        CargarListado(userLogueado);
+                        pnlListadoSprints.Visible = true;
+                        pnlDetalleSprint.Visible = false;
+                    }
                    
                 }
                 catch (Exception ex)
@@ -82,26 +84,47 @@ namespace TP_Final_Programacion_III
 
         private void CargarFiltros()
         {
-            PrioridadNegocio prioridadNegocio = new PrioridadNegocio();
+            Usuario userLogueado = (Usuario)Session["usuario"];
+            int idEmpresa = userLogueado.Empresa.Id;
+            AreaNegocio areaNegocio = new AreaNegocio();
 
-            ddlPrioridad.DataSource = prioridadNegocio.listar();
-            ddlPrioridad.DataValueField = "Id";
-            ddlPrioridad.DataTextField = "Nombre";
-            ddlPrioridad.DataBind();
-            ddlPrioridad.Items.Insert(0, new ListItem("Todas", ""));
+            ddlArea.DataSource = areaNegocio.listar(idEmpresa);
+            ddlArea.DataValueField = "Id";
+            ddlArea.DataTextField = "Nombre";
+            ddlArea.DataBind();
+            ddlArea.Items.Insert(0, new ListItem("Todas", ""));
         }
 
-        
+        private void CargarListado(Usuario usuario)
+        {
+            
+            SprintNegocio negocio = new SprintNegocio();
+            List<Sprint> lista = negocio.listar(usuario.Empresa.Id, usuario.Id);
+            Session["listaSprintsOriginal"] = lista;
+        }
+
 
         private void AplicarFiltrosSprints(bool reiniciarPagina)
         {
-            List<Sprint> lista = Session["listaSprintsOriginal"] as List<Sprint> ?? new List<Sprint>();
+            List<Sprint> lista = Session["listaSprintsOriginal"] as List<Sprint> ?? new List<Sprint>(); //aca trae 0 registros -- problema 
+
+            bool soloPendientes = (bool)(Session["SprintsSoloPendientes"] ?? true);
+            if (soloPendientes)
+            {
+                lista = lista.Where(x => x.Estado.Id == 1 || x.Estado.Id == 2).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(ddlArea.SelectedValue) && ddlArea.SelectedValue != "0")
+            {
+                int idArea = int.Parse(ddlArea.SelectedValue);
+                lista = lista.Where(x => x.Area.Id == idArea).ToList();
+            }
 
             string filtro = txtFiltro.Text.Trim();
             if (!string.IsNullOrWhiteSpace(filtro))
             {
                 lista = lista.Where(x =>
-                    (x.Proyecto != null && x.Proyecto.Nombre.IndexOf(filtro, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    x.Area.Nombre.Contains(filtro) ||
                     x.NumeroSprint.ToString().Contains(filtro)
                 ).ToList();
             }
@@ -137,18 +160,19 @@ namespace TP_Final_Programacion_III
         }
         protected void btnFiltroPendientes_Click(object sender, EventArgs e)
         {
-            //Session["TicketsUsuarioSoloPendientes"] = true;
+            Session["SprintsSoloPendientes"] = true; 
             AplicarFiltrosSprints(true);
         }
         protected void btnMostrarTodos_Click(object sender, EventArgs e)
         {
-            Session["TicketsUsuarioSoloPendientes"] = false;
+            Session["SprintsSoloPendientes"] = false;
             ddlProximoVencimiento.SelectedValue = "0";
+            ddlArea.SelectedValue = "0"; 
             AplicarFiltrosSprints(true);
         }
         protected void ddlProximoVencimiento_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Session["TicketsUsuarioSoloPendientes"] = true;
+            Session["SprintsSoloPendientes"] = true;
             AplicarFiltrosSprints(true);
         }
         private bool FiltrosVisibles
@@ -163,7 +187,7 @@ namespace TP_Final_Programacion_III
         protected void btnLimpiarFiltros_Click(object sender, EventArgs e)
         {
             txtFiltro.Text = "";
-            ddlPrioridad.SelectedValue = "";
+            ddlArea.SelectedValue = "";
             ddlOrden.SelectedValue = "fecha_asc";
             ddlProximoVencimiento.SelectedValue = "0";
             Session["TicketsUsuarioSoloPendientes"] = true;

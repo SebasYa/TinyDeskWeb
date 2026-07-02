@@ -120,17 +120,17 @@
                              ID="txtFiltro"
                              runat="server"
                              CssClass="form-control"
-                             placeholder="Número, descripción, proyecto o sprint..." />
+                             placeholder="Número, descripción, área..." />
                      </div>
                  </div>
 
                  <div class="col-12 col-md-5 col-lg-2">
-                     <label for="ddlPrioridad" class="form-label fw-semibold">
-                         Prioridad
+                     <label for="ddlArea" class="form-label fw-semibold">
+                         Area
                      </label>
 
                      <asp:DropDownList
-                         ID="ddlPrioridad"
+                         ID="ddlArea"
                          runat="server"
                          CssClass="form-select">
                      </asp:DropDownList>
@@ -144,7 +144,6 @@
                      <asp:DropDownList ID="ddlOrden" runat="server" CssClass="form-select">
                          <asp:ListItem Text="Vencimiento próximo" Value="fecha_asc" />
                          <asp:ListItem Text="Vencimiento lejano" Value="fecha_desc" />
-                         <asp:ListItem Text="Prioridad" Value="prioridad" />
                          <asp:ListItem Text="Más recientes" Value="recientes" />
                      </asp:DropDownList>
                  </div>
