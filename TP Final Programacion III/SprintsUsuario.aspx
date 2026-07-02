@@ -255,7 +255,7 @@
 </asp:Panel>
     <!--   FIN--> 
      </asp:Panel>
-     <asp:Panel ID="pnlDetalleSprint" runat="server" CssClass="ticket-detail-view">
+     <asp:Panel ID="pnlDetalleSprint" runat="server"  Visible="false" CssClass="ticket-detail-view">
       
 
  <div class="ticket-page-heading ticket-detail-heading d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">

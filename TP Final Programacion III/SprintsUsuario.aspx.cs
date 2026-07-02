@@ -47,36 +47,19 @@ namespace TP_Final_Programacion_III
                     FiltrosVisibles = false;
 
 
-                     //ListView View de Sprints
-                     Session.Add("listaSprints", sprintNegocio.listar(userLogueado.Empresa.Id, userLogueado.Id));
-                     lvSprints.DataSource = Session["listaSprints"];
-                     lvSprints.DataBind();
 
-                     if (Request.QueryString["id"] != null)
-                     {
-                         int idSprint = int.Parse(Request.QueryString["id"]);
-                         Session["listaSprintsOriginal"] = sprintNegocio.listar(userLogueado.Empresa.Id, userLogueado.Id);
-                         AplicarFiltrosSprints(true);
 
-                         pnlListadoSprints.Visible = false;
-                         pnlDetalleSprint.Visible = true;
-                         pnlListado.Visible = false;
-                         pnlFiltros.Visible = false;
-                         Session["SprintsSoloPendientes"] = true;
-                         FiltrosVisibles = false;
-                         CargarFiltros();
-                         CargarListado(userLogueado);
-                         ActualizarVisibilidadFiltros();
-                         CargarDetalleDelSprint(idSprint);
-                         
-                     }
-                     else
-                     {
+                    if (Request.QueryString["id"] != null)
+                    {
+                        int idSprint = int.Parse(Request.QueryString["id"]);
                         CargarListado(userLogueado);
-                        pnlListadoSprints.Visible = true;
-                        pnlDetalleSprint.Visible = false;
+                        CargarDetalleDelSprint(idSprint);
                     }
-                   
+                    else
+                    {
+                        CargarListado(userLogueado);
+                    }
+
                 }
                 catch (Exception ex)
                 {
@@ -102,10 +85,13 @@ namespace TP_Final_Programacion_III
 
         private void CargarListado(Usuario usuario)
         {
-            
+            pnlListado.Visible = true;
+            pnlListadoSprints.Visible = true;
+            pnlDetalleSprint.Visible = false;
             SprintNegocio negocio = new SprintNegocio();
             List<Sprint> lista = negocio.listar(usuario.Empresa.Id, usuario.Id);
             Session["listaSprintsOriginal"] = lista;
+            Session["listaSprints"] = lista;
             AplicarFiltrosSprints(true);
         }
 
@@ -145,14 +131,15 @@ namespace TP_Final_Programacion_III
 
             lista = lista.OrderByDescending(x => x.FechaInicio).ToList();
 
+            Session["listaSprintsFiltrada"] = lista;
+
             if (reiniciarPagina) dpSprints.SetPageProperties(0, dpSprints.PageSize, false);
 
-
-            Session["listaSprintFiltrada"] = lista;
-            dpSprints.Visible = lista.Count > dpSprints.PageSize;
-            ActualizarControlesFiltroRapido(soloPendientes);
             lvSprints.DataSource = lista;
             lvSprints.DataBind();
+            dpSprints.Visible = lista.Count > dpSprints.PageSize;
+
+            ActualizarControlesFiltroRapido(soloPendientes);
         }
         protected void btnToggleFiltros_Click(object sender, EventArgs e)
         {
@@ -300,40 +287,51 @@ namespace TP_Final_Programacion_III
 
         }
 
-
         private void CargarDetalleDelSprint(int idSprint)
         {
             Usuario userLogueado = (Usuario)Session["usuario"];
-            List<Sprint> listaSprints = (List<Sprint>)Session["listaSprints"];
-            Sprint sprint = listaSprints?.Find(x => x.Id == idSprint);
+            List<Sprint> listaSprints = Session["listaSprintsOriginal"] as List<Sprint> ?? new List<Sprint>();
+            Sprint sprint = listaSprints.Find(x => x.Id == idSprint);
 
-            if (sprint != null)
+            if (sprint == null)
             {
-                //lblDetalleTituloSprint.Text = $"Detalle de Sprint {sprint.NumeroSprint}";
-                //lblSprintProyectoArea.Text = $"{sprint.Proyecto.Nombre} / {sprint.Area.Nombre}";
-                lblDetalleFechaInicio.Text = sprint.FechaInicio.ToString("dd/MM/yyyy");
-                lblDetalleFechaEstimadaFin.Text = sprint.FechaEstimadaFin.ToString("dd/MM/yyyy");
-                lblDetalleFechaFin.Text = sprint.FechaFin != null ? ((DateTime)sprint.FechaFin).ToString("dd/MM/yyyy") : "-";
-                lblDetalleEstado.Text = sprint.Estado.Nombre;
-                lblDetalleEstado.CssClass += " " + GetClassEtiquetaEstado(sprint.Estado.Nombre);
-
-
-                TicketNegocio ticketNegocio = new TicketNegocio();
-                Session["listaTicketsDelSprint"] = ticketNegocio.listarPorSprint(idSprint, userLogueado.Id );
-
-                dpTicketsDelSprint.SetPageProperties(0, dpTicketsDelSprint.MaximumRows, false);
-
-                lvTicketsDelSprint.DataSource = Session["listaTicketsDelSprint"];
-                lvTicketsDelSprint.DataBind();
+                Response.Redirect("SprintsUsuario.aspx", false);
+                Context.ApplicationInstance.CompleteRequest();
+                return;
             }
+
+            pnlListado.Visible = false;
+            pnlListadoSprints.Visible = false;
+            pnlDetalleSprint.Visible = true;
+
+            lblTicketSprintProyecto.Text = "Sprint " + sprint.NumeroSprint + " / " + sprint.Proyecto.Nombre + " / " + sprint.Area.Nombre;
+            lblDetalleFechaInicio.Text = sprint.FechaInicio.ToString("dd/MM/yyyy");
+            lblDetalleFechaEstimadaFin.Text = sprint.FechaEstimadaFin.ToString("dd/MM/yyyy");
+            lblDetalleFechaFin.Text = sprint.FechaFin.HasValue ? sprint.FechaFin.Value.ToString("dd/MM/yyyy") : "-";
+            lblDetalleEstado.Text = sprint.Estado.Nombre;
+            lblDetalleEstado.CssClass = GetClassEtiquetaEstado(sprint.Estado.Nombre);
+
+            TicketNegocio ticketNegocio = new TicketNegocio();
+            List<Ticket> tickets = ticketNegocio.listarPorSprint(idSprint, userLogueado.Id);
+
+            Session["listaTicketsDelSprint"] = tickets;
+
+            dpTicketsDelSprint.SetPageProperties(0, dpTicketsDelSprint.PageSize, false);
+
+            lvTicketsDelSprint.DataSource = tickets;
+            lvTicketsDelSprint.DataBind();
+            dpTicketsDelSprint.Visible = tickets.Count > dpTicketsDelSprint.PageSize;
         }
 
         protected void lvTicketsDelSprint_PagePropertiesChanging(object sender, PagePropertiesChangingEventArgs e)
         {
 
-            dpTicketsDelSprint.SetPageProperties(e.StartRowIndex, e.MaximumRows, false);
-            lvTicketsDelSprint.DataSource = Session["listaTicketsDelSprint"];
-            lvTicketsDelSprint.DataBind();
+            List<Sprint> lista = Session["listaSprintsFiltrada"] as List<Sprint> ?? new List<Sprint>();
+
+            dpSprints.SetPageProperties(e.StartRowIndex, e.MaximumRows, false);
+            lvSprints.DataSource = lista;
+            lvSprints.DataBind();
+            dpSprints.Visible = lista.Count > dpSprints.PageSize;
         }
 
 
