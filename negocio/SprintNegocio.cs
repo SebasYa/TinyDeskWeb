@@ -198,6 +198,87 @@ namespace negocio
                 datos.cerrarConexion();
             }
         }
+
+        public List<Sprint> listar(int idEmpresa, int idUsuario)
+        {
+            List<Sprint> lista = new List<Sprint>();
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta(@"
+                     SELECT S.Id, S.NumeroSprint, S.FechaInicio, S.FechaEstimadaFin, S.FechaFin, S.Activo, 
+                           P.Nombre AS NombreProyecto,P.Id AS IdProyecto, E.Id AS IdEstado, E.Nombre AS NombreEstado, 
+                           E.EsFinal, E.EsSistema, A.Nombre AS NombreArea, A.Id AS IdArea,
+                           CASE 
+                               WHEN E.EsFinal = 1 THEN 100
+                               WHEN GETDATE() < S.FechaInicio THEN 0
+                               WHEN GETDATE() > S.FechaEstimadaFin THEN 100
+                               ELSE (DATEDIFF(DAY, S.FechaInicio, GETDATE()) * 100) / NULLIF(DATEDIFF(DAY, S.FechaInicio, S.FechaEstimadaFin), 0)
+                           END AS ProgresoTiempo,
+                       -- Progreso por Tickets (Cálculo real de trabajo terminado)
+                       ISNULL((
+                           SELECT CAST((COUNT(CASE WHEN ET.EsFinal = 1 THEN 1 END) * 100.0) / NULLIF(COUNT(T.Id), 0) AS INT)
+                           FROM TICKET T
+                           INNER JOIN ESTADO ET ON ET.Id = T.IdEstado
+                           WHERE T.IdSprint = S.Id
+                       ), 0) AS ProgresoTickets,
+                       (SELECT COUNT(CASE WHEN ET.EsFinal = 1 THEN 1 END) FROM TICKET T INNER JOIN ESTADO ET ON ET.Id = T.IdEstado WHERE T.IdSprint = S.Id) AS TicketsFinalizados,
+                       (SELECT COUNT(T.Id) FROM TICKET T WHERE T.IdSprint = S.Id) AS TicketsTotales
+                    FROM SPRINT S
+                    INNER JOIN ESTADO E ON E.Id = S.IdEstado
+                    INNER JOIN PROYECTO P ON P.Id = S.IdProyecto
+                    INNER JOIN AREA A ON A.Id = S.IdArea
+                    INNER JOIN TICKET T ON T.IdSprint = S.Id
+                    INNER JOIN USUARIO U ON U.Id = T.IdUsuario
+                    WHERE P.IdEmpresa = @IdEmpresa  AND S.Activo = 1 AND U.Id = @IdUsuario
+                ");
+                datos.setearParametro("@IdEmpresa", idEmpresa);
+                datos.setearParametro("@IdUsuario", idUsuario);
+                datos.ejecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    Sprint aux = new Sprint();
+                    aux.Id = (int)datos.Lector["Id"];
+                    aux.NumeroSprint = (int)datos.Lector["NumeroSprint"];
+                    aux.FechaInicio = (DateTime)datos.Lector["FechaInicio"];
+                    aux.FechaEstimadaFin = (DateTime)datos.Lector["FechaEstimadaFin"];
+                    if (datos.Lector["FechaFin"] != DBNull.Value)
+                    {
+                        aux.FechaFin = (DateTime)datos.Lector["FechaFin"];
+                    }
+                    aux.Activo = (bool)datos.Lector["Activo"];
+                    aux.Estado = new Estado();
+                    aux.Estado.Id = (int)datos.Lector["IdEstado"];
+                    aux.Estado.Nombre = (string)datos.Lector["NombreEstado"];
+                    aux.Estado.EsFinal = (bool)datos.Lector["EsFinal"];
+                    aux.Estado.EsSistema = (bool)datos.Lector["EsSistema"];
+                    aux.Proyecto = new Proyecto();
+                    aux.Proyecto.Id = (int)datos.Lector["IdProyecto"];
+                    aux.Proyecto.Nombre = (string)datos.Lector["NombreProyecto"];
+                    aux.Area = new Area();
+                    aux.Area.Id = (int)datos.Lector["IdArea"];
+                    aux.Area.Nombre = (string)datos.Lector["NombreArea"];
+                    aux.ProgresoTiempo = Convert.ToInt32(datos.Lector["ProgresoTiempo"]);
+                    aux.ProgresoTickets = Convert.ToInt32(datos.Lector["ProgresoTickets"]);
+                    aux.TicketsFinalizados = Convert.ToInt32(datos.Lector["TicketsFinalizados"]);
+                    aux.TicketsTotales = Convert.ToInt32(datos.Lector["TicketsTotales"]);
+
+                    lista.Add(aux);
+                }
+                return lista;
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
         public int ContarEnCurso(int idEmpresa)
         {
             AccesoDatos datos = new AccesoDatos();
