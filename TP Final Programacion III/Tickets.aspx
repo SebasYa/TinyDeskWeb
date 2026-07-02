@@ -524,44 +524,5 @@
         <!-- FIN MODAL EDITAR -->
 
     </div>
-    <script type="text/javascript">
-function validarSprintModal() {
-    let esValido = true;
-
-    // --- 1. Obtención de elementos ---
-    
-    const txtDescripcionCambio = document.getElementById('<%= txtMotivoCambio.ClientID %>');
-
-    // --- 2. Función auxiliar con LOG de error ---
-    function setValidacion(control, condicion, nombreCampo) {
-        if (!control) return;
-        if (condicion) {
-            control.classList.remove('is-invalid');
-            control.classList.add('is-valid');
-        } else {
-            control.classList.remove('is-valid');
-            control.classList.add('is-invalid');
-            console.warn("❌ FALLÓ LA VALIDACIÓN EN: " + (nombreCampo || "Desconocido"));
-            esValido = false;
-        }
-    }
-
-    // --- 3. Detección de Modal ---
-
-    console.log("--- DEBUG DE VARIABLES ---");
-
-    // --- 6. Validación Descripción Motivo ---
-    if (modalEditarVisible && txtDescripcionCambio) {
-        const motivoValido = txtDescripcionCambio.value.trim().length >= 5;
-        setValidacion(txtDescripcionCambio, motivoValido, "Motivo Cambio");
-    }
-
-    console.log("RESULTADO FINAL ¿Es válido?:", esValido);
-    console.log("--------------------------");
-
-    return esValido;
-}
-
-    
-    </script>
+ 
 </asp:Content>

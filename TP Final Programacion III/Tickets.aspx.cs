@@ -312,7 +312,8 @@ namespace TP_Final_Programacion_III
 
                 MostrarExito("Ticket modificado correctamente.");
                 CargarDetalleTicket(ticket.Id, ((Usuario)Session["usuario"]).Empresa.Id);
-                
+                txtMotivoCambio.Text = "";
+
             }
             catch (Exception ex)
             {

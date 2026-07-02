@@ -74,7 +74,7 @@
                  <div class="col-12 col-md-6 col-lg-4">
                      <div class="ticket-filter-note rounded-3 px-3 py-2">
                          <div class="small text-muted">
-                             Los períodos muestran tickets pendientes que vencen desde hoy.
+                             Los períodos muestran sprints pendientes que vencen desde hoy.
                          </div>
                      </div>
                  </div>
@@ -93,7 +93,7 @@
 
          </div>
      </div>
-     </asp:Panel>
+    
      <!-- FILTROS -->
      <asp:Panel
          ID="pnlFiltros"
@@ -120,7 +120,7 @@
                              ID="txtFiltro"
                              runat="server"
                              CssClass="form-control"
-                             placeholder="Número, descripción, área..." />
+                             placeholder="Número, proyecto, área..." />
                      </div>
                  </div>
 
@@ -348,7 +348,7 @@
             <ItemTemplate>
                 <tr>
                     <td>
-                        <a href='TicketsUsuario?idTicket=<%# Eval("Id") %>' class="text-primary fw-bold text-decoration-none">
+                        <a href='TicketsUsuario.aspx?id=<%# Eval("Id") %>' class="text-primary fw-bold text-decoration-none">
                             TK-<%# Eval("Id").ToString().PadLeft(3, '0') %>
                         </a>
                     </td>

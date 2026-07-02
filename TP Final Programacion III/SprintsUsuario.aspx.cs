@@ -27,6 +27,7 @@ namespace TP_Final_Programacion_III
                      ProyectoNegocio proyectoNegocio = new ProyectoNegocio();
                      SprintNegocio sprintNegocio = new SprintNegocio();
 
+
                      if (Session["usuario"] == null)
                      {
                          Session.Add("error", "Debes iniciar sesión para acceder a esta pantalla.");
@@ -41,7 +42,9 @@ namespace TP_Final_Programacion_III
                          return;
                      }
 
-
+                    CargarFiltros();
+                    Session["SprintsSoloPendientes"] = true;
+                    FiltrosVisibles = false;
 
 
                      //ListView View de Sprints
@@ -59,8 +62,10 @@ namespace TP_Final_Programacion_III
                          pnlDetalleSprint.Visible = true;
                          pnlListado.Visible = false;
                          pnlFiltros.Visible = false;
-                        //CargarFiltros();
-                        CargarListado(userLogueado);
+                         Session["SprintsSoloPendientes"] = true;
+                         FiltrosVisibles = false;
+                         CargarFiltros();
+                         CargarListado(userLogueado);
                          ActualizarVisibilidadFiltros();
                          CargarDetalleDelSprint(idSprint);
                          
@@ -101,6 +106,7 @@ namespace TP_Final_Programacion_III
             SprintNegocio negocio = new SprintNegocio();
             List<Sprint> lista = negocio.listar(usuario.Empresa.Id, usuario.Id);
             Session["listaSprintsOriginal"] = lista;
+            AplicarFiltrosSprints(true);
         }
 
 
@@ -111,7 +117,7 @@ namespace TP_Final_Programacion_III
             bool soloPendientes = (bool)(Session["SprintsSoloPendientes"] ?? true);
             if (soloPendientes)
             {
-                lista = lista.Where(x => x.Estado.Id == 1 || x.Estado.Id == 2).ToList();
+                lista = lista.Where(x => x.Activo && !x.Estado.EsFinal).ToList();
             }
 
             if (!string.IsNullOrEmpty(ddlArea.SelectedValue) && ddlArea.SelectedValue != "0")
@@ -121,18 +127,30 @@ namespace TP_Final_Programacion_III
             }
 
             string filtro = txtFiltro.Text.Trim();
-            if (!string.IsNullOrWhiteSpace(filtro))
+
+            if (!string.IsNullOrWhiteSpace(filtro)) lista = lista.Where(x => x.NumeroSprint.ToString().Contains(filtro) || 
+                                                            (x.Proyecto != null && !string.IsNullOrWhiteSpace(x.Proyecto.Nombre) && 
+                                                            x.Proyecto.Nombre.IndexOf(filtro, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                                                            (x.Area != null && !string.IsNullOrWhiteSpace(x.Area.Nombre) &&
+                                                            x.Area.Nombre.IndexOf(filtro, StringComparison.OrdinalIgnoreCase) >= 0)).ToList();
+
+            int dias = int.Parse(ddlProximoVencimiento.SelectedValue);
+
+            if (soloPendientes && dias > 0)
             {
-                lista = lista.Where(x =>
-                    x.Area.Nombre.Contains(filtro) ||
-                    x.NumeroSprint.ToString().Contains(filtro)
-                ).ToList();
+                DateTime hoy = DateTime.Today;
+                DateTime limite = hoy.AddDays(dias);
+                lista = lista.Where(x => x.FechaEstimadaFin.Date >= hoy && x.FechaEstimadaFin.Date <= limite).ToList();
             }
 
             lista = lista.OrderByDescending(x => x.FechaInicio).ToList();
 
             if (reiniciarPagina) dpSprints.SetPageProperties(0, dpSprints.PageSize, false);
 
+
+            Session["listaSprintFiltrada"] = lista;
+            dpSprints.Visible = lista.Count > dpSprints.PageSize;
+            ActualizarControlesFiltroRapido(soloPendientes);
             lvSprints.DataSource = lista;
             lvSprints.DataBind();
         }
@@ -148,8 +166,8 @@ namespace TP_Final_Programacion_III
             btnToggleFiltros.CssClass = FiltrosVisibles ? "btn btn-secondary w-100" : "btn btn-outline-secondary w-100";
         }
         private void ActualizarControlesFiltroRapido(bool soloPendientes)
-        {
-            List<Ticket> listaCompleta = Session["listaTicketsUsuario"] as List<Ticket> ?? new List<Ticket>();
+        {;
+            List<Sprint> listaCompleta = Session["listaSprintsOriginal"] as List<Sprint> ?? new List<Sprint>();
             int cantidadPendientes = listaCompleta.Count(x => x.Activo && !x.Estado.EsFinal);
 
             btnFiltroPendientes.Text = "Pendientes (" + cantidadPendientes + ")";
@@ -167,7 +185,7 @@ namespace TP_Final_Programacion_III
         {
             Session["SprintsSoloPendientes"] = false;
             ddlProximoVencimiento.SelectedValue = "0";
-            ddlArea.SelectedValue = "0"; 
+            ddlArea.SelectedValue = ""; 
             AplicarFiltrosSprints(true);
         }
         protected void ddlProximoVencimiento_SelectedIndexChanged(object sender, EventArgs e)
@@ -190,7 +208,7 @@ namespace TP_Final_Programacion_III
             ddlArea.SelectedValue = "";
             ddlOrden.SelectedValue = "fecha_asc";
             ddlProximoVencimiento.SelectedValue = "0";
-            Session["TicketsUsuarioSoloPendientes"] = true;
+            Session["SprintsSoloPendientes"] = true;
             AplicarFiltrosSprints(true);
         }
 
@@ -252,8 +270,7 @@ namespace TP_Final_Programacion_III
 
             dpSprints.SetPageProperties(e.StartRowIndex, e.MaximumRows, false);
             AplicarFiltrosSprints(false);
-            lvSprints.DataSource = Session["listaSprints"];
-            lvSprints.DataBind();
+            
         }
         protected void txtFiltroSprints_TextChanged(object sender, EventArgs e)
         {

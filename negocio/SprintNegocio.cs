@@ -151,7 +151,7 @@ namespace negocio
                     INNER JOIN ESTADO E ON E.Id = S.IdEstado
                     INNER JOIN PROYECTO P ON P.Id = S.IdProyecto
                     INNER JOIN AREA A ON A.Id = S.IdArea
-                    WHERE P.IdEmpresa = @IdEmpresa  AND S.Activo = 1
+                    WHERE P.IdEmpresa = @IdEmpresa 
                 ");
                 datos.setearParametro("@IdEmpresa", idEmpresa);
                 datos.ejecutarLectura();
@@ -206,7 +206,7 @@ namespace negocio
             try
             {
                 datos.setearConsulta(@"
-                     SELECT S.Id, S.NumeroSprint, S.FechaInicio, S.FechaEstimadaFin, S.FechaFin, S.Activo, 
+                     SELECT DISTINCT S.Id, S.NumeroSprint, S.FechaInicio, S.FechaEstimadaFin, S.FechaFin, S.Activo, 
                            P.Nombre AS NombreProyecto,P.Id AS IdProyecto, E.Id AS IdEstado, E.Nombre AS NombreEstado, 
                            E.EsFinal, E.EsSistema, A.Nombre AS NombreArea, A.Id AS IdArea,
                            CASE 
@@ -230,7 +230,7 @@ namespace negocio
                     INNER JOIN AREA A ON A.Id = S.IdArea
                     INNER JOIN TICKET T ON T.IdSprint = S.Id
                     INNER JOIN USUARIO U ON U.Id = T.IdUsuario
-                    WHERE P.IdEmpresa = @IdEmpresa  AND S.Activo = 1 AND U.Id = @IdUsuario
+                    WHERE P.IdEmpresa = @IdEmpresa  AND U.Id = @IdUsuario
                 ");
                 datos.setearParametro("@IdEmpresa", idEmpresa);
                 datos.setearParametro("@IdUsuario", idUsuario);
