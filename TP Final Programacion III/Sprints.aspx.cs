@@ -44,6 +44,11 @@ namespace TP_Final_Programacion_III
                         return;
                     }
 
+
+                    CargarFiltros();
+                    Session["SprintsSoloPendientes"] = true;
+                    FiltrosVisibles = false;
+
                     ddlArea.DataSource = areaNegocio.listar(idEmpresa);
                     ddlArea.DataValueField = "Id";
                     ddlArea.DataTextField = "Nombre";
@@ -83,9 +88,13 @@ namespace TP_Final_Programacion_III
                     txtFechaInicio.Text = DateTime.Today.ToString("yyyy-MM-dd");
 
 
-                    //Datagrid View de Sprints
-                    Session.Add("listaSprints", sprintNegocio.listar(userLogueado.Empresa.Id));
-                    CargarListadoSprints((List<Sprint>)Session["listaSprints"], true);
+                    List<Sprint> lista = sprintNegocio.listar(userLogueado.Empresa.Id);
+
+                    Session["listaSprintsOriginal"] = lista;
+                    Session["listaSprints"] = lista;
+                    Session["listaSprintsFiltrada"] = lista;
+
+                    AplicarFiltrosSprints(true);
 
                     if (Request.QueryString["id"] != null)
                     {
@@ -110,10 +119,179 @@ namespace TP_Final_Programacion_III
 
         }
 
-        protected void Unnamed_Click(object sender, EventArgs e)
+        private void CargarFiltros()
         {
+            Usuario userLogueado = (Usuario)Session["usuario"];
+            int idEmpresa = userLogueado.Empresa.Id;
+            AreaNegocio areaNegocio = new AreaNegocio();
 
+            ddlareaFiltro.DataSource = areaNegocio.listar(idEmpresa);
+            ddlareaFiltro.DataValueField = "Id";
+            ddlareaFiltro.DataTextField = "Nombre";
+            ddlareaFiltro.DataBind();
+            ddlareaFiltro.Items.Insert(0, new ListItem("Todas", ""));
         }
+
+        private void ActualizarControlesFiltroRapido(bool soloPendientes)
+        {
+            List<Sprint> listaCompleta = Session["listaSprintsOriginal"] as List<Sprint> ?? new List<Sprint>();
+
+            int cantidadPendientes = listaCompleta.Count(x => x.Activo && !x.Estado.EsFinal);
+
+            btnFiltroPendientes.Text = "Pendientes (" + cantidadPendientes + ")";
+            btnMostrarTodos.Text = "Todos";
+
+            btnFiltroPendientes.CssClass =
+                "btn btn-outline-primary flex-fill" +
+                (soloPendientes ? " active" : "");
+
+            btnMostrarTodos.CssClass =
+                "btn btn-outline-secondary flex-fill" +
+                (!soloPendientes ? " active" : "");
+
+            ddlProximoVencimiento.Enabled = soloPendientes;
+        }
+
+        private void AplicarFiltrosSprints(bool reiniciarPagina)
+        {
+            List<Sprint> lista =
+                Session["listaSprintsOriginal"] as List<Sprint>
+                ?? new List<Sprint>();
+
+            bool soloPendientes =
+                (bool)(Session["SprintsSoloPendientes"] ?? true);
+
+            if (soloPendientes)
+            {
+                lista = lista.Where(x => x.Activo && !x.Estado.EsFinal).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(ddlareaFiltro.SelectedValue))
+            {
+                int idArea = int.Parse(ddlareaFiltro.SelectedValue);
+
+                lista = lista.Where(x => x.Area.Id == idArea).ToList();
+            }
+
+            string filtro = txtFiltro.Text.Trim();
+
+            if (!string.IsNullOrWhiteSpace(filtro))
+            {
+                lista = lista.Where(x =>
+                    x.NumeroSprint.ToString().Contains(filtro)
+                    || (x.Proyecto != null &&
+                        x.Proyecto.Nombre.IndexOf(filtro,
+                        StringComparison.OrdinalIgnoreCase) >= 0)
+                    || (x.Area != null &&
+                        x.Area.Nombre.IndexOf(filtro,
+                        StringComparison.OrdinalIgnoreCase) >= 0)
+                    || (x.Estado != null &&
+                        x.Estado.Nombre.IndexOf(filtro,
+                        StringComparison.OrdinalIgnoreCase) >= 0))
+                    .ToList();
+            }
+
+            int dias = int.Parse(ddlProximoVencimiento.SelectedValue);
+
+            if (soloPendientes && dias > 0)
+            {
+                DateTime hoy = DateTime.Today;
+                DateTime limite = hoy.AddDays(dias);
+
+                lista = lista.Where(x => x.FechaEstimadaFin.Date >= hoy &&
+                                         x.FechaEstimadaFin.Date <= limite).ToList();
+            }
+
+            switch (ddlOrden.SelectedValue)
+            {
+                case "fecha_desc":
+                    lista = lista.OrderByDescending(x => x.FechaInicio).ToList();
+                    break;
+
+                case "fecha_asc":
+                    lista = lista.OrderBy(x => x.FechaInicio).ToList();
+                    break;
+
+                case "numero":
+                    lista = lista.OrderBy(x => x.NumeroSprint).ToList();
+                    break;
+
+                default:
+                    lista = lista.OrderByDescending(x => x.FechaInicio).ToList();
+                    break;
+            }
+
+            Session["listaSprintsFiltrada"] = lista;
+
+            CargarListadoSprints(lista, reiniciarPagina);
+
+            ActualizarControlesFiltroRapido(soloPendientes);
+        }
+
+        protected void btnAplicarFiltros_Click(object sender, EventArgs e)
+        {
+            AplicarFiltrosSprints(true);
+        }
+
+        protected void btnLimpiarFiltros_Click(object sender, EventArgs e)
+        {
+            txtFiltro.Text = "";
+            ddlArea.SelectedValue = "";
+            ddlOrden.SelectedValue = "fecha_asc";
+            ddlProximoVencimiento.SelectedValue = "0";
+
+            Session["SprintsSoloPendientes"] = true;
+
+            AplicarFiltrosSprints(true);
+        }
+
+        protected void btnFiltroPendientes_Click(object sender, EventArgs e)
+        {
+            Session["SprintsSoloPendientes"] = true;
+            AplicarFiltrosSprints(true);
+        }
+
+        protected void btnMostrarTodos_Click(object sender, EventArgs e)
+        {
+            Session["SprintsSoloPendientes"] = false;
+            ddlProximoVencimiento.SelectedValue = "0";
+            ddlArea.SelectedValue = "";
+
+            AplicarFiltrosSprints(true);
+        }
+
+        protected void ddlProximoVencimiento_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Session["SprintsSoloPendientes"] = true;
+            AplicarFiltrosSprints(true);
+        }
+
+        private bool FiltrosVisibles
+        {
+            get { return ViewState["FiltrosVisibles"] != null && (bool)ViewState["FiltrosVisibles"]; }
+            set { ViewState["FiltrosVisibles"] = value; }
+        }
+
+        protected void btnToggleFiltros_Click(object sender, EventArgs e)
+        {
+            FiltrosVisibles = !FiltrosVisibles;
+            ActualizarVisibilidadFiltros();
+        }
+
+        private void ActualizarVisibilidadFiltros()
+        {
+            pnlFiltros.Visible = FiltrosVisibles;
+
+            btnToggleFiltros.Text = FiltrosVisibles
+                ? "Ocultar filtros"
+                : "Mostrar filtros";
+
+            btnToggleFiltros.CssClass = FiltrosVisibles
+                ? "btn btn-secondary w-100"
+                : "btn btn-outline-secondary w-100";
+        }
+
+
 
         protected void btnCrearSprint_Click(object sender, EventArgs e)
         {
@@ -321,9 +499,7 @@ namespace TP_Final_Programacion_III
 
         protected void txtFiltroSprints_TextChanged(object sender, EventArgs e)
         {
-            List<Sprint> lista = (List<Sprint>)Session["listaSprints"];
-            List<Sprint> listaFiltrada = lista.FindAll(x => x.Proyecto.Nombre.ToUpper().Contains(txtFiltroSprints.Text.ToUpper()));
-            CargarListadoSprints(listaFiltrada, true);
+            AplicarFiltrosSprints(true);
         }
 
         protected void btnGuardarEdicion_Click(object sender, EventArgs e)
@@ -641,9 +817,10 @@ namespace TP_Final_Programacion_III
             List<Sprint> lista = Session["listaSprintsFiltrada"] as List<Sprint> ?? Session["listaSprints"] as List<Sprint> ?? new List<Sprint>();
 
             dpSprints.SetPageProperties(e.StartRowIndex, e.MaximumRows, false);
-            lvSprints.DataSource = lista;
-            lvSprints.DataBind();
-            dpSprints.Visible = lista.Count > dpSprints.PageSize;
+            //lvSprints.DataSource = lista;
+            //lvSprints.DataBind();
+            //dpSprints.Visible = lista.Count > dpSprints.PageSize;
+            AplicarFiltrosSprints(false);
         }
 
         protected void lvSprints_ItemCommand(object sender, ListViewCommandEventArgs e)

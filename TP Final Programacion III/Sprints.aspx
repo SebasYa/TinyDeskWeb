@@ -5,13 +5,24 @@
         <asp:Literal ID="litMensaje" runat="server"></asp:Literal>
         <asp:Panel ID="pnlListadoSprints" runat="server">
             <div class="row">
-                <div class="col-6">
+                <!--<div class="col-6">
                     <div class="mb-3">
-                        <!--<asp:Label Text="Filtrar" runat="server" />-->
+                        <!--<asp:Label Text="Filtrar" runat="server" />
                         <asp:TextBox runat="server" ID="txtFiltroSprints" CssClass="form-control" placeholder="Filtrar por Proyecto" AutoPostBack="true" OnTextChanged="txtFiltroSprints_TextChanged" />
                     </div>
-                </div>
+                </div>-->
+                <div class="ticket-page-heading d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+                    <div class="ticket-heading-copy">
+                        <span class="ticket-eyebrow"><i class="bi bi-ticket-perforated"></i>Espacio de trabajo</span>
+                        <h1 class="h2 fw-bold mb-1">Mis sprints</h1>
+                        <p class="mb-0">Consultá los sprints que tenés asignados y sus fechas de vencimiento.</p>
+                    </div>
 
+                    <div class="ticket-context-chip">
+                        <i class="bi bi-person-check"></i>
+                        <span><strong>Tu trabajo</strong><small>Seguimiento personal</small></span>
+                    </div>
+                </div>
                 <div class="col-6 d-flex align-items-center flex-row-reverse">
                     <button type="button" class="btn btn-primary shadow-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#sprintModal">
                         <i class="bi bi-plus-circle"></i>Crear Sprint
@@ -88,8 +99,157 @@
                 </div>
             </div>
             <!-- FIN MODAL -->
-            <!-- INICIO GRIDVIEW -->
+            <!-- FILTRO -->
 
+            <div class="card ticket-filter-panel border-0 mb-4">
+                <div class="card-body p-3 p-lg-4">
+
+                    <div class="row g-3 align-items-end">
+
+                        <div class="col-12 col-lg-4">
+                            <label class="form-label fw-semibold">Vista rápida</label>
+
+                            <div class="ticket-toggle d-flex gap-2">
+
+                                <asp:Button
+                                    ID="btnFiltroPendientes"
+                                    runat="server"
+                                    Text="Pendientes"
+                                    CssClass="btn btn-outline-primary active flex-fill"
+                                    CausesValidation="false"
+                                    OnClick="btnFiltroPendientes_Click" />
+
+                                <asp:Button
+                                    ID="btnMostrarTodos"
+                                    runat="server"
+                                    Text="Todos"
+                                    CssClass="btn btn-outline-secondary flex-fill"
+                                    CausesValidation="false"
+                                    OnClick="btnMostrarTodos_Click" />
+
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-2">
+                            <label for="ddlProximoVencimiento" class="form-label fw-semibold">
+                                Vencimiento
+                            </label>
+
+                            <asp:DropDownList
+                                ID="ddlProximoVencimiento"
+                                runat="server"
+                                CssClass="form-select"
+                                AutoPostBack="true"
+                                OnSelectedIndexChanged="ddlProximoVencimiento_SelectedIndexChanged">
+
+                                <asp:ListItem Text="Todos" Value="0" />
+                                <asp:ListItem Text="Próximos 7 días" Value="7" />
+                                <asp:ListItem Text="Próximos 14 días" Value="14" />
+                                <asp:ListItem Text="Próximos 30 días" Value="30" />
+
+                            </asp:DropDownList>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="ticket-filter-note rounded-3 px-3 py-2">
+                                <div class="small text-muted">
+                                    Los períodos muestran sprints pendientes que vencen desde hoy.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-2">
+                            <asp:Button
+                                ID="btnToggleFiltros"
+                                runat="server"
+                                Text="Mostrar filtros"
+                                CssClass="btn btn-outline-secondary w-100"
+                                CausesValidation="false"
+                                OnClick="btnToggleFiltros_Click" />
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- FILTROS -->
+            <asp:Panel
+                ID="pnlFiltros"
+                runat="server"
+                Visible="false"
+                CssClass="card ticket-filter-panel ticket-advanced-filters border-0 mb-4"
+                DefaultButton="btnAplicarFiltros">
+
+                <div class="card-body p-3 p-lg-4">
+
+                    <div class="row g-3 align-items-end">
+
+                        <div class="col-12 col-lg-5">
+                            <label for="txtFiltro" class="form-label fw-semibold">
+                                Buscar
+                            </label>
+
+                            <div class="input-group ticket-search-group">
+                                <span class="input-group-text bg-white">
+                                    <i class="bi bi-search text-muted"></i>
+                                </span>
+
+                                <asp:TextBox
+                                    ID="txtFiltro"
+                                    runat="server"
+                                    CssClass="form-control"
+                                    placeholder="Número, proyecto, área..." />
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-5 col-lg-2">
+                            <label for="ddlArea" class="form-label fw-semibold">
+                                Area
+                            </label>
+
+                            <asp:DropDownList
+                                ID="ddlareaFiltro"
+                                runat="server"
+                                CssClass="form-select">
+                            </asp:DropDownList>
+                        </div>
+
+                        <div class="col-12 col-md-7 col-lg-3">
+                            <label for="ddlOrden" class="form-label fw-semibold">
+                                Ordenar
+                            </label>
+
+                            <asp:DropDownList ID="ddlOrden" runat="server" CssClass="form-select">
+                                <asp:ListItem Text="Vencimiento próximo" Value="fecha_asc" />
+                                <asp:ListItem Text="Vencimiento lejano" Value="fecha_desc" />
+                                <asp:ListItem Text="Más recientes" Value="recientes" />
+                            </asp:DropDownList>
+                        </div>
+
+                        <div class="col-12 col-lg-2 d-flex gap-2">
+
+                            <asp:Button
+                                ID="btnAplicarFiltros"
+                                runat="server"
+                                Text="Aplicar"
+                                CssClass="btn btn-primary flex-fill"
+                                OnClick="btnAplicarFiltros_Click" />
+
+                            <asp:Button
+                                ID="btnLimpiarFiltros"
+                                runat="server"
+                                Text="Limpiar"
+                                CssClass="btn btn-outline-secondary flex-fill"
+                                OnClick="btnLimpiarFiltros_Click" />
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </asp:Panel>
+            <!-- INICIO LISTVIEW -->
             <div class="table-responsive">
 
                 <asp:ListView ID="lvSprints" runat="server" ItemPlaceholderID="itemPlaceholder" OnItemCommand="lvSprints_ItemCommand" OnPagePropertiesChanging="lvSprints_PagePropertiesChanging">
