@@ -64,7 +64,7 @@ namespace TP_Final_Programacion_III
 
                 int idProyectoSeleccionado = int.Parse(ddlProyecto.SelectedValue);
                 nuevoSprint.NumeroSprint = sprintNegocio.ObtenerSiguienteNumeroSprint(idProyectoSeleccionado);
-                nuevoSprint.FechaInicio = Convert.ToDateTime(txtFechaInicio.Text);
+                nuevoSprint.FechaInicio = Convert.ToDateTime(DateTime.Today.ToString("yyyy-MM-dd"));
                 nuevoSprint.FechaEstimadaFin = Convert.ToDateTime(txtFechaEstimadaFin.Text);
                 nuevoSprint.Area = new Area();
                 nuevoSprint.Area.Id = int.Parse(ddlArea.SelectedValue);
@@ -434,6 +434,7 @@ namespace TP_Final_Programacion_III
         {
             int idEmpresa = ((Usuario)Session["usuario"]).Empresa.Id;
             CargarCombosSprint(idEmpresa);
+            txtFechaInicio.Text = DateTime.Today.ToString("yyyy-MM-dd");
 
             ScriptManager.RegisterStartupScript(
                 this,

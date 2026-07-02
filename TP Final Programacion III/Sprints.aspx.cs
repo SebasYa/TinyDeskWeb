@@ -80,6 +80,7 @@ namespace TP_Final_Programacion_III
                     ddlEditProyecto.DataTextField = "Nombre";
                     ddlEditProyecto.DataBind();
                     ddlEditProyecto.Items.Insert(0, new ListItem("Seleccione un puesto...", ""));
+                    txtFechaInicio.Text = DateTime.Today.ToString("yyyy-MM-dd");
 
 
                     //Datagrid View de Sprints
@@ -149,7 +150,7 @@ namespace TP_Final_Programacion_III
                     return;
                 }
 
-                nuevoSprint.FechaInicio = Convert.ToDateTime(txtFechaInicio.Text);
+                nuevoSprint.FechaInicio = Convert.ToDateTime(DateTime.Today.ToString("yyyy-MM-dd"));
                 nuevoSprint.FechaEstimadaFin = Convert.ToDateTime(txtFechaEstimadaFin.Text);
                 nuevoSprint.Area = new Area();
                 nuevoSprint.Area.Id = int.Parse(ddlArea.SelectedValue);

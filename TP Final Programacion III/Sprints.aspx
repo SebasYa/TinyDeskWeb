@@ -32,7 +32,7 @@
 
                                 <div class="col-md-6">
                                     <label for="txtFechaInicio" class="form-label fw-semibold">Fecha Inicio</label>
-                                    <asp:TextBox ID="txtFechaInicio" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                                    <asp:TextBox ID="txtFechaInicio" runat="server" CssClass="form-control" TextMode="Date" Enabled="false"></asp:TextBox>
                                 <div class="invalid-feedback">
                                   La fecha de inicio tiene que ser igual o mayor al día de hoy
                                 </div>
