@@ -838,9 +838,9 @@
         }
 
         .projects-workspace .badge.status-final {
-            border-color: rgba(35, 134, 91, .18);
-            background: rgba(76, 175, 125, .14) !important;
-            color: #237a55 !important;
+            border-color: #cbbbe8;
+            background: #65479b !important;
+            color: #eee7fa !important;
         }
 
         .projects-workspace .badge.status-pending {
