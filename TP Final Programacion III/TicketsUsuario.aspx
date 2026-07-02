@@ -237,19 +237,19 @@
                                 </span>
                             </td>
 
-                            <td>
+                            <td class="ticket-status-cell">
                                 <span class='<%# GetClassEstado(Eval("Estado.Nombre"), Eval("Estado.EsFinal")) %>'>
                                     <%# Eval("Estado.Nombre") %>
                                 </span>
                             </td>
 
-                            <td>
+                            <td class="ticket-priority-cell">
                                 <span class='<%# GetClassPrioridad(Eval("Prioridad.Nombre")) %>'>
                                     <%# Eval("Prioridad.Nombre") %>
                                 </span>
                             </td>
 
-                            <td>
+                            <td class="ticket-date-cell">
                                 <div class="small">
                                     <span class="text-muted">Inicio:</span>
                                     <%# Eval("FechaInicio", "{0:dd/MM/yyyy}") %>
@@ -266,7 +266,7 @@
                                 </div>
                             </td>
 
-                            <td>
+                            <td class="ticket-deadline-cell">
                                 <span class='<%# GetClassVencimiento(Eval("FechaEstimadaFin"), Eval("Estado.EsFinal")) %>'>
                                     <%# GetTextoVencimiento(Eval("FechaEstimadaFin"), Eval("FechaFin"), Eval("Estado.EsFinal")) %>
                                 </span>
@@ -373,13 +373,13 @@
                             </div>
                         </div>
 
-                        <div class="col-6 col-md-3 ticket-detail-field">
+                        <div class="col-6 col-md-3 ticket-detail-field ticket-detail-status">
                             <span class="text-uppercase text-muted fw-semibold d-block" style="font-size: 0.75rem; letter-spacing: 0.5px;">Estado</span>
 
                             <asp:Label ID="lblDetalleEstado" runat="server"></asp:Label>
                         </div>
 
-                        <div class="col-6 col-md-3 ticket-detail-field">
+                        <div class="col-6 col-md-3 ticket-detail-field ticket-detail-priority">
                             <span class="text-uppercase text-muted fw-semibold d-block" style="font-size: 0.75rem; letter-spacing: 0.5px;">Prioridad</span>
 
                             <asp:Label ID="lblDetallePrioridad" runat="server"></asp:Label>
@@ -444,8 +444,8 @@
                             </div>
 
                             <div class="col-12 col-md-auto">
-                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#finalizarTicketModal">
-                                    Finalizar ticket
+                                <button type="button" class="btn ticket-finalize-action" data-bs-toggle="modal" data-bs-target="#finalizarTicketModal">
+                                    <i class="bi bi-check2-circle me-1"></i>Finalizar ticket
                                 </button>
                             </div>
 
@@ -458,25 +458,23 @@
 
         </asp:Panel>
         <div class="modal fade" id="finalizarTicketModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content ticket-modal-content">
-                    <div class="modal-header bg-success-subtle">
-                        <h5 class="modal-title fw-bold text-success">Finalizar ticket</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="modal-header ticket-finalize-header">
+                        <span class="ticket-finalize-icon"><i class="bi bi-check2-circle"></i></span>
+                        <div class="me-auto"><span class="ticket-finalize-kicker">Cerrar ciclo de trabajo</span><h5 class="modal-title fw-bold mb-0">Finalizar ticket</h5>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
 
-                    <div class="modal-body">
-                        <p class="mb-2 text-black">¿Querés finalizar este ticket?</p>
-
-                        <p class="text-danger small mb-0">
-                            Se registrará la fecha de finalización y el ticket no podrá volver a abrirse.
-                        </p>
+                    <div class="modal-body p-4">
+                        <div class="ticket-finalize-copy"><strong>¿Querés finalizar este ticket?</strong><span>Se registrará la fecha de finalización y el ticket no podrá volver a abrirse.</span></div>
                     </div>
 
                     <div class="modal-footer ticket-modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
 
-                        <asp:Button ID="btnFinalizarTicket" runat="server" CssClass="btn btn-success" Text="Finalizar" CausesValidation="false" OnClick="btnFinalizarTicket_Click" />
+                        <asp:Button ID="btnFinalizarTicket" runat="server" CssClass="btn ticket-finalize-confirm" Text="Finalizar" CausesValidation="false" OnClick="btnFinalizarTicket_Click" />
                     </div>
 
                 </div>
@@ -491,6 +489,9 @@
             --tickets-ink: #09232f;
             --tickets-muted: #75797e;
             --tickets-cloud: #e5e5e5;
+            --tickets-violet: #65479b;
+            --tickets-violet-soft: #eee7fa;
+            --tickets-violet-line: #cbbbe8;
             --tickets-surface: #f3f7f8;
             --tickets-line: rgba(9, 35, 47, .11);
             --tickets-shadow: 0 18px 45px rgba(9, 35, 47, .075);
@@ -849,6 +850,21 @@
             color: #584d91 !important;
         }
 
+        .ticket-status-cell .bg-primary-subtle,
+        .ticket-detail-status .bg-primary-subtle {
+            border-color: rgba(45, 132, 95, .18) !important;
+            background: rgba(76, 175, 125, .14) !important;
+            color: #237a55 !important;
+        }
+
+        .ticket-status-cell .bg-success-subtle,
+        .ticket-detail-status .bg-success-subtle,
+        .ticket-deadline-cell .bg-success-subtle {
+            border-color: var(--tickets-violet-line) !important;
+            background: var(--tickets-violet) !important;
+            color: var(--tickets-violet-soft) !important;
+        }
+
         .ticket-table .bg-light.text-secondary {
             border-color: rgba(66, 140, 153, .15) !important;
             background: rgba(185, 229, 229, .24) !important;
@@ -939,6 +955,21 @@
             background: rgba(185, 229, 229, .1);
         }
 
+        .ticket-finalize-action {
+            border: 1px solid rgba(101, 71, 155, .34);
+            border-radius: .7rem;
+            background: rgba(238, 231, 250, .72);
+            color: var(--tickets-violet);
+            font-weight: 700;
+        }
+
+            .ticket-finalize-action:hover,
+            .ticket-finalize-action:focus {
+                border-color: var(--tickets-violet);
+                background: var(--tickets-violet);
+                color: var(--tickets-violet-soft);
+            }
+
         .ticket-pagination .btn {
             border-radius: .65rem;
         }
@@ -954,6 +985,76 @@
             border-color: rgba(9, 35, 47, .08);
             background: #f2f7f8;
         }
+
+            .ticket-modal-footer .btn {
+                min-height: 42px;
+                border-radius: .7rem;
+                font-weight: 700;
+            }
+
+        .ticket-finalize-header {
+            padding: 1.1rem 1.25rem;
+            border-bottom: 1px solid rgba(101, 71, 155, .14);
+            background: linear-gradient(105deg, #faf8fd, var(--tickets-violet-soft));
+        }
+
+        .ticket-finalize-icon {
+            display: grid;
+            flex: 0 0 auto;
+            place-items: center;
+            width: 2.65rem;
+            height: 2.65rem;
+            margin-right: .75rem;
+            border: 1px solid rgba(101, 71, 155, .18);
+            border-radius: .8rem;
+            background: rgba(101, 71, 155, .12);
+            color: var(--tickets-violet);
+            font-size: 1.15rem;
+        }
+
+        .ticket-finalize-kicker {
+            display: block;
+            margin-bottom: .12rem;
+            color: #765aa6;
+            font-size: .62rem;
+            font-weight: 850;
+            letter-spacing: .09em;
+            text-transform: uppercase;
+        }
+
+        .ticket-finalize-copy {
+            display: flex;
+            flex-direction: column;
+            gap: .3rem;
+            padding: 1rem;
+            border: 1px solid rgba(101, 71, 155, .14);
+            border-radius: .9rem;
+            background: rgba(238, 231, 250, .42);
+        }
+
+            .ticket-finalize-copy strong {
+                color: var(--tickets-ink);
+            }
+
+            .ticket-finalize-copy span {
+                color: #6d6872;
+                font-size: .82rem;
+                line-height: 1.5;
+            }
+
+        .ticket-finalize-confirm {
+            border-color: var(--tickets-violet) !important;
+            background: var(--tickets-violet) !important;
+            color: var(--tickets-violet-soft) !important;
+            box-shadow: 0 8px 18px rgba(101, 71, 155, .18);
+        }
+
+            .ticket-finalize-confirm:hover,
+            .ticket-finalize-confirm:focus {
+                border-color: #52377f !important;
+                background: #52377f !important;
+                color: #fff !important;
+            }
 
         @media (max-width: 767.98px) {
             .ticket-context-chip {
