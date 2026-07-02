@@ -114,13 +114,22 @@ namespace TP_Final_Programacion_III
         protected global::System.Web.UI.WebControls.Button btnGuardarSprint;
 
         /// <summary>
-        /// Control dgvSprints.
+        /// Control lvSprints.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView dgvSprints;
+        protected global::System.Web.UI.WebControls.ListView lvSprints;
+
+        /// <summary>
+        /// Control dpSprints.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DataPager dpSprints;
 
         /// <summary>
         /// Control lblModalEditarTitulo.
@@ -312,13 +321,22 @@ namespace TP_Final_Programacion_III
         protected global::System.Web.UI.WebControls.Label lblDetalleEstado;
 
         /// <summary>
-        /// Control dgvTicketsDelSprint.
+        /// Control lvTicketsDelSprint.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView dgvTicketsDelSprint;
+        protected global::System.Web.UI.WebControls.ListView lvTicketsDelSprint;
+
+        /// <summary>
+        /// Control dpTicketsDelSprint.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DataPager dpTicketsDelSprint;
 
         /// <summary>
         /// Control hfIdSprintEliminar.

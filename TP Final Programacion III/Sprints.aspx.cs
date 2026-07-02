@@ -85,8 +85,7 @@ namespace TP_Final_Programacion_III
 
                     //Datagrid View de Sprints
                     Session.Add("listaSprints", sprintNegocio.listar(userLogueado.Empresa.Id));
-                    dgvSprints.DataSource = Session["listaSprints"];
-                    dgvSprints.DataBind();
+                    CargarListadoSprints((List<Sprint>)Session["listaSprints"], true);
 
                     if (Request.QueryString["id"] != null)
                     {
@@ -176,8 +175,7 @@ namespace TP_Final_Programacion_III
                 ddlProyecto.SelectedIndex = 0;
 
                 Session.Add("listaSprints", sprintNegocio.listar(userLogueado.Empresa.Id));
-                dgvSprints.DataSource = Session["listaSprints"];
-                dgvSprints.DataBind();
+                CargarListadoSprints((List<Sprint>)Session["listaSprints"], true);
 
 
             }
@@ -245,20 +243,13 @@ namespace TP_Final_Programacion_III
         {
         }
 
-        protected void dgvSprints_PageIndexChanging(object sender, GridViewPageEventArgs e)
-        {
-            dgvSprints.PageIndex = e.NewPageIndex;
-            dgvSprints.DataSource = Session["listaSprints"];
-            dgvSprints.DataBind();
 
-        }
 
-        protected void dgvSprints_SelectedIndexChanged(object sender, EventArgs e)
+        private void CargarSprintParaEditar(int idSeleccionado)
         {
             try
             {
                 litMensaje.Text = "";
-                int idSeleccionado = (int)(dgvSprints.SelectedDataKey.Value);
 
                 List<Sprint> listaSprints = (List<Sprint>)Session["listaSprints"];
 
@@ -332,8 +323,7 @@ namespace TP_Final_Programacion_III
         {
             List<Sprint> lista = (List<Sprint>)Session["listaSprints"];
             List<Sprint> listaFiltrada = lista.FindAll(x => x.Proyecto.Nombre.ToUpper().Contains(txtFiltroSprints.Text.ToUpper()));
-            dgvSprints.DataSource = listaFiltrada;
-            dgvSprints.DataBind();
+            CargarListadoSprints(listaFiltrada, true);
         }
 
         protected void btnGuardarEdicion_Click(object sender, EventArgs e)
@@ -427,8 +417,7 @@ namespace TP_Final_Programacion_III
                 txtMotivoCambio.Text = "";
 
                 Session.Add("listaSprints", sprintNegocio.listar(userLogueado.Empresa.Id));
-                dgvSprints.DataSource = Session["listaSprints"];
-                dgvSprints.DataBind();
+                CargarListadoSprints((List<Sprint>)Session["listaSprints"], true);
 
 
             }
@@ -483,8 +472,7 @@ namespace TP_Final_Programacion_III
 
 
                 Session.Add("listaSprints", sprintNegocio.listar(userLogueado.Empresa.Id));
-                dgvSprints.DataSource = Session["listaSprints"];
-                dgvSprints.DataBind();
+                CargarListadoSprints((List<Sprint>)Session["listaSprints"], true);
 
                 txtMotivoEliminacion.Text = "";
 
@@ -528,22 +516,7 @@ namespace TP_Final_Programacion_III
             ddlProyecto.SelectedIndex = 0;
         }
 
-        protected void dgvSprints_RowCommand(object sender, GridViewCommandEventArgs e)
-        {
-            if (e.CommandName == "VerDetalle")
-            {
-                string idSprint = e.CommandArgument.ToString();
-
-                // Redirigimos a la misma página pasando el ID por parámetro en la URL
-                Response.Redirect($"Sprints.aspx?id={idSprint}");
-            }
-
-            if (e.CommandName == "Finalizar")
-            {
-                int idSprint = Convert.ToInt32(e.CommandArgument);
-                FinalizarSprint(idSprint);
-            }
-        }
+   
 
         private void FinalizarSprint(int idSprint)
         {
@@ -579,8 +552,7 @@ namespace TP_Final_Programacion_III
                 </div>";
 
                 Session["listaSprints"] = sprintNegocio.listar(userLogueado.Empresa.Id);
-                dgvSprints.DataSource = Session["listaSprints"];
-                dgvSprints.DataBind();
+                CargarListadoSprints((List<Sprint>)Session["listaSprints"], true);
             }
             catch (Exception ex)
             {
@@ -610,14 +582,28 @@ namespace TP_Final_Programacion_III
 
                 // 3. Enlazamos la lista falsa al GridView
                 TicketNegocio ticketNegocio = new TicketNegocio();
-                dgvTicketsDelSprint.DataSource = ticketNegocio.listarPorSprint(idSprint);
+                List<Ticket> tickets = ticketNegocio.listarPorSprint(idSprint);
+                Session["listaTicketsDelSprint"] = tickets;
 
-                //dgvTicketsDelSprint.DataSource = listaMockupTickets;
-                dgvTicketsDelSprint.DataBind();
+                dpTicketsDelSprint.SetPageProperties(0, dpTicketsDelSprint.PageSize, false);
+
+                lvTicketsDelSprint.DataSource = tickets;
+                lvTicketsDelSprint.DataBind();
+                dpTicketsDelSprint.Visible = tickets.Count > dpTicketsDelSprint.PageSize;
             }
         }
 
-        
+        protected void lvTicketsDelSprint_PagePropertiesChanging(object sender, PagePropertiesChangingEventArgs e)
+        {
+            List<Ticket> tickets = Session["listaTicketsDelSprint"] as List<Ticket> ?? new List<Ticket>();
+
+            dpTicketsDelSprint.SetPageProperties(e.StartRowIndex, e.MaximumRows, false);
+            lvTicketsDelSprint.DataSource = tickets;
+            lvTicketsDelSprint.DataBind();
+            dpTicketsDelSprint.Visible = tickets.Count > dpTicketsDelSprint.PageSize;
+        }
+
+
 
         public string GetClassEtiquetaPrioridad(object prioridad)
         {
@@ -638,54 +624,49 @@ namespace TP_Final_Programacion_III
             }
         }
 
-        protected void dgvTicketsDelSprint_PageIndexChanging(object sender, GridViewPageEventArgs e)
+
+        private void CargarListadoSprints(List<Sprint> lista, bool reiniciarPagina)
         {
+            Session["listaSprintsFiltrada"] = lista;
 
-            dgvTicketsDelSprint.PageIndex = e.NewPageIndex;
+            if (reiniciarPagina) dpSprints.SetPageProperties(0, dpSprints.PageSize, false);
 
-            dgvTicketsDelSprint.DataSource = Session["listaSprints"];
-            dgvTicketsDelSprint.DataBind();
+            lvSprints.DataSource = lista;
+            lvSprints.DataBind();
+            dpSprints.Visible = lista.Count > dpSprints.PageSize;
         }
 
-        protected void dgvTicketsDelSprint_PageIndexChanging1(object sender, GridViewPageEventArgs e)
+        protected void lvSprints_PagePropertiesChanging(object sender, PagePropertiesChangingEventArgs e)
         {
-           
+            List<Sprint> lista = Session["listaSprintsFiltrada"] as List<Sprint> ?? Session["listaSprints"] as List<Sprint> ?? new List<Sprint>();
+
+            dpSprints.SetPageProperties(e.StartRowIndex, e.MaximumRows, false);
+            lvSprints.DataSource = lista;
+            lvSprints.DataBind();
+            dpSprints.Visible = lista.Count > dpSprints.PageSize;
         }
 
-        protected void dgvSprints_RowCreated(object sender, GridViewRowEventArgs e)
+        protected void lvSprints_ItemCommand(object sender, ListViewCommandEventArgs e)
         {
-            // Verificamos si la fila creada es la del paginador
-            if (e.Row.RowType == DataControlRowType.Pager)
+            int idSprint = Convert.ToInt32(e.CommandArgument);
+
+            if (e.CommandName == "VerDetalle")
             {
-                e.Row.Cells[0].Attributes.Add("class", "pagination-container");
-
-                if (e.Row.Cells[0].Controls.Count > 0)
-                {
-                    Table pagerTable = (Table)e.Row.Cells[0].Controls[0];
-
-                    pagerTable.Attributes.Add("class", "pagination pagination-sm justify-content-center my-3");
-
-                    foreach (TableCell cell in pagerTable.Rows[0].Cells)
-                    {
-                        foreach (Control ctrl in cell.Controls)
-                        {
-                            if (ctrl is LinkButton)
-                            {
-                                ((LinkButton)ctrl).CssClass = "page-link";
-                            }
-                            else if (ctrl is Label) // Este es el número de página actual
-                            {
-                                ((Label)ctrl).CssClass = "page-link active";
-                            }
-                        }
-                    }
-                }
+                Response.Redirect("Sprints.aspx?id=" + idSprint, false);
+                Context.ApplicationInstance.CompleteRequest();
+                return;
             }
-        }
 
-        protected void dgvSprints_PageIndexChanging1(object sender, GridViewPageEventArgs e)
-        {
+            if (e.CommandName == "EditarSprint")
+            {
+                CargarSprintParaEditar(idSprint);
+                return;
+            }
 
+            if (e.CommandName == "Finalizar")
+            {
+                FinalizarSprint(idSprint);
+            }
         }
     }
 
