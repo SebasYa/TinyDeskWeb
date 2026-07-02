@@ -471,12 +471,24 @@ namespace negocio
                         "Estado", original.Estado.Nombre, ticket.Estado.Nombre, motivo);
 
                 if (original.Usuario.Id != ticket.Usuario.Id)
+                {
+                    string valorOriginal = FormatearNombreUsuario(original.Usuario);
+                    string valorNuevo = FormatearNombreUsuario(ticket.Usuario);
+
                     auditoriaService.Registrar(idUsuario, "Ticket", ticket.Id, accion,
-                        "Usuario", original.Usuario.Id.ToString() , ticket.Usuario.Id.ToString(), motivo);
+                        "Usuario", valorOriginal, valorNuevo, motivo);
+                }
+                    
 
                 if (original.Sprint.Id != ticket.Sprint.Id)
+                {
+                    string valorOriginal = FormatearNombreSprint(original.Sprint);
+                    string valorNuevo = FormatearNombreSprint(ticket.Sprint);
+
                     auditoriaService.Registrar(idUsuario, "Ticket", ticket.Id, accion,
-                        "Sprint", original.Sprint.NumeroSprint.ToString(), ticket.Sprint.NumeroSprint.ToString(), motivo);
+                       "Sprint", valorOriginal, valorNuevo, motivo);
+                }
+                   
 
                 string descOriginal = (original.Descripcion ?? "").Trim();
                 string descNuevo = (ticket.Descripcion ?? "").Trim();
@@ -496,6 +508,18 @@ namespace negocio
             {
                 datos.cerrarConexion();
             }
+        }
+
+        private string FormatearNombreSprint(Sprint s)
+        {
+            if (s == null) return "Sin Sprint";
+            return $"Sprint {s.NumeroSprint} - {s.Proyecto?.Nombre}";
+        }
+
+        private string FormatearNombreUsuario(Usuario u)
+        {
+            if (u == null) return "Sin Usuario";
+            return $"Id: {u.Id} - {u.Nombre} {u.Apellido}";
         }
 
         public List<Ticket> listarPorSprint(int idSprint)

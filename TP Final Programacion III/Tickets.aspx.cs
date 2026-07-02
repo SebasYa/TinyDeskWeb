@@ -253,7 +253,8 @@ namespace TP_Final_Programacion_III
                 string.IsNullOrWhiteSpace(ddlEditPrioridad.SelectedValue) ||
                 string.IsNullOrWhiteSpace(ddlEditEstado.SelectedValue) ||
                 string.IsNullOrWhiteSpace(ddlEditUsuario.SelectedValue) ||
-                string.IsNullOrWhiteSpace(ddlEditSprint.SelectedValue))
+                string.IsNullOrWhiteSpace(ddlEditSprint.SelectedValue) ||
+                string.IsNullOrWhiteSpace(txtMotivoCambio.Text))
             {
                 MostrarError("Completá todos los campos obligatorios.");
                 return;
@@ -263,7 +264,9 @@ namespace TP_Final_Programacion_III
             {
                 AuditoriaService auditoriaService = new AuditoriaService();
                 Ticket ticket = new Ticket();
+                UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
                 Usuario userLogueado = (Usuario)Session["usuario"];
+                SprintNegocio sprintNegocio = new SprintNegocio();
 
 
                 ticket.Id = int.Parse(hdnIdTicket.Value);
@@ -278,17 +281,27 @@ namespace TP_Final_Programacion_III
 
                 ticket.Prioridad = new Prioridad();
                 ticket.Prioridad.Id = int.Parse(ddlEditPrioridad.SelectedValue);
+                ticket.Prioridad.Nombre = ddlEditPrioridad.SelectedItem.Text;
 
                 // Si el estado es final, cerrar el ticket
                 List<Estado> estados = (List<Estado>)Session["listaEstadosTicket"];
                 Estado estadoSeleccionado = estados.Find(x => x.Id == int.Parse(ddlEditEstado.SelectedValue));
                 ticket.Estado = estadoSeleccionado ?? new Estado { Id = int.Parse(ddlEditEstado.SelectedValue) };
+                ticket.Estado.Nombre = ddlEditEstado.SelectedItem.Text;
 
                 ticket.Usuario = new Usuario();
                 ticket.Usuario.Id = int.Parse(ddlEditUsuario.SelectedValue);
+                List<Usuario> listaUsuarios = (List<Usuario>)usuarioNegocio.listar(userLogueado.Empresa.Id);
+                Usuario usuarioCompleto = listaUsuarios.FirstOrDefault(u => u.Id == ticket.Usuario.Id);
+                ticket.Usuario = usuarioCompleto;
 
                 ticket.Sprint = new Sprint();
                 ticket.Sprint.Id = int.Parse(ddlEditSprint.SelectedValue);
+                List<Sprint> listaSprints = (List<Sprint>)sprintNegocio.listar(userLogueado.Empresa.Id);
+                Sprint sprintCompleto = listaSprints.FirstOrDefault(s => s.Id == ticket.Sprint.Id);
+                ticket.Sprint = sprintCompleto;
+
+
 
                 string motivo = txtMotivoCambio.Text;
                 string accion = "UPDATE";
