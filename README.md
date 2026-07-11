@@ -221,11 +221,11 @@ Abrí `TinyDeskWeb.slnx` en Visual Studio y presioná **F5**.
 ### 🎫 Gestión de Tickets
 > Alta de tickets, asignación con sugerencia IA y cambio de estados.
 
-[▶ Ver demo — Tickets.mp4](./docs/images/Tickets.mp4)
+https://github.com/user-attachments/assets/330e0044-72b1-4e72-a50b-ec3a42a982e7
 
 ### ℹ️ Página About
 
-[▶ Ver demo — About.mp4](./docs/images/About.mp4)
+https://github.com/user-attachments/assets/4cdb46b8-9faa-49d3-a5a4-c5c03839e394
 
 ---
 
