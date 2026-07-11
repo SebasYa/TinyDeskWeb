@@ -2,9 +2,6 @@
 
 > Sistema de gestión de proyectos, sprints y tickets para equipos de desarrollo — construido con **ASP.NET Web Forms** y **SQL Server**.
 
-<!-- BANNER: reemplazá esta línea con tu imagen banner si tenés una -->
-<!-- ![Banner TinyDesk](./docs/images/banner.png) -->
-
 ---
 
 ## 📋 Tabla de contenidos
@@ -16,6 +13,8 @@
 - [🚀 Instalación y configuración](#-instalación-y-configuración)
 - [📸 Capturas de pantalla](#-capturas-de-pantalla)
 - [🧠 Motor de sugerencia IA](#-motor-de-sugerencia-ia)
+- [📧 Notificaciones por email](#-notificaciones-por-email)
+- [🛠️ Stack tecnológico](#️-stack-tecnológico)
 
 ---
 
@@ -161,11 +160,7 @@ cd TinyDeskWeb
 
 **2. Crear la base de datos**
 
-Abrí SQL Server Management Studio y ejecutá el script:
-```
-TinyDesk_ASP.sql
-```
-Esto crea la base de datos, todas las tablas, índices, datos semilla y un usuario de prueba (`phantom_user`).
+Abrí SQL Server Management Studio y ejecutá el script `TinyDesk_ASP.sql`. Esto crea la base de datos, todas las tablas, índices, datos semilla y un usuario de prueba.
 
 **3. Verificar la cadena de conexión**
 
@@ -180,7 +175,7 @@ conexion = new SqlConnection("server=.\\SQLEXPRESS; database=TinyDesk_Web; integ
 
 **4. Compilar y ejecutar**
 
-Abrí `TinyDeskWeb.slnx` en Visual Studio y presioná **F5** (o Ctrl+F5 para sin debug).
+Abrí `TinyDeskWeb.slnx` en Visual Studio y presioná **F5**.
 
 ### Usuario de prueba
 
@@ -190,8 +185,6 @@ Abrí `TinyDeskWeb.slnx` en Visual Studio y presioná **F5** (o Ctrl+F5 para sin
 | Email | `gasparin@gmail.com` |
 | Empresa | `Phantom inc.` |
 | Rol | Admin |
-
-> ⚠️ El password en la base de datos de prueba es `123` (sin hashear en el seed). En producción todos los passwords están hasheados con SHA-256.
 
 ---
 
@@ -211,11 +204,11 @@ Abrí `TinyDeskWeb.slnx` en Visual Studio y presioná **F5** (o Ctrl+F5 para sin
 
 ### 📁 Proyectos
 
-![Proyectos Light](./docs/images/ProyectoLight.png)
+![Proyectos](./docs/images/ProyectoLight.png)
 
 ### 👥 Usuarios
 
-![Usuarios Night](./docs/images/UsuariosNight.png)
+![Usuarios](./docs/images/UsuariosNight.png)
 
 ### 📩 Contacto
 
@@ -228,16 +221,11 @@ Abrí `TinyDeskWeb.slnx` en Visual Studio y presioná **F5** (o Ctrl+F5 para sin
 ### 🎫 Gestión de Tickets
 > Alta de tickets, asignación con sugerencia IA y cambio de estados.
 
-https://github.com/user-attachments/assets/tickets-demo
-
-<!-- Para subir el video a GitHub: andá a cualquier Issue o Pull Request, arrastrá el .mp4 y GitHub te genera la URL. Luego reemplazá el link de arriba. El archivo está en: docs/images/Tickets.mp4 -->
+[▶ Ver demo — Tickets.mp4](./docs/images/Tickets.mp4)
 
 ### ℹ️ Página About
-> Vista informativa de la plataforma con animaciones.
 
-https://github.com/user-attachments/assets/about-demo
-
-<!-- El archivo está en: docs/images/About.mp4 -->
+[▶ Ver demo — About.mp4](./docs/images/About.mp4)
 
 ---
 
@@ -272,8 +260,6 @@ El sistema envía emails automáticos en los siguientes eventos:
 | Recuperación de contraseña | Usuario → link con token de expiración |
 | Ticket asignado | Usuario asignado → detalle del ticket + link directo |
 | Formulario de contacto | Admin → mensaje del remitente |
-
-> Los emails se envían via **SMTP** usando [Mailtrap](https://mailtrap.io/) en desarrollo. Para producción, reemplazá las credenciales en `EmailService.cs`.
 
 ---
 
